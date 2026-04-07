@@ -1,16 +1,83 @@
-# React + Vite
+# Azzam Abdul Khadar Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Professional personal portfolio website built with React and Vite.
 
-Currently, two official plugins are available:
+## 🚀 Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Modern responsive portfolio UI for displaying skills, experience, education, projects, and contact info.
+- Built using React (JSX) and Vite for fast startup + HMR.
+- Clean component-based architecture under `src/components`.
+- Mobile-first design with responsive layout and modern styling.
 
-## React Compiler
+## 📁 Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `src/main.jsx` — React app bootstrap
+- `src/App.jsx` — main page layout and section composition
+- `src/components/*` — individual sections (Hero, Navbar, About, Skills,
+  Experience, Education, Projects, Contact, Footer)
+- `src/assets/*` — static images/icons
+- `src/App.css`, `src/index.css` — global and application styles
+- `public/` — static files served at root
+- `vite.config.js` — Vite configuration
 
-## Expanding the ESLint configuration
+## ✅ Features Included
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Responsive Hero and Navbar with smooth section scrolling
+- About section with summary and personal profile
+- Skills visualization section (frontend, backend, tools)
+- Experience and education timeline cards
+- Projects showcase with links to demo/repo
+- Contact form + social links
+- Clean and minimal UI with accessible text and color contrast
+
+## 🛠️ Setup & Run Locally
+
+1. Clone repository
+```bash
+git clone https://github.com/Azzam-Abdul-Khadar/azzam-portfolio.git
+cd azzam-portfolio
+```
+2. Install dependencies
+```bash
+npm install
+```
+3. Start dev server
+```bash
+npm run dev
+```
+4. Open browser on `http://localhost:5173`
+
+## 📦 Build for Production
+
+```bash
+npm run build
+```
+
+- Production build output in `dist/`.
+- Preview production build (locally) with:
+```bash
+npm run preview
+```
+
+## 🔧 Deployment
+
+This project is suitable for deployment on GitHub Pages, Netlify, Vercel, Cloudflare Pages, etc.
+
+### GitHub Pages example
+1. Build: `npm run build`
+2. Push `dist/` to `gh-pages` branch (or use GitHub Pages deploy action)
+
+## 💡 Customize
+
+- Update content in `src/components/*` and style in `src/App.css`
+- Add new portfolio items to `src/components/Projects.jsx`
+- Add SEO and meta tags in `index.html`
+
+## 📄 License
+
+MIT License
+
+---
+
+Made with ❤️ by Azzam Abdul Khadar.
+
