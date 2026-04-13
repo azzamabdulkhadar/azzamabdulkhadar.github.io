@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { SectionLabel } from './About';
+import { useLanguage } from '../LanguageContext';
+import { getTranslation } from '../translations';
 
 const skillGroups = [
   {
@@ -39,6 +41,7 @@ const skillGroups = [
 export default function Skills() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
+  const { language } = useLanguage();
 
   return (
     <section id="skills" ref={ref} style={{
@@ -52,12 +55,9 @@ export default function Skills() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          <SectionLabel>Skills</SectionLabel>
+          <SectionLabel>{getTranslation(language, 'skillsTitle')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            Tech{' '}
-            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Stack
-            </span>
+            {getTranslation(language, 'skillsDescription')}
           </h2>
         </motion.div>
 

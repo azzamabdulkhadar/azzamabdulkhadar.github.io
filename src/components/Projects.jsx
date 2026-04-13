@@ -3,6 +3,8 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { ExternalLink, Code2, Layers } from 'lucide-react';
 import { SectionLabel } from './About';
+import { useLanguage } from '../LanguageContext';
+import { getTranslation } from '../translations';
 
 const projects = [
   {
@@ -55,6 +57,7 @@ const projects = [
 export default function Projects() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
+  const { language } = useLanguage();
 
   return (
     <section id="projects" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg-secondary)' }}>
@@ -65,12 +68,9 @@ export default function Projects() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          <SectionLabel>Projects</SectionLabel>
+          <SectionLabel>{getTranslation(language, 'projectsTitle')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            Things I've{' '}
-            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Built
-            </span>
+            {getTranslation(language, 'projectsDescription')}
           </h2>
         </motion.div>
 

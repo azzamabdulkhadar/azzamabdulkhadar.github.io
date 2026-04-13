@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { questions, POINTS, getLevel, LEVELS } from './quizData';
-import { CheckCircle, XCircle, Trophy, RotateCcw, Filter, Info, X } from 'lucide-react';
+import { generateQuizQuestions } from '../../services/quizGenerator';
+import { CheckCircle, XCircle, Trophy, RotateCcw, Filter, Info, X, Zap, Sparkles, Star } from 'lucide-react';
 
 const TOTAL_Q = 10;
 
@@ -19,6 +20,11 @@ export default function QuizGame({ onPlayingChange }) {
   const [sessionPoints, setSessionPoints] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [showInfo, setShowInfo] = useState(false);
+  const [useAI, setUseAI] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [levelUp, setLevelUp] = useState(null);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const level = getLevel(points);
   const nextLevel = LEVELS.find(l => l.min > points);
@@ -28,18 +34,43 @@ export default function QuizGame({ onPlayingChange }) {
     onPlayingChange?.(phase === 'quiz');
   }, [phase]);
 
-  const startQuiz = () => {
-    const filtered = topic === 'All' ? questions : questions.filter(q => q.topic === topic);
-    // Pick a balanced mix: ~3 Easy, ~4 Medium, ~3 Hard — shuffled within each tier
-    const easy   = shuffle(filtered.filter(q => q.level === 'Easy')).slice(0, 3);
-    const medium = shuffle(filtered.filter(q => q.level === 'Medium')).slice(0, 4);
-    const hard   = shuffle(filtered.filter(q => q.level === 'Hard')).slice(0, 3);
-    setPool(shuffle([...easy, ...medium, ...hard]));
-    setIdx(0);
-    setSelected(null);
-    setSessionPoints(0);
-    setAnswers([]);
-    setPhase('quiz');
+  const startQuiz = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let quizPool;
+      
+      if (useAI) {
+        // Generate questions from API
+        let topicForAPI = topic === 'All' ? ['MERN', 'Android'] : [topic];
+        let allQuestions = [];
+        
+        // Generate questions for each topic
+        for (const t of topicForAPI) {
+          const generated = await generateQuizQuestions(t, 'mixed', Math.ceil(TOTAL_Q / topicForAPI.length));
+          allQuestions = [...allQuestions, ...generated];
+        }
+        
+        quizPool = shuffle(allQuestions).slice(0, TOTAL_Q);
+      } else {
+        // Use static questions
+        const filtered = topic === 'All' ? questions : questions.filter(q => q.topic === topic);
+        const easy   = shuffle(filtered.filter(q => q.level === 'Easy')).slice(0, 3);
+        const medium = shuffle(filtered.filter(q => q.level === 'Medium')).slice(0, 4);
+        const hard   = shuffle(filtered.filter(q => q.level === 'Hard')).slice(0, 3);
+        quizPool = shuffle([...easy, ...medium, ...hard]);
+      }
+
+      setPool(quizPool);
+      setIdx(0);
+      setSelected(null);
+      setSessionPoints(0);
+      setAnswers([]);
+      setPhase('quiz');
+    } catch (err) {
+      setError(err.message || 'Failed to generate questions');
+      setLoading(false);
+    }
   };
 
   const handleAnswer = (i) => {
@@ -49,10 +80,20 @@ export default function QuizGame({ onPlayingChange }) {
     const correct = i === q.ans;
     const earned = correct ? POINTS[q.level] : 0;
     const newPoints = points + earned;
+    const oldLevel = getLevel(points);
+    const newLevel = getLevel(newPoints);
+    
     setPoints(newPoints);
     setSessionPoints(sp => sp + earned);
     setAnswers(a => [...a, { correct, earned, level: q.level }]);
     localStorage.setItem('quizPoints', newPoints);
+
+    // Check if user leveled up
+    if (newLevel.name !== oldLevel.name) {
+      setLevelUp(newLevel);
+      setShowCelebration(true);
+      setTimeout(() => setShowCelebration(false), 4000);
+    }
   };
 
   const next = () => {
@@ -75,14 +116,62 @@ export default function QuizGame({ onPlayingChange }) {
     setPhase('intro');
   };
 
-  if (phase === 'intro') return <Intro topic={topic} setTopic={setTopic} onStart={startQuiz} points={points} level={level} nextLevel={nextLevel} onReset={resetAll} showInfo={showInfo} setShowInfo={setShowInfo} />;
-  if (phase === 'result') return <Result answers={answers} sessionPoints={sessionPoints} points={points} level={level} nextLevel={nextLevel} onRetry={reset} />;
+  if (phase === 'intro') return <Intro topic={topic} setTopic={setTopic} onStart={startQuiz} points={points} level={level} nextLevel={nextLevel} onReset={resetAll} showInfo={showInfo} setShowInfo={setShowInfo} useAI={useAI} setUseAI={setUseAI} loading={loading} error={error} />;
+  if (phase === 'result') return <Result answers={answers} sessionPoints={sessionPoints} points={points} level={level} nextLevel={nextLevel} onRetry={reset} levelUp={levelUp} />;
 
   const q = pool[idx];
   const progress = ((idx + 1) / pool.length) * 100;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: 640, margin: '0 auto', position: 'relative' }}>
+
+      {/* Exit Confirmation Dialog */}
+      <AnimatePresence>
+        {showCelebration && levelUp && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: -50 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 200,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ repeat: Infinity, duration: 0.6 }}
+              style={{
+                background: `linear-gradient(135deg, ${levelUp.color}, ${levelUp.color}dd)`,
+                borderRadius: 20, padding: '2rem', textAlign: 'center',
+                boxShadow: `0 20px 60px ${levelUp.color}40`,
+                backdropFilter: 'blur(10px)',
+              }}
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 2, ease: 'linear' }}
+                style={{ fontSize: '3.5rem', marginBottom: '0.5rem' }}
+              >
+                🎉
+              </motion.div>
+              <div style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                Level Up! 🚀
+              </div>
+              <div style={{ color: '#fff', fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.3rem' }}>
+                {levelUp.name}
+              </div>
+              <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem' }}>
+                You've earned {points} total points!
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Confetti effect */}
+      {showCelebration && <Confetti />}
 
       {/* Info panel overlay */}
       <AnimatePresence>
@@ -252,7 +341,34 @@ export default function QuizGame({ onPlayingChange }) {
   );
 }
 
-function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, showInfo, setShowInfo }) {
+function Confetti() {
+  const confetti = Array.from({ length: 50 }).map((_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    delay: Math.random() * 0.3,
+    duration: 2 + Math.random() * 1,
+    color: ['#fbbf24', '#60a5fa', '#34d399', '#f87171', '#a78bfa'][Math.floor(Math.random() * 5)],
+  }));
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 199 }}>
+      {confetti.map(c => (
+        <motion.div
+          key={c.id}
+          initial={{ y: -10, opacity: 1, rotate: 0 }}
+          animate={{ y: window.innerHeight + 10, opacity: 0, rotate: 360 }}
+          transition={{ duration: c.duration, delay: c.delay, ease: 'easeIn' }}
+          style={{
+            position: 'absolute', left: `${c.left}%`, width: 10, height: 10,
+            background: c.color, borderRadius: '50%',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, showInfo, setShowInfo, useAI, setUseAI, loading, error }) {
   const topics = ['All', 'MERN', 'Android'];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 560, margin: '0 auto', width: '100%', position: 'relative' }}>
@@ -369,6 +485,47 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
         </div>
       )}
 
+      {/* AI Toggle */}
+      <div style={{
+        background: 'var(--bg-card)', border: '1px solid var(--border)',
+        borderRadius: 12, padding: '1rem',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <Zap size={16} color='var(--accent)' />
+          <div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-h)' }}>AI-Generated Questions</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text)', marginTop: '0.2rem' }}>
+              {useAI ? 'Fresh questions every time' : 'Use static question bank'}
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={() => setUseAI(!useAI)}
+          style={{
+            width: 50, height: 28, borderRadius: 14, border: 'none',
+            background: useAI ? 'var(--accent)' : 'var(--border)',
+            cursor: 'pointer', transition: 'all 0.2s',
+            position: 'relative',
+          }}
+        >
+          <div style={{
+            width: 24, height: 24, borderRadius: '50%', background: '#fff',
+            position: 'absolute', top: 2, left: useAI ? 24 : 2,
+            transition: 'left 0.2s',
+          }} />
+        </button>
+      </div>
+
+      {error && (
+        <div style={{
+          background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444',
+          borderRadius: 8, padding: '0.75rem', color: '#ef4444', fontSize: '0.85rem',
+        }}>
+          ⚠️ {error}
+        </div>
+      )}
+
       {/* Topic filter */}
       <div>
         <div style={{ fontSize: '0.8rem', color: 'var(--text)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -401,12 +558,13 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
       </div>
 
       <div style={{ display: 'flex', gap: '0.75rem' }}>
-        <button onClick={onStart} style={{
+        <button onClick={onStart} disabled={loading} style={{
           flex: 1, background: 'var(--gradient)', color: '#fff', border: 'none',
-          borderRadius: 10, padding: '0.85rem', cursor: 'pointer',
+          borderRadius: 10, padding: '0.85rem', cursor: loading ? 'not-allowed' : 'pointer',
           fontWeight: 700, fontFamily: 'var(--font)', fontSize: '1rem',
+          opacity: loading ? 0.6 : 1,
         }}>
-          Start Quiz 🚀
+          {loading ? '⏳ Generating...' : 'Start Quiz 🚀'}
         </button>
         <button onClick={onReset} title="Reset all points" style={{
           background: 'var(--bg-card)', border: '1px solid var(--border)',
@@ -420,55 +578,160 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
   );
 }
 
-function Result({ answers, sessionPoints, points, level, nextLevel, onRetry }) {
+function Result({ answers, sessionPoints, points, level, nextLevel, onRetry, levelUp }) {
   const correct = answers.filter(a => a.correct).length;
   const pct = Math.round((correct / answers.length) * 100);
+  
+  const getResultMessage = () => {
+    if (pct === 100) return { emoji: '🏆', msg: 'Perfect Score!', color: '#fbbf24' };
+    if (pct >= 90) return { emoji: '⭐', msg: 'Excellent!', color: '#34d399' };
+    if (pct >= 80) return { emoji: '👏', msg: 'Great Job!', color: '#60a5fa' };
+    if (pct >= 70) return { emoji: '👍', msg: 'Good Work!', color: '#a78bfa' };
+    if (pct >= 50) return { emoji: '💪', msg: 'Keep Practicing!', color: '#f59e0b' };
+    return { emoji: '🎯', msg: 'Try Again!', color: '#f87171' };
+  };
+
+  const result = getResultMessage();
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: 480, margin: '0 auto', width: '100%', textAlign: 'center' }}>
-      <div style={{ fontSize: '3rem' }}>{pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '💪'}</div>
-      <div>
-        <h3 style={{ color: 'var(--text-h)', fontSize: '1.3rem', fontWeight: 700 }}>Quiz Complete!</h3>
-        <p style={{ color: 'var(--text)', marginTop: '0.3rem' }}>{correct}/{answers.length} correct · {pct}%</p>
-      </div>
+      {/* Celebration animation for perfect/excellent scores */}
+      {pct >= 80 && <Confetti />}
 
-      <div style={{
-        background: 'var(--bg-card)', border: `1px solid ${level.color}40`,
-        borderRadius: 14, padding: '1.25rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
+      <motion.div
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+        style={{ fontSize: '4rem' }}
+      >
+        {result.emoji}
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <h3 style={{ color: result.color, fontSize: '1.5rem', fontWeight: 700 }}>
+          {result.msg}
+        </h3>
+        <p style={{ color: 'var(--text)', marginTop: '0.3rem', fontSize: '1rem' }}>
+          {correct}/{answers.length} correct · {pct}%
+        </p>
+      </motion.div>
+
+      {/* Achievement badges */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        style={{
+          display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap',
+        }}
+      >
+        {pct === 100 && (
+          <div style={{
+            background: 'rgba(251,191,36,0.15)', border: '1px solid #fbbf24',
+            borderRadius: 8, padding: '0.5rem 1rem', fontSize: '0.85rem',
+            color: '#fbbf24', fontWeight: 600,
+          }}>
+            ⭐ Perfect Score
+          </div>
+        )}
+        {correct >= 8 && (
+          <div style={{
+            background: 'rgba(52,211,153,0.15)', border: '1px solid #34d399',
+            borderRadius: 8, padding: '0.5rem 1rem', fontSize: '0.85rem',
+            color: '#34d399', fontWeight: 600,
+          }}>
+            🔥 On Fire
+          </div>
+        )}
+        {sessionPoints >= 60 && (
+          <div style={{
+            background: 'rgba(96,165,250,0.15)', border: '1px solid #60a5fa',
+            borderRadius: 8, padding: '0.5rem 1rem', fontSize: '0.85rem',
+            color: '#60a5fa', fontWeight: 600,
+          }}>
+            💎 High Earner
+          </div>
+        )}
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        style={{
+          background: 'var(--bg-card)', border: `1px solid ${level.color}40`,
+          borderRadius: 14, padding: '1.25rem',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}
+      >
         <div style={{ textAlign: 'left' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text)' }}>Session earned</div>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: '1.4rem', fontWeight: 700, color: '#22c55e' }}>+{sessionPoints} pts</div>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.5, type: 'spring' }}
+            style={{ fontFamily: 'var(--mono)', fontSize: '1.4rem', fontWeight: 700, color: '#22c55e' }}
+          >
+            +{sessionPoints} pts
+          </motion.div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text)' }}>Current Level</div>
-          <div style={{ fontWeight: 700, color: level.color }}>{level.name}</div>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.8rem', color: 'var(--text)' }}>{points} pts total</div>
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            style={{ fontWeight: 700, color: level.color, fontSize: '1.1rem' }}
+          >
+            {level.name}
+          </motion.div>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.8rem', color: 'var(--text)' }}>
+            {points} pts total
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {nextLevel && (
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
           <div style={{ fontSize: '0.75rem', color: 'var(--text)', marginBottom: '0.4rem' }}>
             {nextLevel.min - points} pts to {nextLevel.name}
           </div>
           <div style={{ height: 6, background: 'var(--border)', borderRadius: 4, overflow: 'hidden' }}>
-            <div style={{
-              height: '100%',
-              width: `${Math.min(100, ((points - level.min) / (nextLevel.min - level.min)) * 100)}%`,
-              background: level.color,
-            }} />
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{
+                width: `${Math.min(100, ((points - level.min) / (nextLevel.min - level.min)) * 100)}%`,
+              }}
+              transition={{ delay: 0.6, duration: 1 }}
+              style={{
+                height: '100%',
+                background: level.color,
+              }}
+            />
           </div>
-        </div>
+        </motion.div>
       )}
 
-      <button onClick={onRetry} style={{
-        background: 'var(--gradient)', color: '#fff', border: 'none',
-        borderRadius: 10, padding: '0.85rem', cursor: 'pointer',
-        fontWeight: 700, fontFamily: 'var(--font)', fontSize: '1rem',
-      }}>
+      <motion.button
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7 }}
+        onClick={onRetry}
+        style={{
+          background: 'var(--gradient)', color: '#fff', border: 'none',
+          borderRadius: 10, padding: '0.85rem', cursor: 'pointer',
+          fontWeight: 700, fontFamily: 'var(--font)', fontSize: '1rem',
+        }}
+      >
         Play Again
-      </button>
+      </motion.button>
     </div>
   );
 }

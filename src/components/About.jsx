@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Code2, Server, Database, GitBranch } from 'lucide-react';
+import { useLanguage } from '../LanguageContext';
+import { getTranslation } from '../translations';
 
 const stats = [
   { label: 'Projects Built', value: '3+' },
@@ -20,6 +22,7 @@ const highlights = [
 export default function About() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
+  const { language } = useLanguage();
 
   return (
     <section id="about" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg-secondary)' }}>
@@ -29,12 +32,9 @@ export default function About() {
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7 }}
       >
-        <SectionLabel>About Me</SectionLabel>
+        <SectionLabel>{getTranslation(language, 'aboutTitle')}</SectionLabel>
         <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '3rem' }}>
-          Turning ideas into{' '}
-          <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            real products
-          </span>
+          {getTranslation(language, 'aboutDescription')}
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '3rem', alignItems: 'start' }}>

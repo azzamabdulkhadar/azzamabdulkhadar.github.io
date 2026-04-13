@@ -55,7 +55,7 @@ function QuitConfirm({ message, onConfirm, onCancel }) {
               color: '#fff', fontFamily: 'var(--font)', fontSize: '0.9rem', fontWeight: 700,
             }}
           >
-            Quit
+            Exit Game
           </button>
         </div>
       </motion.div>
@@ -98,7 +98,11 @@ export default function GamesModal({ onClose }) {
     dinoRunning.current = false;
     quizPlaying.current = false;
 
-    if (confirm === 'close') { setConfirm(null); onClose(); return; }
+    if (confirm === 'close') { 
+      // Go back to game selection screen (don't close modal)
+      setConfirm(null); 
+      return; 
+    }
     if (confirm?.startsWith('tab:')) {
       setTab(confirm.split(':')[1]);
     }
@@ -130,7 +134,7 @@ export default function GamesModal({ onClose }) {
   ];
 
   const confirmMessage = confirm === 'close'
-    ? 'Your current game progress will be lost. Are you sure you want to quit?'
+    ? 'Your current game progress will be lost. You will return to the game selection screen.'
     : 'Switching games will end your current session. Are you sure?';
 
   return createPortal(
