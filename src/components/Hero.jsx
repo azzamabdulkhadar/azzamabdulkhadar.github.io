@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion';
 import { Code2, Link, Mail, Download, ArrowDown } from 'lucide-react';
-import heroImg from '../assets/hero.png';
+import heroImg from '../assets/profile.png';
+import { useLanguage } from '../LanguageContext';
+import { getTranslation } from '../translations';
 
 export default function Hero() {
+  const { language } = useLanguage();
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
@@ -44,6 +47,7 @@ export default function Hero() {
             transition={{ delay: 0.2 }}
             style={{ fontFamily: 'var(--mono)', color: 'var(--accent-2)', fontSize: '0.9rem', marginBottom: '1rem' }}
           >
+            👋 {getTranslation(language, 'heroTitle')}
             👋 Hello, I'm
           </motion.p>
 
@@ -71,7 +75,7 @@ export default function Hero() {
           >
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 2s infinite' }} />
             <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85rem', color: 'var(--text-h)' }}>
-              MERN Stack & Android Developer
+              {getTranslation(language, 'heroSubtitle')}
             </span>
           </motion.div>
 
@@ -81,6 +85,7 @@ export default function Hero() {
             transition={{ delay: 0.6 }}
             style={{ fontSize: '1.05rem', color: 'var(--text)', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '520px' }}
           >
+            {getTranslation(language, 'heroDescription')}
             Results-driven Full Stack Developer building scalable web applications with the MERN stack.
             Passionate about clean code, responsive UIs, and real-world problem solving.
           </motion.p>
@@ -100,6 +105,7 @@ export default function Hero() {
               onMouseEnter={e => { e.target.style.opacity = '0.85'; e.target.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }}
             >
+              {getTranslation(language, 'projects')}
               View Projects
             </button>
             <button onClick={() => scrollTo('contact')} style={{
@@ -111,6 +117,7 @@ export default function Hero() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
+              {getTranslation(language, 'contact')}
               Contact Me
             </button>
           </motion.div>

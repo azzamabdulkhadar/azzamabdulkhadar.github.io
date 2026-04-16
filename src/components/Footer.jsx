@@ -1,4 +1,9 @@
 import { Code2, Link, Mail } from 'lucide-react';
+import { useLanguage } from '../LanguageContext';
+import { getTranslation } from '../translations';
+
+export default function Footer() {
+  const { language } = useLanguage();
 
 export default function Footer() {
   return (
@@ -13,7 +18,7 @@ export default function Footer() {
           &lt;Azzam /&gt;
         </span>
         <p style={{ color: 'var(--text)', fontSize: '0.85rem' }}>
-          © 2025 Azzam Abdul Khadar. Built with React & Framer Motion.
+          {getTranslation(language, 'footerText')}
         </p>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           {[

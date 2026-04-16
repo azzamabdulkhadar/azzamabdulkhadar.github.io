@@ -3,6 +3,8 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { GraduationCap } from 'lucide-react';
 import { SectionLabel } from './About';
+import { useLanguage } from '../LanguageContext';
+import { getTranslation } from '../translations';
 
 const education = [
   {
@@ -26,6 +28,7 @@ const education = [
 export default function Education() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
+  const { language } = useLanguage();
 
   return (
     <section id="education" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg-secondary)' }}>
@@ -36,6 +39,9 @@ export default function Education() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
+          <SectionLabel>{getTranslation(language, 'educationTitle')}</SectionLabel>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+            {getTranslation(language, 'educationDescription')}
           <SectionLabel>Education</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
             Academic{' '}

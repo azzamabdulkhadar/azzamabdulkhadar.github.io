@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MessageCircle, X, Send, Bot, User, Loader, ThumbsUp, ThumbsDown, Copy, Check, Mic, MicOff, Trash2 } from 'lucide-react';
+import { useTheme } from '../ThemeContext';
+
+const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 import { MessageCircle, X, Send, Bot, User, Loader } from 'lucide-react';
 import { useTheme } from '../ThemeContext';
 
@@ -42,12 +47,17 @@ export default function ChatBot() {
   const { theme } = useTheme();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'bot', text: "Hi! I'm Azzam's portfolio assistant 👋 Ask me anything about his skills, projects, or experience!" }
+    { role: 'bot', text: "Hi! I'm Azzam's portfolio assistant 👋 Ask me anything about his skills, projects, or experience!", id: 0 }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState({});
+  const [copied, setCopied] = useState({});
+  const [isListening, setIsListening] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const messageIdRef = useRef(1);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -57,10 +67,75 @@ export default function ChatBot() {
     if (open) setTimeout(() => inputRef.current?.focus(), 300);
   }, [open]);
 
+  useEffect(() => {
+    // Initialize Web Speech API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+      recognitionRef.current.maxAlternatives = 1;
+
+      recognitionRef.current.onstart = () => {
+        setIsListening(true);
+        // Don't clear input - keep existing text
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onresult = (event) => {
+        let finalTranscript = '';
+
+        // Only process final results to avoid repetition
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          }
+        }
+
+        // Append to existing text instead of replacing
+        if (finalTranscript.trim()) {
+          setInput(prev => (prev + ' ' + finalTranscript).trim());
+        }
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+    }
+  }, []);
+
   const send = async (text) => {
     const msg = text || input.trim();
     if (!msg || loading) return;
     setInput('');
+    const userMsgId = messageIdRef.current++;
+    setMessages(m => [...m, { role: 'user', text: msg, id: userMsgId }]);
+    setLoading(true);
+
+    try {
+      if (!API_KEY || API_KEY === 'your_groq_api_key_here') throw new Error('no_key');
+
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            { role: 'system', content: SYSTEM_CONTEXT },
+            { role: 'user', content: msg },
+          ],
+          max_tokens: 300,
+          temperature: 0.7,
     setMessages(m => [...m, { role: 'user', text: msg }]);
     setLoading(true);
 
@@ -83,6 +158,20 @@ export default function ChatBot() {
         throw new Error(errMsg);
       }
       const data = await res.json();
+      const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't get a response.";
+      const botMsgId = messageIdRef.current++;
+      setMessages(m => [...m, { role: 'bot', text: reply, id: botMsgId }]);
+    } catch (e) {
+      let fallback;
+      if (e.message === 'no_key') {
+        fallback = "⚠️ API key not set. Add your Groq key to the .env file as VITE_GROQ_API_KEY, then restart the dev server.";
+      } else if (e.message.includes('invalid_api_key') || e.message.includes('401')) {
+        fallback = "⚠️ Invalid API key. Please check your VITE_GROQ_API_KEY in the .env file.";
+      } else {
+        fallback = `⚠️ Error: ${e.message}`;
+      }
+      const botMsgId = messageIdRef.current++;
+      setMessages(m => [...m, { role: 'bot', text: fallback, id: botMsgId }]);
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't get a response.";
       setMessages(m => [...m, { role: 'bot', text: reply }]);
     } catch (e) {
@@ -97,6 +186,51 @@ export default function ChatBot() {
       setMessages(m => [...m, { role: 'bot', text: fallback }]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFeedback = (messageId, type) => {
+    // Log feedback to console for analysis
+    console.log(`Feedback for message ${messageId}: ${type}`);
+    setFeedback(prev => ({
+      ...prev,
+      [messageId]: feedback[messageId] === type ? null : type
+    }));
+  };
+
+  const handleCopy = (text, messageId) => {
+    navigator.clipboard.writeText(text);
+    setCopied(prev => ({
+      ...prev,
+      [messageId]: true
+    }));
+    setTimeout(() => {
+      setCopied(prev => ({
+        ...prev,
+        [messageId]: false
+      }));
+    }, 2000);
+  };
+
+  const handleClearChat = () => {
+    setMessages([
+      { role: 'bot', text: "Hi! I'm Azzam's portfolio assistant 👋 Ask me anything about his skills, projects, or experience!", id: 0 }
+    ]);
+    setFeedback({});
+  };
+
+  const toggleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      alert('Speech recognition not supported in your browser');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      // Start listening without clearing existing text
+      recognitionRef.current.start();
     }
   };
 
@@ -142,6 +276,52 @@ export default function ChatBot() {
                   </div>
                 </div>
               </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <button 
+                  onClick={handleClearChat}
+                  title="Clear chat"
+                  style={{
+                    background: 'var(--bg-secondary)', border: '1px solid var(--border)',
+                    cursor: 'pointer', color: 'var(--text)', display: 'flex', alignItems: 'center',
+                    padding: '0.5rem 0.7rem', borderRadius: '8px', transition: 'all 0.2s',
+                    fontSize: '0.8rem', fontWeight: 500, gap: '0.3rem',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#ef4444';
+                    e.currentTarget.style.color = '#fff';
+                    e.currentTarget.style.borderColor = '#ef4444';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                    e.currentTarget.style.color = 'var(--text)';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                  }}
+                >
+                  <Trash2 size={14} />
+                  Clear
+                </button>
+                <button 
+                  onClick={() => setOpen(false)}
+                  title="Close chat"
+                  style={{
+                    background: 'var(--bg-secondary)', border: '1px solid var(--border)',
+                    cursor: 'pointer', color: 'var(--text)', display: 'flex', alignItems: 'center',
+                    padding: '0.5rem 0.7rem', borderRadius: '8px', transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'var(--accent)';
+                    e.currentTarget.style.color = '#fff';
+                    e.currentTarget.style.borderColor = 'var(--accent)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                    e.currentTarget.style.color = 'var(--text)';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              </div>
               <button onClick={() => setOpen(false)} style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 color: 'var(--text)', display: 'flex', alignItems: 'center',
@@ -153,6 +333,11 @@ export default function ChatBot() {
             {/* Messages */}
             <div style={{
               flex: 1, overflowY: 'auto', overscrollBehavior: 'contain',
+              padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+            }}>
+              {messages.map((m, i) => (
+                <motion.div
+                  key={m.id}
               padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem',
             }}>
               {messages.map((m, i) => (
@@ -164,6 +349,9 @@ export default function ChatBot() {
                     display: 'flex', gap: '0.5rem',
                     flexDirection: m.role === 'user' ? 'row-reverse' : 'row',
                     alignItems: 'flex-end',
+                    group: 'message',
+                  }}
+                  className="message-group"
                   }}
                 >
                   <div style={{
@@ -176,6 +364,78 @@ export default function ChatBot() {
                     {m.role === 'bot' ? <Bot size={14} /> : <User size={14} />}
                   </div>
                   <div style={{
+                    display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1,
+                  }}>
+                    <div style={{
+                      maxWidth: '85%',
+                      background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-card)',
+                      color: m.role === 'user' ? '#fff' : 'var(--text-h)',
+                      border: m.role === 'bot' ? '1px solid var(--border)' : 'none',
+                      borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                      padding: '0.6rem 0.9rem',
+                      fontSize: '0.875rem', lineHeight: 1.6,
+                      whiteSpace: 'pre-wrap',
+                    }}>
+                      {m.text}
+                    </div>
+                    {m.role === 'bot' && (
+                      <div style={{
+                        display: 'flex', gap: '0.3rem', alignItems: 'center',
+                        paddingLeft: '0.2rem', opacity: 0.6, transition: 'opacity 0.2s',
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                        onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
+                      >
+                        <button
+                          onClick={() => handleCopy(m.text, m.id)}
+                          title="Copy message"
+                          style={{
+                            background: 'none', border: 'none', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            color: 'var(--text)', padding: '0.2rem',
+                            transition: 'color 0.2s',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
+                          onMouseLeave={e => e.currentTarget.style.color = 'var(--text)'}
+                        >
+                          {copied[m.id] ? <Check size={14} /> : <Copy size={14} />}
+                        </button>
+                        <button
+                          onClick={() => handleFeedback(m.id, 'like')}
+                          title="Helpful"
+                          style={{
+                            background: 'none', border: 'none', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            color: feedback[m.id] === 'like' ? 'var(--accent)' : 'var(--text)',
+                            padding: '0.2rem',
+                            transition: 'color 0.2s',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
+                          onMouseLeave={e => {
+                            if (feedback[m.id] !== 'like') e.currentTarget.style.color = 'var(--text)';
+                          }}
+                        >
+                          <ThumbsUp size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleFeedback(m.id, 'dislike')}
+                          title="Not helpful"
+                          style={{
+                            background: 'none', border: 'none', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            color: feedback[m.id] === 'dislike' ? '#ef4444' : 'var(--text)',
+                            padding: '0.2rem',
+                            transition: 'color 0.2s',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
+                          onMouseLeave={e => {
+                            if (feedback[m.id] !== 'dislike') e.currentTarget.style.color = 'var(--text)';
+                          }}
+                        >
+                          <ThumbsDown size={14} />
+                        </button>
+                      </div>
+                    )}
                     maxWidth: '78%',
                     background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-card)',
                     color: m.role === 'user' ? '#fff' : 'var(--text-h)',
@@ -243,6 +503,21 @@ export default function ChatBot() {
               display: 'flex', gap: '0.5rem', alignItems: 'center',
               background: 'var(--bg-card)',
             }}>
+              <button
+                onClick={toggleVoiceInput}
+                disabled={loading}
+                title={isListening ? 'Stop listening' : 'Start voice input'}
+                style={{
+                  width: 36, height: 36, borderRadius: '50%', border: 'none',
+                  background: isListening ? '#ef4444' : 'var(--border)',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: isListening ? '#fff' : 'var(--text)',
+                  transition: 'all 0.2s', flexShrink: 0,
+                }}
+              >
+                {isListening ? <Mic size={15} style={{ animation: 'pulse 1s infinite' }} /> : <MicOff size={15} />}
+              </button>
               <input
                 ref={inputRef}
                 value={input}
@@ -305,7 +580,8 @@ export default function ChatBot() {
         )}
       </motion.button>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }`}</style>
     </div>
   );
 }

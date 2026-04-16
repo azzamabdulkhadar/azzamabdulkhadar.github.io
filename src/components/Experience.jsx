@@ -3,10 +3,13 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Briefcase } from 'lucide-react';
 import { SectionLabel } from './About';
+import { useLanguage } from '../LanguageContext';
+import { getTranslation } from '../translations';
 
 export default function Experience() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
+  const { language } = useLanguage();
 
   return (
     <section id="experience" ref={ref} style={{
@@ -20,6 +23,9 @@ export default function Experience() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
+          <SectionLabel>{getTranslation(language, 'experienceTitle')}</SectionLabel>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+            {getTranslation(language, 'experienceDescription')}
           <SectionLabel>Experience</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
             Work{' '}

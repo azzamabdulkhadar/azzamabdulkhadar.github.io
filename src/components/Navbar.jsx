@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon, Palette, Gamepad2 } from 'lucide-react';
+import { Menu, X, Sun, Moon, Palette, Gamepad2, Globe } from 'lucide-react';
 import { useTheme } from '../ThemeContext';
+import { useLanguage, LANGUAGES } from '../LanguageContext';
+import { getTranslation } from '../translations';
 import GamesModal from './games/GamesModal';
 
 const themeOptions = [
@@ -10,14 +12,26 @@ const themeOptions = [
   { value: 'light', label: 'Light', icon: Sun },
 ];
 
+const navIds = ['about', 'skills', 'projects', 'experience', 'education', 'contact'];
 const links = ['About', 'Skills', 'Projects', 'Experience', 'Education', 'Contact'];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { language, setLanguage } = useLanguage();
+
+  const links = [
+    getTranslation(language, 'about'),
+    getTranslation(language, 'skills'),
+    getTranslation(language, 'projects'),
+    getTranslation(language, 'experience'),
+    getTranslation(language, 'education'),
+    getTranslation(language, 'contact'),
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -25,6 +39,9 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const handleNav = (index) => {
+    setOpen(false);
+    document.getElementById(navIds[index])?.scrollIntoView({ behavior: 'smooth' });
   const handleNav = (id) => {
     setOpen(false);
     document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
@@ -52,6 +69,9 @@ export default function Navbar() {
 
       {/* Desktop links */}
       <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none', margin: 0 }} className="nav-desktop">
+        {links.map((l, idx) => (
+          <li key={l}>
+            <button onClick={() => handleNav(idx)} style={{
         {links.map(l => (
           <li key={l}>
             <button onClick={() => handleNav(l)} style={{
@@ -66,7 +86,7 @@ export default function Navbar() {
         ))}
       </ul>
 
-      {/* Theme switcher + Games */}
+      {/* Theme switcher + Language + Games */}
       <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         {/* Games button */}
         <button
@@ -84,6 +104,58 @@ export default function Navbar() {
           <Gamepad2 size={15} />
           <span className="theme-label">Games</span>
         </button>
+
+        {/* Language button */}
+        <button
+          onClick={() => setLanguageOpen(!languageOpen)}
+          title="Switch language"
+          style={{
+            background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
+            cursor: 'pointer', color: 'var(--text-h)', padding: '6px 10px',
+            display: 'flex', alignItems: 'center', gap: '6px',
+            fontSize: '0.8rem', fontFamily: 'var(--font)',
+            transition: 'border-color 0.2s, color 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+        >
+          <Globe size={15} />
+          <span className="theme-label">{LANGUAGES[language].flag}</span>
+        </button>
+
+        <AnimatePresence>
+          {languageOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              style={{
+                position: 'absolute', top: 'calc(100% + 8px)', right: 0,
+                background: 'var(--bg-card)', border: '1px solid var(--border)',
+                borderRadius: '10px', overflow: 'hidden', minWidth: '140px',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+              }}
+            >
+              {Object.values(LANGUAGES).map(({ code, name, flag }) => (
+                <button
+                  key={code}
+                  onClick={() => { setLanguage(code); setLanguageOpen(false); }}
+                  style={{
+                    width: '100%', background: language === code ? 'var(--accent-glow)' : 'none',
+                    border: 'none', cursor: 'pointer', color: language === code ? 'var(--accent)' : 'var(--text)',
+                    padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '8px',
+                    fontSize: '0.85rem', fontFamily: 'var(--font)', textAlign: 'left',
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => { if (language !== code) e.currentTarget.style.background = 'var(--bg-secondary)'; }}
+                  onMouseLeave={e => { if (language !== code) e.currentTarget.style.background = 'none'; }}
+                >
+                  <span>{flag}</span> {name}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Theme button */}
         <button
@@ -160,6 +232,8 @@ export default function Navbar() {
               display: 'flex', flexDirection: 'column', gap: '1rem',
             }}
           >
+            {links.map((l, idx) => (
+              <button key={l} onClick={() => handleNav(idx)} style={{
             {links.map(l => (
               <button key={l} onClick={() => handleNav(l)} style={{
                 background: 'none', border: 'none', cursor: 'pointer',
