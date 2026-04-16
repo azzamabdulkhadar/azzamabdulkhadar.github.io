@@ -26,6 +26,12 @@ export default function Experience() {
           <SectionLabel>{getTranslation(language, 'experienceTitle')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
             {getTranslation(language, 'experienceDescription')}
+          <SectionLabel>Experience</SectionLabel>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+            Work{' '}
+            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Experience
+            </span>
           </h2>
         </motion.div>
 

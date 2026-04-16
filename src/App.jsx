@@ -29,6 +29,18 @@ function App() {
         <Footer />
         <ChatBot />
       </LanguageProvider>
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Experience />
+        <Education />
+        <Contact />
+      </main>
+      <Footer />
+      <ChatBot />
     </ThemeProvider>
   );
 }

@@ -35,6 +35,12 @@ export default function About() {
         <SectionLabel>{getTranslation(language, 'aboutTitle')}</SectionLabel>
         <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '3rem' }}>
           {getTranslation(language, 'aboutDescription')}
+        <SectionLabel>About Me</SectionLabel>
+        <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '3rem' }}>
+          Turning ideas into{' '}
+          <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            real products
+          </span>
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '3rem', alignItems: 'start' }}>

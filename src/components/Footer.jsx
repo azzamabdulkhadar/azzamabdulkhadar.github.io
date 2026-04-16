@@ -4,6 +4,8 @@ import { getTranslation } from '../translations';
 
 export default function Footer() {
   const { language } = useLanguage();
+
+export default function Footer() {
   return (
     <footer style={{
       borderTop: '1px solid var(--border)',

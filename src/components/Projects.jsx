@@ -71,6 +71,12 @@ export default function Projects() {
           <SectionLabel>{getTranslation(language, 'projectsTitle')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
             {getTranslation(language, 'projectsDescription')}
+          <SectionLabel>Projects</SectionLabel>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+            Things I've{' '}
+            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Built
+            </span>
           </h2>
         </motion.div>
 

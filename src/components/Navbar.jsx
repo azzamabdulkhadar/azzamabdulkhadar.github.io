@@ -13,6 +13,7 @@ const themeOptions = [
 ];
 
 const navIds = ['about', 'skills', 'projects', 'experience', 'education', 'contact'];
+const links = ['About', 'Skills', 'Projects', 'Experience', 'Education', 'Contact'];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -41,6 +42,9 @@ export default function Navbar() {
   const handleNav = (index) => {
     setOpen(false);
     document.getElementById(navIds[index])?.scrollIntoView({ behavior: 'smooth' });
+  const handleNav = (id) => {
+    setOpen(false);
+    document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -68,6 +72,9 @@ export default function Navbar() {
         {links.map((l, idx) => (
           <li key={l}>
             <button onClick={() => handleNav(idx)} style={{
+        {links.map(l => (
+          <li key={l}>
+            <button onClick={() => handleNav(l)} style={{
               background: 'none', border: 'none', cursor: 'pointer',
               color: 'var(--text)', fontSize: '0.9rem', fontFamily: 'var(--font)',
               transition: 'color 0.2s',
@@ -227,6 +234,8 @@ export default function Navbar() {
           >
             {links.map((l, idx) => (
               <button key={l} onClick={() => handleNav(idx)} style={{
+            {links.map(l => (
+              <button key={l} onClick={() => handleNav(l)} style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 color: 'var(--text-h)', fontSize: '1rem', fontFamily: 'var(--font)',
                 textAlign: 'left', padding: '0.25rem 0',

@@ -42,6 +42,12 @@ export default function Education() {
           <SectionLabel>{getTranslation(language, 'educationTitle')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
             {getTranslation(language, 'educationDescription')}
+          <SectionLabel>Education</SectionLabel>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+            Academic{' '}
+            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Background
+            </span>
           </h2>
         </motion.div>
 

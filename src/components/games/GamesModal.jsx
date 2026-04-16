@@ -103,6 +103,7 @@ export default function GamesModal({ onClose }) {
       setConfirm(null); 
       return; 
     }
+    if (confirm === 'close') { setConfirm(null); onClose(); return; }
     if (confirm?.startsWith('tab:')) {
       setTab(confirm.split(':')[1]);
     }

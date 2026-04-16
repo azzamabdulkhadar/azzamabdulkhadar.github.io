@@ -90,6 +90,16 @@ export default function Contact() {
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
             {getTranslation(language, 'contactDescription')}
           </h2>
+          <SectionLabel>Contact</SectionLabel>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+            Let's{' '}
+            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Connect
+            </span>
+          </h2>
+          <p style={{ color: 'var(--text)', marginTop: '0.75rem', maxWidth: '480px', margin: '0.75rem auto 0' }}>
+            Open to new opportunities, collaborations, or just a good tech conversation.
+          </p>
         </motion.div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
@@ -183,6 +193,7 @@ export default function Contact() {
                 </motion.div>
               )}
 
+            }}>
               <input
                 type="text" placeholder="Your Name" required
                 value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
@@ -235,6 +246,19 @@ export default function Contact() {
                     {getTranslation(language, 'sendMessage')}
                   </>
                 )}
+              />
+              <button type="submit" style={{
+                background: sent ? '#10b981' : 'var(--gradient)',
+                color: '#fff', border: 'none', borderRadius: '10px',
+                padding: '0.85rem', cursor: 'pointer', fontWeight: 600,
+                fontSize: '0.95rem', fontFamily: 'var(--font)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                transition: 'opacity 0.2s, transform 0.2s',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+              >
+                {sent ? '✓ Opening mail client...' : <><Send size={16} /> Send Message</>}
               </button>
             </form>
           </motion.div>

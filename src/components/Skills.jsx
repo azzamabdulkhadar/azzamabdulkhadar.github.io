@@ -58,6 +58,12 @@ export default function Skills() {
           <SectionLabel>{getTranslation(language, 'skillsTitle')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
             {getTranslation(language, 'skillsDescription')}
+          <SectionLabel>Skills</SectionLabel>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+            Tech{' '}
+            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Stack
+            </span>
           </h2>
         </motion.div>
 

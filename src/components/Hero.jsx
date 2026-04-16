@@ -48,6 +48,7 @@ export default function Hero() {
             style={{ fontFamily: 'var(--mono)', color: 'var(--accent-2)', fontSize: '0.9rem', marginBottom: '1rem' }}
           >
             👋 {getTranslation(language, 'heroTitle')}
+            👋 Hello, I'm
           </motion.p>
 
           <motion.h1
@@ -85,6 +86,8 @@ export default function Hero() {
             style={{ fontSize: '1.05rem', color: 'var(--text)', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '520px' }}
           >
             {getTranslation(language, 'heroDescription')}
+            Results-driven Full Stack Developer building scalable web applications with the MERN stack.
+            Passionate about clean code, responsive UIs, and real-world problem solving.
           </motion.p>
 
           <motion.div
@@ -103,6 +106,7 @@ export default function Hero() {
               onMouseLeave={e => { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }}
             >
               {getTranslation(language, 'projects')}
+              View Projects
             </button>
             <button onClick={() => scrollTo('contact')} style={{
               background: 'transparent', color: 'var(--text-h)',
@@ -114,6 +118,7 @@ export default function Hero() {
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
               {getTranslation(language, 'contact')}
+              Contact Me
             </button>
           </motion.div>
 

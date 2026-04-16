@@ -5,6 +5,11 @@ import { useTheme } from '../ThemeContext';
 
 const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+import { MessageCircle, X, Send, Bot, User, Loader } from 'lucide-react';
+import { useTheme } from '../ThemeContext';
+
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
 const SYSTEM_CONTEXT = `You are Azzam's portfolio assistant. Answer questions about Azzam Abdul Khadar concisely and helpfully.
 
@@ -131,6 +136,19 @@ export default function ChatBot() {
           ],
           max_tokens: 300,
           temperature: 0.7,
+    setMessages(m => [...m, { role: 'user', text: msg }]);
+    setLoading(true);
+
+    try {
+      if (!API_KEY || API_KEY === 'your_gemini_api_key_here') throw new Error('no_key');
+
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_CONTEXT }] },
+          contents: [{ role: 'user', parts: [{ text: msg }] }],
+          generationConfig: { maxOutputTokens: 300, temperature: 0.7 },
         }),
       });
 
@@ -154,6 +172,18 @@ export default function ChatBot() {
       }
       const botMsgId = messageIdRef.current++;
       setMessages(m => [...m, { role: 'bot', text: fallback, id: botMsgId }]);
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't get a response.";
+      setMessages(m => [...m, { role: 'bot', text: reply }]);
+    } catch (e) {
+      let fallback;
+      if (e.message === 'no_key') {
+        fallback = "⚠️ API key not set. Add your Gemini key to the .env file as VITE_GEMINI_API_KEY, then restart the dev server.";
+      } else if (e.message.includes('API_KEY_INVALID') || e.message.includes('400')) {
+        fallback = "⚠️ Invalid API key. Please check your VITE_GEMINI_API_KEY in the .env file.";
+      } else {
+        fallback = `⚠️ Error: ${e.message}`;
+      }
+      setMessages(m => [...m, { role: 'bot', text: fallback }]);
     } finally {
       setLoading(false);
     }
@@ -292,6 +322,12 @@ export default function ChatBot() {
                   <X size={14} />
                 </button>
               </div>
+              <button onClick={() => setOpen(false)} style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: 'var(--text)', display: 'flex', alignItems: 'center',
+              }}>
+                <X size={18} />
+              </button>
             </div>
 
             {/* Messages */}
@@ -302,6 +338,11 @@ export default function ChatBot() {
               {messages.map((m, i) => (
                 <motion.div
                   key={m.id}
+              padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem',
+            }}>
+              {messages.map((m, i) => (
+                <motion.div
+                  key={i}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   style={{
@@ -311,6 +352,7 @@ export default function ChatBot() {
                     group: 'message',
                   }}
                   className="message-group"
+                  }}
                 >
                   <div style={{
                     width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
@@ -394,6 +436,16 @@ export default function ChatBot() {
                         </button>
                       </div>
                     )}
+                    maxWidth: '78%',
+                    background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-card)',
+                    color: m.role === 'user' ? '#fff' : 'var(--text-h)',
+                    border: m.role === 'bot' ? '1px solid var(--border)' : 'none',
+                    borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                    padding: '0.6rem 0.9rem',
+                    fontSize: '0.875rem', lineHeight: 1.6,
+                    whiteSpace: 'pre-wrap',
+                  }}>
+                    {m.text}
                   </div>
                 </motion.div>
               ))}

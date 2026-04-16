@@ -732,6 +732,22 @@ function Result({ answers, sessionPoints, points, level, nextLevel, onRetry, lev
       >
         Play Again
       </motion.button>
+            <div style={{
+              height: '100%',
+              width: `${Math.min(100, ((points - level.min) / (nextLevel.min - level.min)) * 100)}%`,
+              background: level.color,
+            }} />
+          </div>
+        </div>
+      )}
+
+      <button onClick={onRetry} style={{
+        background: 'var(--gradient)', color: '#fff', border: 'none',
+        borderRadius: 10, padding: '0.85rem', cursor: 'pointer',
+        fontWeight: 700, fontFamily: 'var(--font)', fontSize: '1rem',
+      }}>
+        Play Again
+      </button>
     </div>
   );
 }
