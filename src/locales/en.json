@@ -1,0 +1,287 @@
+{
+  "nav": {
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "experience": "Experience",
+    "education": "Education",
+    "contact": "Contact",
+    "games": "Games"
+  },
+  "hero": {
+    "greeting": "Hello, I'm",
+    "name": "Azzam Abdul Khadar",
+    "subtitle": "Full-stack and Flutter Developer",
+    "description": "I engineer scalable web and mobile applications using MERN stack and Flutter, delivering high-performance solutions with clean architecture and seamless user experience.",
+    "badge": "MERN Stack & Flutter Developer",
+    "viewProjects": "View Projects",
+    "downloadResume": "Download Resume",
+    "contactMe": "Contact Me",
+    "performanceNote": "⚡ Improved application performance by 30% through optimization techniques",
+    "experienceLabel": "Experience",
+    "experienceBadge": "MERN & Flutter"
+  },
+  "about": {
+    "label": "About Me",
+    "heading": "Turning ideas into real products",
+    "para1": "I'm a Full Stack and Flutter Developer from Hyderabad, India, with a B.Tech in Computer Science from VTU. Experienced in delivering production-ready applications with clean architecture, efficient state management, and measurable improvements in speed and usability.",
+    "para2_prefix": "At ",
+    "para2_company": "Atmez AI Solutions",
+    "para2_suffix": ", I build Flutter-based user interfaces for Employee Management and Master Admin applications, crafting responsive, role-based UI components and integrating REST APIs with a MySQL backend.",
+    "para3_prefix": "Previously at ",
+    "para3_company": "Zenexis Solutions",
+    "para3_suffix": ", I engineered 2+ full-stack web applications using the MERN stack, building platforms like TaskHive with 15+ REST APIs and optimizing backend performance by 30%.",
+    "stats": {
+      "projectsBuilt": "Projects Built",
+      "apiEndpoints": "API Endpoints",
+      "fasterQueries": "Faster Queries",
+      "responsiveUI": "Responsive UI"
+    },
+    "highlights": {
+      "frontend": "Frontend",
+      "frontendDesc": "React.js, Next.js, Vite, Tailwind CSS, Bootstrap, Ant Design",
+      "backend": "Backend",
+      "backendDesc": "Node.js, Express.js, Flask, RESTful APIs",
+      "database": "Database",
+      "databaseDesc": "MongoDB, PostgreSQL, MySQL, Redis",
+      "mobileDev": "Mobile Development",
+      "mobileDevDesc": "Flutter, Android Development (Material UI)",
+      "versionControl": "Version Control",
+      "versionControlDesc": "Git, GitHub, GitLab, Bitbucket"
+    }
+  },
+  "skills": {
+    "label": "Skills",
+    "heading": "Tech Stack",
+    "categories": {
+      "programmingLanguages": "Programming Languages",
+      "frontend": "Frontend",
+      "backendDatabase": "Backend & Database",
+      "mobileDevelopment": "Mobile Development",
+      "versionControl": "Version Control",
+      "developmentTools": "Development Tools"
+    }
+  },
+  "projects": {
+    "label": "Projects",
+    "heading": "Things I've Built",
+    "keyHighlights": "Key Highlights",
+    "coreFeatures": "Core Features",
+    "viewMore": "Tap to view details →",
+    "viewAllGithub": "View All on GitHub",
+    "technologiesUsed": "Technologies Used",
+    "ems": {
+      "title": "Employee Management System (EMS)",
+      "date": "Present",
+      "shortDescription": "A comprehensive Flutter-based system for managing employee tasks, attendance, and profiles with REST API integration and optimized performance.",
+      "description": "A comprehensive Flutter-based Employee Management System designed to streamline employee tasks, attendance tracking, and profile management. Built with reusable UI components and integrated with a MySQL backend through REST APIs using Dio, following clean architecture principles for maintainability.",
+      "highlights": [
+        "Structured highly reusable UI components for improved scalability and maintainability",
+        "Integrated RESTful APIs with MySQL backend using Dio for efficient data handling",
+        "Enhanced app performance by reducing unnecessary widget rebuilds",
+        "Optimized rendering techniques resulting in smoother and more responsive user experience",
+        "Implemented clean architecture principles for better code organization"
+      ],
+      "coreFeatures": [
+        "Employee profile management and task assignment",
+        "Attendance tracking with daily and monthly reports",
+        "Role-based dashboards for admins and employees",
+        "Task management and progress monitoring",
+        "Secure authentication and data management",
+        "Provider-based state management for efficient UI updates"
+      ]
+    },
+    "taskhive": {
+      "title": "TaskHive",
+      "date": "06/2025",
+      "shortDescription": "A scalable MERN-based task management platform with lead tracking, scheduling, and secure API-driven workflows.",
+      "description": "A scalable MERN-based task management platform built to help teams and individuals organize tasks, track progress, manage leads, and streamline day-to-day collaboration through secure APIs and responsive workflows.",
+      "highlights": [
+        "Improved API response time by 30% through database query optimization",
+        "Built secure RESTful APIs with authenticated file upload and document handling",
+        "Developed a responsive Ant Design interface for fast and intuitive task workflows",
+        "Optimized MongoDB/Mongoose operations for scalability and consistent performance",
+        "Implemented complete CRUD workflows for task management, lead tracking, and scheduling"
+      ],
+      "coreFeatures": [
+        "Task creation, assignment, and real-time status tracking",
+        "Lead management and progress monitoring",
+        "Secure file attachment and document management",
+        "Advanced filtering, sorting, and search functionality",
+        "User authentication with role-based access control",
+        "Responsive dashboard for activity overview and task monitoring"
+      ]
+    },
+    "bloodhub": {
+      "title": "BloodHub",
+      "date": "04/2025",
+      "shortDescription": "A scalable MERN blood donation platform automating donor-recipient matching and emergency request management.",
+      "description": "A scalable MERN-based blood donation platform that automates donor-recipient matching, manages emergency blood requests, and streamlines coordination through secure, role-based workflows for donors, recipients, and administrators.",
+      "highlights": [
+        "Reduced donor-recipient coordination time by ~30% via automated blood group-based matching",
+        "Built and optimized backend to reliably handle 100+ concurrent request workflows",
+        "Implemented JWT-based authentication with role-based access control (Donor/Recipient/Admin)",
+        "Developed real-time request tracking from creation to fulfillment",
+        "Designed secure RESTful APIs for registration, requests, updates, and status management"
+      ],
+      "coreFeatures": [
+        "Donor registration, profile management & availability tracking",
+        "Intelligent blood group + availability matching engine",
+        "Emergency request creation with live status updates",
+        "Admin dashboard for monitoring users and requests",
+        "Advanced search & filtering capabilities",
+        "Real-time request lifecycle tracking from creation to fulfillment"
+      ]
+    }
+  },
+  "experience": {
+    "label": "Experience",
+    "heading": "Work Experience",
+    "job1": {
+      "position": "App Developer Trainee",
+      "company": "Atmez AI Solutions",
+      "location": "Hyderabad, Telangana",
+      "period": "01/2026 – Present",
+      "responsibilities": [
+        "Built Flutter-based user interfaces for Employee Management System (EMS) and Master Admin applications.",
+        "Crafted responsive, role-based UI components for dashboards, attendance tracking, and employee workflows.",
+        "Integrated REST APIs using HTTP/Dio with a MySQL backend.",
+        "Implemented Provider-based state management for efficient UI updates.",
+        "Optimized rendering performance, improving UI responsiveness by 20–30%.",
+        "Collaborated in Agile teams for feature delivery, debugging, and iterative improvements."
+      ]
+    },
+    "job2": {
+      "position": "Full Stack Trainee",
+      "company": "Zenexis Solutions",
+      "location": "Bidar, Karnataka",
+      "period": "02/2025 – 06/2025",
+      "responsibilities": [
+        "Engineered 2+ full-stack web applications using the MERN stack.",
+        "Built and deployed TaskHive, a task management platform with 15+ REST APIs and real-time data handling.",
+        "Optimized backend performance using Mongoose, reducing response time by 30%.",
+        "Implemented secure file upload functionality using Multer and configured CORS for cross-origin access.",
+        "Developed responsive front-end interfaces using React.js, Vite, Bootstrap, and Ant Design.",
+        "Contributed to Agile workflows including sprint planning, code reviews, and debugging."
+      ]
+    }
+  },
+  "education": {
+    "label": "Education",
+    "heading": "Academic Background",
+    "degree1": {
+      "title": "Bachelor of Technology in Computer Science",
+      "institution": "Visvesvaraya Technological University (VTU)",
+      "location": "Belagavi, Karnataka",
+      "period": "06/2025"
+    },
+    "degree2": {
+      "title": "Pre-University Course",
+      "institution": "Department of Pre-University Education Karnataka",
+      "location": "Bidar, Karnataka",
+      "period": "07/2019 – 07/2021"
+    }
+  },
+  "contact": {
+    "label": "Get In Touch",
+    "heading": "Let's Connect",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "formName": "Your Name",
+    "formEmail": "Your Email",
+    "formMessage": "Your Message",
+    "sendMessage": "Send Message",
+    "sending": "Sending...",
+    "messageSent": "Message Sent!",
+    "successMessage": "Message sent successfully! We'll get back to you soon.",
+    "errorMessage": "Failed to send message. Please try again."
+  },
+  "footer": {
+    "text": "© 2026 Azzam Abdul Khadar. Built with React & Framer Motion."
+  },
+  "feedback": {
+    "label": "Feedback",
+    "heading": "I'm always improving",
+    "subtitle": "Your feedback helps me build a better experience. It only takes a moment.",
+    "rateQuestion": "How was your experience with this portfolio?",
+    "rating1": "Needs work",
+    "rating2": "Could be better",
+    "rating3": "It's okay",
+    "rating4": "Really good!",
+    "rating5": "Loved it!",
+    "commentLabel": "Any suggestions? (optional)",
+    "commentPlaceholder": "What can be improved? What did you like?",
+    "submit": "Submit Feedback",
+    "submitting": "Submitting...",
+    "successMessage": "Thank you for your feedback! 🙏",
+    "errorMessage": "Failed to submit. Please try again."
+  },
+  "games": {
+    "title": "Games",
+    "quitTitle": "Quit Game?",
+    "quitClose": "Your current game progress will be lost. You will return to the game selection screen.",
+    "quitSwitch": "Switching games will end your current session. Are you sure?",
+    "keepPlaying": "Keep Playing",
+    "exitGame": "Exit Game",
+    "dinoRunner": "Dino Runner",
+    "flappyBird": "Flappy Bird",
+    "skillQuiz": "Skill Quiz"
+  },
+  "chatbot": {
+    "title": "Azzam's Assistant",
+    "online": "Online",
+    "clear": "Clear",
+    "welcome": "Hi! I'm Azzam's portfolio assistant 👋 Ask me anything about his skills, projects, or experience!",
+    "placeholder": "Ask me anything...",
+    "suggestions": [
+      "What are your skills?",
+      "Tell me about your projects",
+      "What is your experience?",
+      "How can I contact you?"
+    ]
+  },
+  "startProject": {
+    "label": "Start a Project",
+    "heading": "Have an idea? Let's build it.",
+    "subtitle": "Tell me about your project and I'll get back to you with a plan, timeline, and estimate.",
+    "steps": {
+      "project": "Project",
+      "budget": "Budget & Timeline",
+      "contact": "Contact"
+    },
+    "fields": {
+      "projectType": "Project Type",
+      "projectTitle": "Project Title",
+      "projectOverview": "Project Overview",
+      "coreFeatures": "Core Features",
+      "platform": "Platform Needed",
+      "designStatus": "Design Status",
+      "budgetRange": "Budget Range",
+      "timeline": "Expected Timeline",
+      "referenceLinks": "Reference Links",
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone / WhatsApp",
+      "additionalNotes": "Additional Notes"
+    },
+    "placeholders": {
+      "projectTitle": "e.g. TaskHive, BloodHub, My Startup App",
+      "projectOverview": "Briefly describe what you want to build and the problem it solves...",
+      "coreFeatures": "List the key features you need (e.g. user auth, dashboard, payments, notifications)...",
+      "referenceLinks": "Any existing products, competitors, or design references (URLs)...",
+      "fullName": "Your full name",
+      "email": "your@email.com",
+      "phone": "+91 XXXXX XXXXX or +1 XXX XXX XXXX",
+      "additionalNotes": "Anything else you'd like to share — deadlines, preferences, tech stack..."
+    },
+    "next": "Next",
+    "back": "Back",
+    "submit": "Submit Project",
+    "submitting": "Submitting...",
+    "successMessage": "Project inquiry sent! I'll review your details and get back to you soon.",
+    "errorMessage": "Failed to submit. Please try again or email directly."
+  }
+}

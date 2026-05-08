@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Gamepad2, Brain, AlertTriangle } from 'lucide-react';
+import { X, Gamepad2, Brain, AlertTriangle, Bird } from 'lucide-react';
 import { useTheme } from '../../ThemeContext';
+import { useTranslation } from 'react-i18next';
 import DinoGame from './DinoGame';
 import QuizGame from './QuizGame';
+import FlappyBird from './FlappyBird';
 
-function QuitConfirm({ message, onConfirm, onCancel }) {
+function QuitConfirm({ message, onConfirm, onCancel, t }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -31,7 +33,7 @@ function QuitConfirm({ message, onConfirm, onCancel }) {
       >
         <AlertTriangle size={36} color="#f59e0b" style={{ marginBottom: '0.75rem' }} />
         <h3 style={{ color: 'var(--text-h)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-          Quit Game?
+          {t('games.quitTitle')}
         </h3>
         <p style={{ color: 'var(--text)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.6 }}>
           {message}
@@ -45,7 +47,7 @@ function QuitConfirm({ message, onConfirm, onCancel }) {
               color: 'var(--text-h)', fontFamily: 'var(--font)', fontSize: '0.9rem', fontWeight: 500,
             }}
           >
-            Keep Playing
+            {t('games.keepPlaying')}
           </button>
           <button
             onClick={onConfirm}
@@ -55,7 +57,7 @@ function QuitConfirm({ message, onConfirm, onCancel }) {
               color: '#fff', fontFamily: 'var(--font)', fontSize: '0.9rem', fontWeight: 700,
             }}
           >
-            Exit Game
+            {t('games.exitGame')}
           </button>
         </div>
       </motion.div>
@@ -65,45 +67,44 @@ function QuitConfirm({ message, onConfirm, onCancel }) {
 
 export default function GamesModal({ onClose }) {
   const [tab, setTab] = useState('dino');
-  const [confirm, setConfirm] = useState(null); // null | 'tab:{id}' | 'close'
+  const [confirm, setConfirm] = useState(null);
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
-  const dinoRef = useRef(null);       // ref to DinoGame imperative handle
-  const dinoRunning = useRef(false);  // is dino actively running
-  const quizPlaying = useRef(false);  // is quiz in active question phase
+  const dinoRef = useRef(null);
+  const flappyRef = useRef(null);
+  const dinoRunning = useRef(false);
+  const flappyRunning = useRef(false);
+  const quizPlaying = useRef(false);
 
   const isDinoRunning = () => tab === 'dino' && dinoRunning.current;
+  const isFlappyRunning = () => tab === 'flappy' && flappyRunning.current;
   const isQuizPlaying = () => tab === 'quiz' && quizPlaying.current;
 
   const showConfirm = (target) => {
-    // pause dino if it's running
     if (isDinoRunning()) dinoRef.current?.pause();
+    if (isFlappyRunning()) flappyRef.current?.pause();
     setConfirm(target);
   };
 
   const requestTabChange = (id) => {
     if (id === tab) return;
-    if (isDinoRunning() || isQuizPlaying()) { showConfirm(`tab:${id}`); return; }
+    if (isDinoRunning() || isFlappyRunning() || isQuizPlaying()) { showConfirm(`tab:${id}`); return; }
     setTab(id);
   };
 
   const requestClose = () => {
-    if (isDinoRunning() || isQuizPlaying()) { showConfirm('close'); return; }
+    if (isDinoRunning() || isFlappyRunning() || isQuizPlaying()) { showConfirm('close'); return; }
     onClose();
   };
 
   const handleConfirm = () => {
-    // force-stop dino regardless
     dinoRef.current?.forceStop();
+    flappyRef.current?.forceStop();
     dinoRunning.current = false;
+    flappyRunning.current = false;
     quizPlaying.current = false;
 
-    if (confirm === 'close') { 
-      // Go back to game selection screen (don't close modal)
-      setConfirm(null); 
-      return; 
-    }
-    if (confirm === 'close') { setConfirm(null); onClose(); return; }
     if (confirm?.startsWith('tab:')) {
       setTab(confirm.split(':')[1]);
     }
@@ -112,9 +113,11 @@ export default function GamesModal({ onClose }) {
 
   const handleCancel = () => {
     setConfirm(null);
-    // resume dino with 3s countdown if it was running
     if (tab === 'dino' && dinoRunning.current) {
       dinoRef.current?.resume();
+    }
+    if (tab === 'flappy' && flappyRunning.current) {
+      flappyRef.current?.resume();
     }
   };
 
@@ -130,13 +133,14 @@ export default function GamesModal({ onClose }) {
   }, [confirm, tab]);
 
   const tabs = [
-    { id: 'dino', label: 'Dino Runner', icon: <Gamepad2 size={16} /> },
-    { id: 'quiz', label: 'Skill Quiz', icon: <Brain size={16} /> },
+    { id: 'dino', label: t('games.dinoRunner'), icon: <Gamepad2 size={16} /> },
+    { id: 'flappy', label: t('games.flappyBird'), icon: <Bird size={16} /> },
+    { id: 'quiz', label: t('games.skillQuiz'), icon: <Brain size={16} /> },
   ];
 
   const confirmMessage = confirm === 'close'
-    ? 'Your current game progress will be lost. You will return to the game selection screen.'
-    : 'Switching games will end your current session. Are you sure?';
+    ? t('games.quitClose')
+    : t('games.quitSwitch');
 
   return createPortal(
     <AnimatePresence>
@@ -159,6 +163,7 @@ export default function GamesModal({ onClose }) {
           exit={{ scale: 0.92, opacity: 0, y: 20 }}
           transition={{ type: 'spring', stiffness: 300, damping: 28 }}
           onClick={e => e.stopPropagation()}
+          dir="ltr"
           style={{
             background: 'var(--bg-secondary)', border: '1px solid var(--border)',
             borderRadius: 20, width: '100%', maxWidth: 860,
@@ -175,17 +180,17 @@ export default function GamesModal({ onClose }) {
             background: 'var(--bg-secondary)',
           }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              {tabs.map(t => (
-                <button key={t.id} onClick={() => requestTabChange(t.id)} style={{
+              {tabs.map(tabItem => (
+                <button key={tabItem.id} onClick={() => requestTabChange(tabItem.id)} style={{
                   display: 'flex', alignItems: 'center', gap: '0.4rem',
-                  background: tab === t.id ? 'var(--accent-glow)' : 'transparent',
-                  border: `1px solid ${tab === t.id ? 'var(--accent)' : 'var(--border)'}`,
-                  color: tab === t.id ? 'var(--accent)' : 'var(--text)',
+                  background: tab === tabItem.id ? 'var(--accent-glow)' : 'transparent',
+                  border: `1px solid ${tab === tabItem.id ? 'var(--accent)' : 'var(--border)'}`,
+                  color: tab === tabItem.id ? 'var(--accent)' : 'var(--text)',
                   borderRadius: 8, padding: '0.4rem 0.9rem', cursor: 'pointer',
-                  fontFamily: 'var(--font)', fontSize: '0.85rem', fontWeight: tab === t.id ? 600 : 400,
+                  fontFamily: 'var(--font)', fontSize: '0.85rem', fontWeight: tab === tabItem.id ? 600 : 400,
                   transition: 'all 0.2s',
                 }}>
-                  {t.icon} {t.label}
+                  {tabItem.icon} {tabItem.label}
                 </button>
               ))}
             </div>
@@ -200,15 +205,9 @@ export default function GamesModal({ onClose }) {
 
           {/* Content */}
           <div style={{ padding: '1.5rem', overflowY: 'auto', overscrollBehavior: 'contain', flex: 1, background: 'var(--bg-secondary)' }}>
-            {tab === 'dino'
-              ? <DinoGame
-                  ref={dinoRef}
-                  onRunningChange={v => { dinoRunning.current = v; }}
-                />
-              : <QuizGame
-                  onPlayingChange={v => { quizPlaying.current = v; }}
-                />
-            }
+            {tab === 'dino' && <DinoGame ref={dinoRef} onRunningChange={v => { dinoRunning.current = v; }} />}
+            {tab === 'flappy' && <FlappyBird ref={flappyRef} onRunningChange={v => { flappyRunning.current = v; }} />}
+            {tab === 'quiz' && <QuizGame onPlayingChange={v => { quizPlaying.current = v; }} />}
           </div>
 
           {/* Quit confirmation overlay */}
@@ -218,6 +217,7 @@ export default function GamesModal({ onClose }) {
                 message={confirmMessage}
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
+                t={t}
               />
             )}
           </AnimatePresence>

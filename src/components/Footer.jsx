@@ -1,11 +1,8 @@
 import { Code2, Link, Mail } from 'lucide-react';
-import { useLanguage } from '../LanguageContext';
-import { getTranslation } from '../translations';
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
-  const { language } = useLanguage();
-
-export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer style={{
       borderTop: '1px solid var(--border)',
@@ -18,12 +15,12 @@ export default function Footer() {
           &lt;Azzam /&gt;
         </span>
         <p style={{ color: 'var(--text)', fontSize: '0.85rem' }}>
-          {getTranslation(language, 'footerText')}
+          {t('footer.text')}
         </p>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           {[
             { icon: <Code2 size={18} />, href: 'https://github.com/Azzam-Abdul-Khadar' },
-            { icon: <Link size={18} />, href: 'https://www.linkedin.com/in/azzam-abdul-khadar-a6656729b' },
+            { icon: <Link size={18} />, href: 'https://linkedin.com/in/azzam-abdul-khadar' },
             { icon: <Mail size={18} />, href: 'mailto:azzamcse@gmail.com' },
           ].map(({ icon, href }, i) => (
             <a key={i} href={href} target="_blank" rel="noreferrer" style={{

@@ -6,6 +6,21 @@
   box-sizing: border-box;
 }
 
+/* Auto-detect text direction for form inputs (fixes RTL languages like Urdu) */
+input[type="text"],
+input[type="search"],
+textarea {
+  direction: auto;
+  unicode-bidi: plaintext;
+}
+
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="number"] {
+  direction: ltr;
+}
+
 :root,
 [data-theme="default"] {
   --bg: #0a0a0f;

@@ -1,28 +1,28 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Code2, Server, Database, GitBranch } from 'lucide-react';
-import { useLanguage } from '../LanguageContext';
-import { getTranslation } from '../translations';
-
-const stats = [
-  { label: 'Projects Built', value: '3+' },
-  { label: 'API Endpoints', value: '15+' },
-  { label: 'Faster Queries', value: '30%' },
-  { label: 'Responsive UI', value: '100%' },
-];
-
-const highlights = [
-  { icon: <Code2 size={20} />, title: 'Frontend', desc: 'React.js, Vite, Ant Design, Bootstrap, HTML/CSS' },
-  { icon: <Server size={20} />, title: 'Backend', desc: 'Node.js, Express.js, RESTful APIs' },
-  { icon: <Database size={20} />, title: 'Database', desc: 'MongoDB, Mongoose, optimized queries' },
-  { icon: <GitBranch size={20} />, title: 'Version Control', desc: 'Git, GitHub, GitLab, Bitbucket' },
-];
+import { Code2, Server, Database, GitBranch, Smartphone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function About() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
-  const { language } = useLanguage();
+  const { t } = useTranslation();
+
+  const stats = [
+    { label: t('about.stats.projectsBuilt'), value: '3+' },
+    { label: t('about.stats.apiEndpoints'), value: '15+' },
+    { label: t('about.stats.fasterQueries'), value: '30%' },
+    { label: t('about.stats.responsiveUI'), value: '100%' },
+  ];
+
+  const highlights = [
+    { icon: <Code2 size={20} />, title: t('about.highlights.frontend'), desc: t('about.highlights.frontendDesc') },
+    { icon: <Server size={20} />, title: t('about.highlights.backend'), desc: t('about.highlights.backendDesc') },
+    { icon: <Database size={20} />, title: t('about.highlights.database'), desc: t('about.highlights.databaseDesc') },
+    { icon: <Smartphone size={20} />, title: t('about.highlights.mobileDev'), desc: t('about.highlights.mobileDevDesc') },
+    { icon: <GitBranch size={20} />, title: t('about.highlights.versionControl'), desc: t('about.highlights.versionControlDesc') },
+  ];
 
   return (
     <section id="about" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg-secondary)' }}>
@@ -32,32 +32,21 @@ export default function About() {
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7 }}
       >
-        <SectionLabel>{getTranslation(language, 'aboutTitle')}</SectionLabel>
+        <SectionLabel>{t('about.label')}</SectionLabel>
         <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '3rem' }}>
-          {getTranslation(language, 'aboutDescription')}
-        <SectionLabel>About Me</SectionLabel>
-        <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '3rem' }}>
-          Turning ideas into{' '}
-          <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            real products
-          </span>
+          {t('about.heading')}
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '3rem', alignItems: 'start' }}>
           <div>
             <p style={{ color: 'var(--text)', lineHeight: 1.9, marginBottom: '1.25rem', fontSize: '1rem' }}>
-              I'm a Full Stack Developer from Karnataka, India, with a B.Tech in Computer Science from VTU.
-              My journey started with curiosity about how the web works and evolved into building complete,
-              production-ready applications.
+              {t('about.para1')}
             </p>
             <p style={{ color: 'var(--text)', lineHeight: 1.9, marginBottom: '1.25rem', fontSize: '1rem' }}>
-              During my internship at <span style={{ color: 'var(--accent-2)', fontWeight: 500 }}>Zenexis Solutions Pvt Ltd</span>,
-              I collaborated on two full-stack web applications, sharpening my skills in responsive UI design,
-              RESTful API integration, and Agile development workflows.
+              {t('about.para2_prefix')}<span style={{ color: 'var(--accent-2)', fontWeight: 500 }}>{t('about.para2_company')}</span>{t('about.para2_suffix')}
             </p>
             <p style={{ color: 'var(--text)', lineHeight: 1.9, fontSize: '1rem' }}>
-              I thrive on solving real-world problems — from automating blood donation coordination to
-              building task management systems with optimized backend performance.
+              {t('about.para3_prefix')}<span style={{ color: 'var(--accent-2)', fontWeight: 500 }}>{t('about.para3_company')}</span>{t('about.para3_suffix')}
             </p>
 
             {/* Stats */}

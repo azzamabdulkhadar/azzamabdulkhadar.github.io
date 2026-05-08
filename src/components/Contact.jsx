@@ -3,8 +3,7 @@ import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { Mail, Phone, Code2, Link, Send, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
 import { SectionLabel } from './About';
-import { useLanguage } from '../LanguageContext';
-import { getTranslation } from '../translations';
+import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS (you'll need to add your public key)
@@ -15,10 +14,13 @@ const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 export default function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
-  const { language } = useLanguage();
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState(null); // null | 'loading' | 'success' | 'error'
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 
   // Initialize EmailJS once
   useEffect(() => {
@@ -27,6 +29,11 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isValidEmail(form.email)) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
     setLoading(true);
     setStatus('loading');
 
@@ -60,11 +67,11 @@ export default function Contact() {
   };
 
   const contacts = [
-    { icon: <Mail size={18} />, label: 'Email', value: 'azzamcse@gmail.com', href: 'mailto:azzamcse@gmail.com' },
-    { icon: <Phone size={18} />, label: 'Phone', value: '+91-7349701430', href: 'tel:+917349701430' },
-    { icon: <MapPin size={18} />, label: 'Location', value: 'Karnataka, India', href: null },
-    { icon: <Code2 size={18} />, label: 'GitHub', value: 'Azzam-Abdul-Khadar', href: 'https://github.com/Azzam-Abdul-Khadar' },
-    { icon: <Link size={18} />, label: 'LinkedIn', value: 'azzam-abdul-khadar', href: 'https://www.linkedin.com/in/azzam-abdul-khadar-a6656729b' },
+    { icon: <Mail size={18} />, label: t('contact.email'), value: 'azzamcse@gmail.com', href: 'mailto:azzamcse@gmail.com' },
+    { icon: <Phone size={18} />, label: t('contact.phone'), value: '+91-7349701430', href: 'tel:+917349701430' },
+    { icon: <MapPin size={18} />, label: t('contact.location'), value: 'Hyderabad, Telangana', href: null },
+    { icon: <Code2 size={18} />, label: t('contact.github'), value: 'Azzam-Abdul-Khadar', href: 'https://github.com/Azzam-Abdul-Khadar' },
+    { icon: <Link size={18} />, label: t('contact.linkedin'), value: 'azzam-abdul-khadar', href: 'https://linkedin.com/in/azzam-abdul-khadar' },
   ];
 
   const inputStyle = {
@@ -86,20 +93,10 @@ export default function Contact() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          <SectionLabel>{getTranslation(language, 'contactTitle')}</SectionLabel>
+          <SectionLabel>{t('contact.label')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            {getTranslation(language, 'contactDescription')}
+            {t('contact.heading')}
           </h2>
-          <SectionLabel>Contact</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            Let's{' '}
-            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Connect
-            </span>
-          </h2>
-          <p style={{ color: 'var(--text)', marginTop: '0.75rem', maxWidth: '480px', margin: '0.75rem auto 0' }}>
-            Open to new opportunities, collaborations, or just a good tech conversation.
-          </p>
         </motion.div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
@@ -131,13 +128,13 @@ export default function Contact() {
                   <div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text)', marginBottom: '0.1rem' }}>{label}</div>
                     {href ? (
-                      <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
-                        style={{ color: 'var(--text-h)', fontSize: '0.9rem', fontWeight: 500, transition: 'color 0.2s' }}
+                      <a dir="ltr" href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
+                        style={{ color: 'var(--text-h)', fontSize: '0.9rem', fontWeight: 500, transition: 'color 0.2s', display: 'inline-block' }}
                         onMouseEnter={e => e.target.style.color = 'var(--accent)'}
                         onMouseLeave={e => e.target.style.color = 'var(--text-h)'}
                       >{value}</a>
                     ) : (
-                      <span style={{ color: 'var(--text-h)', fontSize: '0.9rem', fontWeight: 500 }}>{value}</span>
+                      <span dir="ltr" style={{ color: 'var(--text-h)', fontSize: '0.9rem', fontWeight: 500, display: 'inline-block' }}>{value}</span>
                     )}
                   </div>
                 </div>
@@ -171,7 +168,7 @@ export default function Contact() {
                   }}
                 >
                   <CheckCircle size={18} />
-                  <span>Message sent successfully! We'll get back to you soon.</span>
+                  <span>{t('contact.successMessage')}</span>
                 </motion.div>
               )}
 
@@ -189,13 +186,12 @@ export default function Contact() {
                   }}
                 >
                   <AlertCircle size={18} />
-                  <span>Failed to send message. Please try again.</span>
+                  <span>{t('contact.errorMessage')}</span>
                 </motion.div>
               )}
 
-            }}>
               <input
-                type="text" placeholder="Your Name" required
+                type="text" placeholder={t('contact.formName')} required
                 value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
                 style={inputStyle}
                 onFocus={e => e.target.style.borderColor = 'var(--accent)'}
@@ -203,17 +199,18 @@ export default function Contact() {
                 disabled={loading}
               />
               <input
-                type="email" placeholder="Your Email" required
-                value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                style={inputStyle}
-                onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-                onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                type="email" placeholder={t('contact.formEmail')} required
+                value={form.email} onChange={e => { setForm({ ...form, email: e.target.value }); if (isValidEmail(e.target.value)) setEmailError(false); }}
+                style={{ ...inputStyle, border: emailError ? '1px solid #ef4444' : inputStyle.border }}
+                onFocus={e => { if (!emailError) e.target.style.borderColor = 'var(--accent)'; }}
+                onBlur={e => { if (!emailError) e.target.style.borderColor = 'var(--border)'; }}
                 disabled={loading}
               />
               <textarea
-                placeholder="Your Message" required rows={5}
+                dir="auto"
+                placeholder={t('contact.formMessage')} required rows={5}
                 value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}
-                style={{ ...inputStyle, resize: 'vertical', minHeight: '120px' }}
+                style={{ ...inputStyle, resize: 'none', minHeight: '120px' }}
                 onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                 onBlur={e => e.target.style.borderColor = 'var(--border)'}
                 disabled={loading}
@@ -233,32 +230,19 @@ export default function Contact() {
                 {loading ? (
                   <>
                     <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>⏳</motion.span>
-                    Sending...
+                    {t('contact.sending')}
                   </>
                 ) : status === 'success' ? (
                   <>
                     <CheckCircle size={16} />
-                    Message Sent!
+                    {t('contact.messageSent')}
                   </>
                 ) : (
                   <>
                     <Send size={16} />
-                    {getTranslation(language, 'sendMessage')}
+                    {t('contact.sendMessage')}
                   </>
                 )}
-              />
-              <button type="submit" style={{
-                background: sent ? '#10b981' : 'var(--gradient)',
-                color: '#fff', border: 'none', borderRadius: '10px',
-                padding: '0.85rem', cursor: 'pointer', fontWeight: 600,
-                fontSize: '0.95rem', fontFamily: 'var(--font)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                transition: 'opacity 0.2s, transform 0.2s',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
-              >
-                {sent ? '✓ Opening mail client...' : <><Send size={16} /> Send Message</>}
               </button>
             </form>
           </motion.div>

@@ -2,9 +2,15 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, Palette, Gamepad2, Globe } from 'lucide-react';
 import { useTheme } from '../ThemeContext';
-import { useLanguage, LANGUAGES } from '../LanguageContext';
-import { getTranslation } from '../translations';
+import { useTranslation } from 'react-i18next';
 import GamesModal from './games/GamesModal';
+
+const LANGUAGES = {
+  en: { code: 'en', name: 'English', flag: '🇬🇧' },
+  hi: { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
+  kn: { code: 'kn', name: 'ಕನ್ನಡ', flag: '🇮🇳' },
+  ur: { code: 'ur', name: 'اردو', flag: '🇵🇰' },
+};
 
 const themeOptions = [
   { value: 'default', label: 'Default', icon: Palette },
@@ -13,7 +19,6 @@ const themeOptions = [
 ];
 
 const navIds = ['about', 'skills', 'projects', 'experience', 'education', 'contact'];
-const links = ['About', 'Skills', 'Projects', 'Experience', 'Education', 'Contact'];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -22,16 +27,11 @@ export default function Navbar() {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const { language, setLanguage } = useLanguage();
+  const { t, i18n } = useTranslation();
 
-  const links = [
-    getTranslation(language, 'about'),
-    getTranslation(language, 'skills'),
-    getTranslation(language, 'projects'),
-    getTranslation(language, 'experience'),
-    getTranslation(language, 'education'),
-    getTranslation(language, 'contact'),
-  ];
+  const language = i18n.language;
+
+  const links = navIds.map(id => ({ id, label: t(`nav.${id}`) }));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -39,12 +39,14 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleNav = (index) => {
-    setOpen(false);
-    document.getElementById(navIds[index])?.scrollIntoView({ behavior: 'smooth' });
   const handleNav = (id) => {
     setOpen(false);
-    document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+    setLanguageOpen(false);
   };
 
   return (
@@ -69,19 +71,16 @@ export default function Navbar() {
 
       {/* Desktop links */}
       <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none', margin: 0 }} className="nav-desktop">
-        {links.map((l, idx) => (
-          <li key={l}>
-            <button onClick={() => handleNav(idx)} style={{
-        {links.map(l => (
-          <li key={l}>
-            <button onClick={() => handleNav(l)} style={{
+        {links.map(({ id, label }) => (
+          <li key={id}>
+            <button onClick={() => handleNav(id)} style={{
               background: 'none', border: 'none', cursor: 'pointer',
               color: 'var(--text)', fontSize: '0.9rem', fontFamily: 'var(--font)',
               transition: 'color 0.2s',
             }}
               onMouseEnter={e => e.target.style.color = 'var(--accent)'}
               onMouseLeave={e => e.target.style.color = 'var(--text)'}
-            >{l}</button>
+            >{label}</button>
           </li>
         ))}
       </ul>
@@ -102,7 +101,7 @@ export default function Navbar() {
           onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-h)'; }}
         >
           <Gamepad2 size={15} />
-          <span className="theme-label">Games</span>
+          <span className="theme-label">{t('nav.games')}</span>
         </button>
 
         {/* Language button */}
@@ -116,11 +115,11 @@ export default function Navbar() {
             fontSize: '0.8rem', fontFamily: 'var(--font)',
             transition: 'border-color 0.2s, color 0.2s',
           }}
-          onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-          onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-h)'; }}
         >
           <Globe size={15} />
-          <span className="theme-label">{LANGUAGES[language].flag}</span>
+          <span className="theme-label">{LANGUAGES[language]?.flag ?? ''}</span>
         </button>
 
         <AnimatePresence>
@@ -139,7 +138,7 @@ export default function Navbar() {
               {Object.values(LANGUAGES).map(({ code, name, flag }) => (
                 <button
                   key={code}
-                  onClick={() => { setLanguage(code); setLanguageOpen(false); }}
+                  onClick={() => changeLanguage(code)}
                   style={{
                     width: '100%', background: language === code ? 'var(--accent-glow)' : 'none',
                     border: 'none', cursor: 'pointer', color: language === code ? 'var(--accent)' : 'var(--text)',
@@ -168,11 +167,11 @@ export default function Navbar() {
             fontSize: '0.8rem', fontFamily: 'var(--font)',
             transition: 'border-color 0.2s, color 0.2s',
           }}
-          onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-          onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-h)'; }}
         >
-          {(() => { const Icon = themeOptions.find(t => t.value === theme)?.icon || Palette; return <Icon size={15} />; })()}
-          <span className="theme-label">{themeOptions.find(t => t.value === theme)?.label}</span>
+          {(() => { const Icon = themeOptions.find(o => o.value === theme)?.icon || Palette; return <Icon size={15} />; })()}
+          <span className="theme-label">{themeOptions.find(o => o.value === theme)?.label}</span>
         </button>
 
         <AnimatePresence>
@@ -232,14 +231,12 @@ export default function Navbar() {
               display: 'flex', flexDirection: 'column', gap: '1rem',
             }}
           >
-            {links.map((l, idx) => (
-              <button key={l} onClick={() => handleNav(idx)} style={{
-            {links.map(l => (
-              <button key={l} onClick={() => handleNav(l)} style={{
+            {links.map(({ id, label }) => (
+              <button key={id} onClick={() => handleNav(id)} style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 color: 'var(--text-h)', fontSize: '1rem', fontFamily: 'var(--font)',
                 textAlign: 'left', padding: '0.25rem 0',
-              }}>{l}</button>
+              }}>{label}</button>
             ))}
           </motion.div>
         )}

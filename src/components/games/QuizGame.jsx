@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { questions, POINTS, getLevel, LEVELS } from './quizData';
 import { generateQuizQuestions } from '../../services/quizGenerator';
-import { CheckCircle, XCircle, Trophy, RotateCcw, Filter, Info, X, Zap, Sparkles, Star } from 'lucide-react';
+import { CheckCircle, XCircle, Trophy, RotateCcw, Filter, Info, X, Zap } from 'lucide-react';
 
 const TOTAL_Q = 10;
 
@@ -371,7 +371,7 @@ function Confetti() {
 function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, showInfo, setShowInfo, useAI, setUseAI, loading, error }) {
   const topics = ['All', 'MERN', 'Android'];
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 560, margin: '0 auto', width: '100%', position: 'relative' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: 560, margin: '0 auto', width: '100%', position: 'relative' }}>
 
       {/* Info panel overlay */}
       <AnimatePresence>
@@ -449,9 +449,9 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
         >
           <Info size={14} />
         </button>
-        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🧠</div>
-        <h3 style={{ color: 'var(--text-h)', fontSize: '1.3rem', fontWeight: 700 }}>Test Your Skills</h3>
-        <p style={{ color: 'var(--text)', fontSize: '0.9rem', marginTop: '0.4rem' }}>
+        <div style={{ fontSize: '1.6rem', marginBottom: '0.2rem' }}>🧠</div>
+        <h3 style={{ color: 'var(--text-h)', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Skills</h3>
+        <p style={{ color: 'var(--text)', fontSize: '0.8rem', marginTop: '0.2rem' }}>
           Answer {10} questions and earn points to level up
         </p>
       </div>
@@ -459,7 +459,7 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
       {/* Level card */}
       <div style={{
         background: 'var(--bg-card)', border: `1px solid ${level.color}40`,
-        borderRadius: 14, padding: '1.25rem',
+        borderRadius: 14, padding: '0.75rem',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem',
       }}>
         <div>
@@ -732,22 +732,6 @@ function Result({ answers, sessionPoints, points, level, nextLevel, onRetry, lev
       >
         Play Again
       </motion.button>
-            <div style={{
-              height: '100%',
-              width: `${Math.min(100, ((points - level.min) / (nextLevel.min - level.min)) * 100)}%`,
-              background: level.color,
-            }} />
-          </div>
-        </div>
-      )}
-
-      <button onClick={onRetry} style={{
-        background: 'var(--gradient)', color: '#fff', border: 'none',
-        borderRadius: 10, padding: '0.85rem', cursor: 'pointer',
-        fontWeight: 700, fontFamily: 'var(--font)', fontSize: '1rem',
-      }}>
-        Play Again
-      </button>
     </div>
   );
 }

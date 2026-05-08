@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
 import { Code2, Link, Mail, Download, ArrowDown } from 'lucide-react';
 import heroImg from '../assets/profile.png';
-import { useLanguage } from '../LanguageContext';
-import { getTranslation } from '../translations';
+import { useTranslation } from 'react-i18next';
 
 export default function Hero() {
-  const { language } = useLanguage();
+  const { t } = useTranslation();
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
@@ -47,8 +46,7 @@ export default function Hero() {
             transition={{ delay: 0.2 }}
             style={{ fontFamily: 'var(--mono)', color: 'var(--accent-2)', fontSize: '0.9rem', marginBottom: '1rem' }}
           >
-            👋 {getTranslation(language, 'heroTitle')}
-            👋 Hello, I'm
+            👋 {t('hero.greeting')}
           </motion.p>
 
           <motion.h1
@@ -75,7 +73,7 @@ export default function Hero() {
           >
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 2s infinite' }} />
             <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85rem', color: 'var(--text-h)' }}>
-              {getTranslation(language, 'heroSubtitle')}
+              {t('hero.subtitle')}
             </span>
           </motion.div>
 
@@ -83,42 +81,74 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            style={{ fontSize: '1.05rem', color: 'var(--text)', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '520px' }}
+            style={{ fontSize: '0.92rem', color: 'var(--text)', lineHeight: 1.7, marginBottom: '1rem', maxWidth: '520px' }}
           >
-            {getTranslation(language, 'heroDescription')}
-            Results-driven Full Stack Developer building scalable web applications with the MERN stack.
-            Passionate about clean code, responsive UIs, and real-world problem solving.
+            {t('hero.description')}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.65 }}
+            style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}
+          >
+            {['MongoDB', 'Express', 'React', 'Node.js', 'Flutter', 'MySQL'].map(tech => (
+              <span key={tech} style={{
+                background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.25)',
+                color: 'var(--accent)', borderRadius: '6px', padding: '0.2rem 0.6rem',
+                fontSize: '0.75rem', fontFamily: 'var(--mono)', fontWeight: 500,
+              }}>{tech}</span>
+            ))}
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            style={{ fontSize: '0.82rem', color: 'var(--accent-2)', fontFamily: 'var(--mono)', marginBottom: '1.5rem' }}
+          >
+            {t('hero.performanceNote')}
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}
+            transition={{ delay: 0.75 }}
+            style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}
           >
             <button onClick={() => scrollTo('projects')} style={{
               background: 'var(--gradient)', color: '#fff', border: 'none',
-              padding: '0.75rem 1.75rem', borderRadius: '8px', cursor: 'pointer',
-              fontWeight: 600, fontSize: '0.95rem', fontFamily: 'var(--font)',
+              padding: '0.65rem 1.4rem', borderRadius: '8px', cursor: 'pointer',
+              fontWeight: 600, fontSize: '0.88rem', fontFamily: 'var(--font)',
               transition: 'opacity 0.2s, transform 0.2s',
             }}
               onMouseEnter={e => { e.target.style.opacity = '0.85'; e.target.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }}
             >
-              {getTranslation(language, 'projects')}
-              View Projects
+              {t('hero.viewProjects')}
             </button>
-            <button onClick={() => scrollTo('contact')} style={{
+            <a href="/resume.pdf" download="Azzam_Resume.pdf" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
               background: 'transparent', color: 'var(--text-h)',
-              border: '1px solid var(--border)', padding: '0.75rem 1.75rem',
-              borderRadius: '8px', cursor: 'pointer', fontWeight: 500,
-              fontSize: '0.95rem', fontFamily: 'var(--font)', transition: 'border-color 0.2s, transform 0.2s',
+              border: '1px solid var(--border)', padding: '0.65rem 1.4rem',
+              borderRadius: '8px', fontWeight: 500, textDecoration: 'none',
+              fontSize: '0.88rem', fontFamily: 'var(--font)', transition: 'border-color 0.2s, transform 0.2s',
             }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
-              {getTranslation(language, 'contact')}
-              Contact Me
+              <Download size={15} /> {t('hero.downloadResume')}
+            </a>
+            <button onClick={() => scrollTo('contact')} style={{
+              background: 'transparent', color: 'var(--text-h)',
+              border: '1px solid var(--border)', padding: '0.65rem 1.4rem',
+              borderRadius: '8px', cursor: 'pointer', fontWeight: 500,
+              fontSize: '0.88rem', fontFamily: 'var(--font)', transition: 'border-color 0.2s, transform 0.2s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            >
+              {t('hero.contactMe')}
             </button>
           </motion.div>
 
@@ -130,7 +160,7 @@ export default function Hero() {
           >
             {[
               { icon: <Code2 size={20} />, href: 'https://github.com/Azzam-Abdul-Khadar' },
-              { icon: <Link size={20} />, href: 'https://www.linkedin.com/in/azzam-abdul-khadar-a6656729b' },
+              { icon: <Link size={20} />, href: 'https://linkedin.com/in/azzam-abdul-khadar' },
               { icon: <Mail size={20} />, href: 'mailto:azzamcse@gmail.com' },
             ].map(({ icon, href }, i) => (
               <a key={i} href={href} target="_blank" rel="noreferrer" style={{
@@ -183,8 +213,8 @@ export default function Hero() {
             >
               <span style={{ fontSize: '1.2rem' }}>⚡</span>
               <div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text)', lineHeight: 1 }}>Experience</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-h)' }}>MERN Stack</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text)', lineHeight: 1 }}>{t('hero.experienceLabel')}</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-h)' }}>{t('hero.experienceBadge')}</div>
               </div>
             </motion.div>
           </div>

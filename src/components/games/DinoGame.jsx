@@ -158,7 +158,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
 
   const charH = CHARACTERS[charIdx].h;
   const state = useRef({
-    running: false, over: false,
+    running: false, over: false, started: false,
     dinoY: GROUND - charH, dinoVY: 0, onGround: true,
     obstacles: [], score: 0, speed: 5, frame: 0,
     nextObstacle: 90, legFrame: 0,
@@ -207,18 +207,32 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
   const start = () => {
     clearInterval(countdownRef.current);
     clearTimeout(toastTimerRef.current);
-    setCountdown(null);
     setToast(null);
     pausedRef.current = false;
     reachedRef.current = new Set();
     const ch = CHARACTERS[charIdxRef.current];
+    // reset state but keep running: false until countdown finishes
     Object.assign(state.current, {
-      running: true, over: false,
+      running: false, over: false, started: true,
       dinoY: GROUND - ch.h, dinoVY: 0, onGround: true,
       obstacles: [], score: 0, speed: 5, frame: 0, nextObstacle: 90, legFrame: 0,
     });
-    onRunningChange?.(true);
     setDisplay({ score: 0, over: false, started: true, diff: 'NORMAL' });
+    onRunningChange?.(false);
+
+    let count = 3;
+    setCountdown(count);
+    countdownRef.current = setInterval(() => {
+      count--;
+      if (count <= 0) {
+        clearInterval(countdownRef.current);
+        setCountdown(null);
+        state.current.running = true;
+        onRunningChange?.(true);
+      } else {
+        setCountdown(count);
+      }
+    }, 1000);
   };
 
   const selectChar = (i) => {
@@ -238,7 +252,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
         e.preventDefault();
         const s = state.current;
         if (!s.running && !s.over) start();
-        else if (s.over) start();
+        else if (s.over) return; // button only
         else jump();
       }
     };
@@ -295,7 +309,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
       ctx.fillStyle = colors.border;
       ctx.fillRect(0, GROUND, W, 3);
 
-      if (!s.running && !s.over) {
+      if (!s.running && !s.over && !s.started) {
         ctx.fillStyle = colors.textH;
         ctx.font = 'bold 20px Inter, sans-serif';
         ctx.textAlign = 'center';
@@ -392,14 +406,14 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
 
       if (s.over) {
         ctx.fillStyle = theme === 'light' ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.6)';
-        ctx.fillRect(W / 2 - 230, H / 2 - 42, 460, 72);
+        ctx.fillRect(W / 2 - 180, H / 2 - 52, 360, 56);
         ctx.fillStyle = colors.textH;
         ctx.font = 'bold 26px Inter, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('GAME OVER', W / 2, H / 2 - 10);
+        ctx.fillText('GAME OVER', W / 2, H / 2 - 26);
         ctx.font = '15px Inter, sans-serif';
         ctx.fillStyle = theme === 'light' ? '#555566' : colors.textH;
-        ctx.fillText(`Score: ${Math.floor(s.score)} — Press SPACE to restart`, W / 2, H / 2 + 18);
+        ctx.fillText(`Score: ${Math.floor(s.score)}`, W / 2, H / 2 - 4);
       }
 
       // paused overlay
@@ -495,7 +509,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
           onClick={() => {
             const s = state.current;
             if (!s.running && !s.over) start();
-            else if (s.over) start();
+            else if (s.over) return; // button only
             else jump();
           }}
           style={{
@@ -608,10 +622,44 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
               {countdown}
             </div>
             <div style={{ color: '#fff', fontSize: '0.9rem', marginTop: '0.5rem', fontFamily: 'var(--font)' }}>
-              Resuming...
+              {display.over ? 'Get ready...' : 'Resuming...'}
             </div>
           </div>
         )}
+
+        {/* Game over replay button */}
+        <AnimatePresence>
+          {display.over && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 22, delay: 0.15 }}
+              style={{
+                position: 'absolute', inset: 0, display: 'flex',
+                flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '12px', pointerEvents: 'none',
+                paddingTop: '48px',
+              }}
+            >
+              <button
+                onClick={start}
+                style={{
+                  pointerEvents: 'all',
+                  background: 'var(--gradient)',
+                  border: 'none', borderRadius: 12,
+                  padding: '0.6rem 1.8rem',
+                  color: '#fff', fontFamily: 'var(--font)',
+                  fontSize: '1rem', fontWeight: 700,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+                }}
+              >
+                🔄 Play Again
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Difficulty legend */}

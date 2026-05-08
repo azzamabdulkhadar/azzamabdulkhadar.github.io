@@ -3,19 +3,18 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Briefcase } from 'lucide-react';
 import { SectionLabel } from './About';
-import { useLanguage } from '../LanguageContext';
-import { getTranslation } from '../translations';
+import { useTranslation } from 'react-i18next';
 
 export default function Experience() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
-  const { language } = useLanguage();
+  const { t } = useTranslation();
+
+  const job1Responsibilities = t('experience.job1.responsibilities', { returnObjects: true });
+  const job2Responsibilities = t('experience.job2.responsibilities', { returnObjects: true });
 
   return (
-    <section id="experience" ref={ref} style={{
-      padding: '6rem 2rem',
-      background: 'var(--bg-secondary)',
-    }}>
+    <section id="experience" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg-secondary)' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -23,15 +22,9 @@ export default function Experience() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          <SectionLabel>{getTranslation(language, 'experienceTitle')}</SectionLabel>
+          <SectionLabel>{t('experience.label')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            {getTranslation(language, 'experienceDescription')}
-          <SectionLabel>Experience</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            Work{' '}
-            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Experience
-            </span>
+            {t('experience.heading')}
           </h2>
         </motion.div>
 
@@ -39,8 +32,9 @@ export default function Experience() {
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.6 }}
-          style={{ maxWidth: '720px', margin: '0 auto' }}
+          style={{ maxWidth: '720px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}
         >
+          {/* Atmez AI Solutions */}
           <div style={{
             background: 'var(--bg-card)', border: '1px solid var(--border)',
             borderRadius: '20px', padding: '2rem',
@@ -59,13 +53,13 @@ export default function Experience() {
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <div>
                     <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-h)', marginBottom: '0.2rem' }}>
-                      Intern – Full Stack Developer
+                      {t('experience.job1.position')}
                     </h3>
                     <div style={{ color: 'var(--accent-2)', fontWeight: 500, fontSize: '0.95rem' }}>
-                      Zenexis Solutions Pvt Ltd
+                      {t('experience.job1.company')}
                     </div>
                     <div style={{ fontSize: '0.82rem', color: 'var(--text)', marginTop: '0.15rem' }}>
-                      Karnataka, India
+                      {t('experience.job1.location')}
                     </div>
                   </div>
                   <span style={{
@@ -74,16 +68,12 @@ export default function Experience() {
                     border: '1px solid rgba(124,58,237,0.3)',
                     padding: '0.3rem 0.75rem', borderRadius: '6px', whiteSpace: 'nowrap',
                   }}>
-                    Feb 2025 – Jun 2025
+                    {t('experience.job1.period')}
                   </span>
                 </div>
 
                 <ul style={{ listStyle: 'none', marginTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {[
-                    'Collaborated on two full-stack web applications focused on responsive UI and RESTful API integration.',
-                    'Participated in Agile development, peer code reviews, and debugging sessions.',
-                    'Gained hands-on experience using React.js, Vite.js, Bootstrap, Node.js, and MongoDB.',
-                  ].map((item, i) => (
+                  {Array.isArray(job1Responsibilities) && job1Responsibilities.map((item, i) => (
                     <motion.li
                       key={i}
                       initial={{ opacity: 0, x: -20 }}
@@ -98,12 +88,78 @@ export default function Experience() {
                 </ul>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '1.5rem' }}>
-                  {['React.js', 'Vite.js', 'Bootstrap', 'Node.js', 'MongoDB', 'Agile'].map(t => (
-                    <span key={t} style={{
+                  {['Flutter', 'Dart', 'REST APIs', 'Dio', 'MySQL', 'Provider', 'Agile'].map(tech => (
+                    <span key={tech} style={{
                       background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.25)',
                       color: 'var(--accent)', borderRadius: '6px', padding: '0.2rem 0.6rem',
                       fontSize: '0.78rem', fontFamily: 'var(--mono)',
-                    }}>{t}</span>
+                    }}>{tech}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Zenexis Solutions */}
+          <div style={{
+            background: 'var(--bg-card)', border: '1px solid var(--border)',
+            borderRadius: '20px', padding: '2rem',
+            borderLeft: '3px solid #06b6d4',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem' }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: '12px',
+                background: 'rgba(6,182,212,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#06b6d4', flexShrink: 0,
+              }}>
+                <Briefcase size={22} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-h)', marginBottom: '0.2rem' }}>
+                      {t('experience.job2.position')}
+                    </h3>
+                    <div style={{ color: '#06b6d4', fontWeight: 500, fontSize: '0.95rem' }}>
+                      {t('experience.job2.company')}
+                    </div>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text)', marginTop: '0.15rem' }}>
+                      {t('experience.job2.location')}
+                    </div>
+                  </div>
+                  <span style={{
+                    fontFamily: 'var(--mono)', fontSize: '0.78rem',
+                    color: '#06b6d4', background: 'rgba(6,182,212,0.1)',
+                    border: '1px solid rgba(6,182,212,0.3)',
+                    padding: '0.3rem 0.75rem', borderRadius: '6px', whiteSpace: 'nowrap',
+                  }}>
+                    {t('experience.job2.period')}
+                  </span>
+                </div>
+
+                <ul style={{ listStyle: 'none', marginTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {Array.isArray(job2Responsibilities) && job2Responsibilities.map((item, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={inView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: 0.4 + i * 0.1 }}
+                      style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', color: 'var(--text)', fontSize: '0.95rem', lineHeight: 1.7 }}
+                    >
+                      <span style={{ color: '#06b6d4', marginTop: '0.2rem', flexShrink: 0 }}>▸</span>
+                      {item}
+                    </motion.li>
+                  ))}
+                </ul>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '1.5rem' }}>
+                  {['React.js', 'Vite', 'Node.js', 'Express.js', 'MongoDB', 'Bootstrap', 'Ant Design', 'Agile'].map(tech => (
+                    <span key={tech} style={{
+                      background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)',
+                      color: '#06b6d4', borderRadius: '6px', padding: '0.2rem 0.6rem',
+                      fontSize: '0.78rem', fontFamily: 'var(--mono)',
+                    }}>{tech}</span>
                   ))}
                 </div>
               </div>

@@ -5,36 +5,169 @@ import { useTheme } from '../ThemeContext';
 
 const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-import { MessageCircle, X, Send, Bot, User, Loader } from 'lucide-react';
-import { useTheme } from '../ThemeContext';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+const SYSTEM_CONTEXT = `You are Azzam's portfolio assistant. Answer questions about Azzam Abdul Khadar helpfully and in a well-structured format.
 
-const SYSTEM_CONTEXT = `You are Azzam's portfolio assistant. Answer questions about Azzam Abdul Khadar concisely and helpfully.
+Always format your responses using markdown:
+- Use **bold** for important terms, names, and titles
+- Use bullet points (- item) for lists of skills, features, or items
+- Use numbered lists (1. item) for steps or ranked items
+- Use headings (### Heading) to separate sections when the answer has multiple categories
+- Use inline code (\`code\`) for technology names like \`React.js\`, \`Node.js\`, etc.
+- Keep responses concise but well-structured (not walls of text)
+- IMPORTANT: Always add spaces around bold and code text. Write "is a **Full Stack** Developer" NOT "is a**Full Stack**Developer".
 
 About Azzam:
-- Full Stack Developer from Karnataka, India
-- B.Tech in Computer Science from Visvesvaraya Technological University (VTU), Sep 2021 – Jun 2025
-- Interned at Zenexis Solutions Pvt Ltd (Feb 2025 – Jun 2025) as a Full Stack Developer
+- Full-stack and Flutter Developer currently based in Hyderabad, Telangana
+- B.Tech in Computer Science from Visvesvaraya Technological University (VTU), graduated 06/2025, Belagavi, Karnataka
+- Pre-University Course from Department of Pre-University Education Karnataka, 07/2019 – 07/2021, Bidar, Karnataka
 
-Skills:
-- Frontend: React.js, Vite.js, HTML5, CSS3, Ant Design, Bootstrap
-- Backend: Node.js, Express.js, RESTful APIs, Multer, CORS, Mongoose
-- Database: MongoDB
-- Languages: JavaScript, Java, PHP
-- Tools: Git, GitHub, GitLab, Bitbucket, Postman, VS Code, MySQL
+### Experience:
+1. **App Developer Trainee** at **Atmez AI Solutions**, Hyderabad, Telangana (01/2026 – Present)
+   - Built Flutter-based UIs for Employee Management System (EMS) and Master Admin apps
+   - Crafted responsive, role-based UI components for dashboards, attendance tracking, and employee workflows
+   - Integrated REST APIs using HTTP/Dio with a MySQL backend
+   - Implemented Provider-based state management for efficient UI updates
+   - Optimized rendering performance, improving UI responsiveness by 20–30%
+   - Collaborated in Agile teams for feature delivery, debugging, and iterative improvements
 
-Projects:
-1. TaskHive (Jun 2025) – MERN app with user management, notes, lead tracking, event scheduling. 15+ API endpoints, 30% faster queries, 100% responsive UI.
-2. BloodHub (Apr–May 2025) – MERN app for blood donation coordination. Reduced manual coordination by 30%, handles 100+ requests.
-3. Hotel Booking Management System (Nov–Dec 2024) – PHP + MySQL system for reservations, dynamic pricing, automated check-out.
+2. **Full Stack Trainee** at **Zenexis Solutions**, Bidar, Karnataka (02/2025 – 06/2025)
+   - Engineered 2+ full-stack web applications using the MERN stack
+   - Built and deployed TaskHive, a task management platform with 15+ REST APIs and real-time data handling
+   - Optimized backend performance using Mongoose, reducing response time by 30%
+   - Implemented secure file upload using Multer and configured CORS for cross-origin access
+   - Developed responsive front-end interfaces using React.js, Vite, Bootstrap, and Ant Design
+   - Contributed to Agile workflows including sprint planning, code reviews, and debugging
 
-Contact: azzamcse@gmail.com | +91-7349701430 | Karnataka, India
-GitHub: github.com/Azzam-Abdul-Khadar
-LinkedIn: linkedin.com/in/azzam-abdul-khadar-a6656729b
+### Skills:
+- **Programming Languages:** \`JavaScript\`, \`TypeScript\`, \`Dart\`, \`Java\`, \`Python\`
+- **Frontend:** \`React.js\`, \`Next.js\`, \`Vite\`, \`HTML\`, \`CSS\`, \`Tailwind CSS\`, \`Bootstrap\`, \`React Bootstrap\`, \`Ant Design\`
+- **Backend & Database:** \`Node.js\`, \`Express.js\`, \`Flask\`, RESTful APIs, \`Redis\`, \`MongoDB\`, \`PostgreSQL\`, \`SQL\`
+- **Mobile Development:** \`Flutter\`, Android Development (Material UI)
+- **Version Control:** \`Git\`, \`GitHub\`, \`GitLab\`, \`Bitbucket\`
+- **Development Tools:** \`VS Code\`, \`Android Studio\`, \`Postman\`
 
-Keep answers short (2-4 sentences max). If asked something unrelated to Azzam or tech, politely redirect.`;
+### Projects:
+1. **Employee Management System (EMS)** (Present) – Flutter-based system for managing employee tasks, attendance, and profiles. Reusable UI components, REST API integration with MySQL via Dio, optimized rendering.
+2. **TaskHive** (06/2025) – MERN-based app for task management, lead tracking, and scheduling. 30% faster API response, secure file handling, responsive UI with Ant Design.
+3. **BloodHub** (04/2025) – Full-stack MERN platform for blood donation coordination. Automated donor-recipient matching reducing manual effort by 30%, handles 100+ concurrent requests.
+
+### Contact:
+- **Email:** azzamcse@gmail.com
+- **Phone:** +91 7349701430
+- **Location:** Hyderabad, Telangana
+- **GitHub:** github.com/Azzam-Abdul-Khadar
+- **LinkedIn:** linkedin.com/in/azzam-abdul-khadar
+
+If asked something unrelated to Azzam or tech, politely redirect.`;
+
+function MarkdownMessage({ text }) {
+  const lines = text.split('\n');
+  const elements = [];
+  let i = 0;
+
+  const parseInline = (str) => {
+    // bold **text** or __text__, inline code `code`
+    const parts = str.split(/(\*\*[^*]+\*\*|__[^_]+__|`[^`]+`)/g);
+    return parts.map((part, idx) => {
+      if (/^\*\*(.+)\*\*$/.test(part) || /^__(.+)__$/.test(part)) {
+        const inner = part.replace(/^\*\*|\*\*$|^__|__$/g, '');
+        return <strong key={idx} style={{ color: 'var(--text-h)', fontWeight: 700 }}>{inner}</strong>;
+      }
+      if (/^`(.+)`$/.test(part)) {
+        const inner = part.slice(1, -1);
+        return (
+          <code key={idx} style={{
+            background: 'rgba(124,58,237,0.15)', color: 'var(--accent)',
+            borderRadius: 4, padding: '1px 6px', fontFamily: 'var(--mono)', fontSize: '0.82em',
+            display: 'inline-block', margin: '1px 2px',
+          }}>{inner}</code>
+        );
+      }
+      // preserve plain text as-is (including spaces)
+      return part || null;
+    }).filter(Boolean);
+  };
+
+  while (i < lines.length) {
+    const line = lines[i].trim();
+
+    if (!line) { i++; continue; }
+
+    // Numbered list: 1. or 1)
+    if (/^\d+[.)]\s/.test(line)) {
+      const listItems = [];
+      while (i < lines.length && /^\d+[.)]\s/.test(lines[i].trim())) {
+        const content = lines[i].trim().replace(/^\d+[.)]\s/, '');
+        listItems.push(<li key={i} style={{ marginBottom: '0.25rem' }}>{parseInline(content)}</li>);
+        i++;
+      }
+      elements.push(
+        <ol key={`ol-${i}`} style={{ paddingLeft: '1.25rem', margin: '0.4rem 0', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+          {listItems}
+        </ol>
+      );
+      continue;
+    }
+
+    // Lettered list: a. or a)
+    if (/^[a-z][.)]\s/i.test(line)) {
+      const listItems = [];
+      while (i < lines.length && /^[a-z][.)]\s/i.test(lines[i].trim())) {
+        const content = lines[i].trim().replace(/^[a-z][.)]\s/i, '');
+        listItems.push(<li key={i} style={{ marginBottom: '0.25rem' }}>{parseInline(content)}</li>);
+        i++;
+      }
+      elements.push(
+        <ol key={`alpha-${i}`} type="a" style={{ paddingLeft: '1.25rem', margin: '0.4rem 0', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+          {listItems}
+        </ol>
+      );
+      continue;
+    }
+
+    // Bullet list: - or * or •
+    if (/^[-*•]\s/.test(line)) {
+      const listItems = [];
+      while (i < lines.length && /^[-*•]\s/.test(lines[i].trim())) {
+        const content = lines[i].trim().replace(/^[-*•]\s/, '');
+        listItems.push(
+          <li key={i} style={{ marginBottom: '0.3rem', display: 'flex', gap: '0.4rem', alignItems: 'flex-start' }}>
+            <span style={{ color: 'var(--accent)', marginTop: '0.35em', flexShrink: 0, fontSize: '0.6em' }}>●</span>
+            <span style={{ flex: 1 }}>{parseInline(content)}</span>
+          </li>
+        );
+        i++;
+      }
+      elements.push(
+        <ul key={`ul-${i}`} style={{ listStyle: 'none', padding: 0, margin: '0.4rem 0', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+          {listItems}
+        </ul>
+      );
+      continue;
+    }
+
+    // Heading: #### or ### or ## or #
+    if (/^#{1,4}\s/.test(line)) {
+      const content = line.replace(/^#{1,4}\s/, '');
+      elements.push(
+        <div key={i} style={{ fontWeight: 700, color: 'var(--accent)', fontSize: '0.9rem', marginTop: '0.5rem', marginBottom: '0.2rem' }}>
+          {parseInline(content)}
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // Regular paragraph
+    elements.push(
+      <p key={i} style={{ margin: '0.2rem 0', lineHeight: 1.6 }}>{parseInline(line)}</p>
+    );
+    i++;
+  }
+
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>{elements}</div>;
+}
 
 const SUGGESTIONS = [
   'What are your skills?',
@@ -68,7 +201,6 @@ export default function ChatBot() {
   }, [open]);
 
   useEffect(() => {
-    // Initialize Web Speech API
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
@@ -77,28 +209,16 @@ export default function ChatBot() {
       recognitionRef.current.lang = 'en-US';
       recognitionRef.current.maxAlternatives = 1;
 
-      recognitionRef.current.onstart = () => {
-        setIsListening(true);
-        // Don't clear input - keep existing text
-      };
-
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-      };
+      recognitionRef.current.onstart = () => setIsListening(true);
+      recognitionRef.current.onend = () => setIsListening(false);
 
       recognitionRef.current.onresult = (event) => {
         let finalTranscript = '';
-
-        // Only process final results to avoid repetition
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          
           if (event.results[i].isFinal) {
-            finalTranscript += transcript + ' ';
+            finalTranscript += event.results[i][0].transcript + ' ';
           }
         }
-
-        // Append to existing text instead of replacing
         if (finalTranscript.trim()) {
           setInput(prev => (prev + ' ' + finalTranscript).trim());
         }
@@ -134,29 +254,16 @@ export default function ChatBot() {
             { role: 'system', content: SYSTEM_CONTEXT },
             { role: 'user', content: msg },
           ],
-          max_tokens: 300,
+          max_tokens: 500,
           temperature: 0.7,
-    setMessages(m => [...m, { role: 'user', text: msg }]);
-    setLoading(true);
-
-    try {
-      if (!API_KEY || API_KEY === 'your_gemini_api_key_here') throw new Error('no_key');
-
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_CONTEXT }] },
-          contents: [{ role: 'user', parts: [{ text: msg }] }],
-          generationConfig: { maxOutputTokens: 300, temperature: 0.7 },
         }),
       });
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        const errMsg = err?.error?.message || `HTTP ${res.status}`;
-        throw new Error(errMsg);
+        throw new Error(err?.error?.message || `HTTP ${res.status}`);
       }
+
       const data = await res.json();
       const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't get a response.";
       const botMsgId = messageIdRef.current++;
@@ -172,44 +279,31 @@ export default function ChatBot() {
       }
       const botMsgId = messageIdRef.current++;
       setMessages(m => [...m, { role: 'bot', text: fallback, id: botMsgId }]);
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't get a response.";
-      setMessages(m => [...m, { role: 'bot', text: reply }]);
-    } catch (e) {
-      let fallback;
-      if (e.message === 'no_key') {
-        fallback = "⚠️ API key not set. Add your Gemini key to the .env file as VITE_GEMINI_API_KEY, then restart the dev server.";
-      } else if (e.message.includes('API_KEY_INVALID') || e.message.includes('400')) {
-        fallback = "⚠️ Invalid API key. Please check your VITE_GEMINI_API_KEY in the .env file.";
-      } else {
-        fallback = `⚠️ Error: ${e.message}`;
-      }
-      setMessages(m => [...m, { role: 'bot', text: fallback }]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleFeedback = (messageId, type) => {
-    // Log feedback to console for analysis
-    console.log(`Feedback for message ${messageId}: ${type}`);
     setFeedback(prev => ({
       ...prev,
-      [messageId]: feedback[messageId] === type ? null : type
+      [messageId]: prev[messageId] === type ? null : type
     }));
   };
 
   const handleCopy = (text, messageId) => {
-    navigator.clipboard.writeText(text);
-    setCopied(prev => ({
-      ...prev,
-      [messageId]: true
-    }));
-    setTimeout(() => {
-      setCopied(prev => ({
-        ...prev,
-        [messageId]: false
-      }));
-    }, 2000);
+    // Strip markdown symbols for clean plain text copy
+    const plain = text
+      .replace(/#{1,4}\s/g, '')           // headings
+      .replace(/\*\*([^*]+)\*\*/g, '$1')  // bold
+      .replace(/__([^_]+)__/g, '$1')      // bold alt
+      .replace(/`([^`]+)`/g, '$1')        // inline code
+      .replace(/^[-*•]\s/gm, '• ')        // bullets
+      .replace(/^\d+[.)]\s/gm, (m) => m)  // numbered lists (keep as-is)
+      .trim();
+    navigator.clipboard.writeText(plain);
+    setCopied(prev => ({ ...prev, [messageId]: true }));
+    setTimeout(() => setCopied(prev => ({ ...prev, [messageId]: false })), 2000);
   };
 
   const handleClearChat = () => {
@@ -224,19 +318,16 @@ export default function ChatBot() {
       alert('Speech recognition not supported in your browser');
       return;
     }
-
     if (isListening) {
       recognitionRef.current.stop();
       setIsListening(false);
     } else {
-      // Start listening without clearing existing text
       recognitionRef.current.start();
     }
   };
 
   return (
     <div data-theme={theme} style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 150 }}>
-      {/* Chat window */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -250,7 +341,7 @@ export default function ChatBot() {
               background: 'var(--bg-secondary)', border: '1px solid var(--border)',
               borderRadius: 20, display: 'flex', flexDirection: 'column',
               boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
-              overflow: 'hidden',
+              overflow: 'hidden', direction: 'ltr',
             }}
           >
             {/* Header */}
@@ -277,7 +368,7 @@ export default function ChatBot() {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <button 
+                <button
                   onClick={handleClearChat}
                   title="Clear chat"
                   style={{
@@ -300,7 +391,7 @@ export default function ChatBot() {
                   <Trash2 size={14} />
                   Clear
                 </button>
-                <button 
+                <button
                   onClick={() => setOpen(false)}
                   title="Close chat"
                   style={{
@@ -322,37 +413,24 @@ export default function ChatBot() {
                   <X size={14} />
                 </button>
               </div>
-              <button onClick={() => setOpen(false)} style={{
-                background: 'none', border: 'none', cursor: 'pointer',
-                color: 'var(--text)', display: 'flex', alignItems: 'center',
-              }}>
-                <X size={18} />
-              </button>
             </div>
 
             {/* Messages */}
             <div style={{
               flex: 1, overflowY: 'auto', overscrollBehavior: 'contain',
-              padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem',
-            }}>
-              {messages.map((m, i) => (
-                <motion.div
-                  key={m.id}
               padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem',
             }}>
-              {messages.map((m, i) => (
+              {messages.map((m) => (
                 <motion.div
-                  key={i}
+                  key={m.id}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   style={{
                     display: 'flex', gap: '0.5rem',
                     flexDirection: m.role === 'user' ? 'row-reverse' : 'row',
                     alignItems: 'flex-end',
-                    group: 'message',
                   }}
                   className="message-group"
-                  }}
                 >
                   <div style={{
                     width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
@@ -363,9 +441,7 @@ export default function ChatBot() {
                   }}>
                     {m.role === 'bot' ? <Bot size={14} /> : <User size={14} />}
                   </div>
-                  <div style={{
-                    display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1,
-                  }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1 }}>
                     <div style={{
                       maxWidth: '85%',
                       background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-card)',
@@ -374,15 +450,15 @@ export default function ChatBot() {
                       borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                       padding: '0.6rem 0.9rem',
                       fontSize: '0.875rem', lineHeight: 1.6,
-                      whiteSpace: 'pre-wrap',
                     }}>
-                      {m.text}
+                      {m.role === 'bot' ? <MarkdownMessage text={m.text} /> : m.text}
                     </div>
                     {m.role === 'bot' && (
-                      <div style={{
-                        display: 'flex', gap: '0.3rem', alignItems: 'center',
-                        paddingLeft: '0.2rem', opacity: 0.6, transition: 'opacity 0.2s',
-                      }}
+                      <div
+                        style={{
+                          display: 'flex', gap: '0.3rem', alignItems: 'center',
+                          paddingLeft: '0.2rem', opacity: 0.6, transition: 'opacity 0.2s',
+                        }}
                         onMouseEnter={e => e.currentTarget.style.opacity = '1'}
                         onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
                       >
@@ -392,8 +468,7 @@ export default function ChatBot() {
                           style={{
                             background: 'none', border: 'none', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            color: 'var(--text)', padding: '0.2rem',
-                            transition: 'color 0.2s',
+                            color: 'var(--text)', padding: '0.2rem', transition: 'color 0.2s',
                           }}
                           onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
                           onMouseLeave={e => e.currentTarget.style.color = 'var(--text)'}
@@ -407,13 +482,10 @@ export default function ChatBot() {
                             background: 'none', border: 'none', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             color: feedback[m.id] === 'like' ? 'var(--accent)' : 'var(--text)',
-                            padding: '0.2rem',
-                            transition: 'color 0.2s',
+                            padding: '0.2rem', transition: 'color 0.2s',
                           }}
                           onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
-                          onMouseLeave={e => {
-                            if (feedback[m.id] !== 'like') e.currentTarget.style.color = 'var(--text)';
-                          }}
+                          onMouseLeave={e => { if (feedback[m.id] !== 'like') e.currentTarget.style.color = 'var(--text)'; }}
                         >
                           <ThumbsUp size={14} />
                         </button>
@@ -424,28 +496,15 @@ export default function ChatBot() {
                             background: 'none', border: 'none', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             color: feedback[m.id] === 'dislike' ? '#ef4444' : 'var(--text)',
-                            padding: '0.2rem',
-                            transition: 'color 0.2s',
+                            padding: '0.2rem', transition: 'color 0.2s',
                           }}
                           onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
-                          onMouseLeave={e => {
-                            if (feedback[m.id] !== 'dislike') e.currentTarget.style.color = 'var(--text)';
-                          }}
+                          onMouseLeave={e => { if (feedback[m.id] !== 'dislike') e.currentTarget.style.color = 'var(--text)'; }}
                         >
                           <ThumbsDown size={14} />
                         </button>
                       </div>
                     )}
-                    maxWidth: '78%',
-                    background: m.role === 'user' ? 'var(--accent)' : 'var(--bg-card)',
-                    color: m.role === 'user' ? '#fff' : 'var(--text-h)',
-                    border: m.role === 'bot' ? '1px solid var(--border)' : 'none',
-                    borderRadius: m.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                    padding: '0.6rem 0.9rem',
-                    fontSize: '0.875rem', lineHeight: 1.6,
-                    whiteSpace: 'pre-wrap',
-                  }}>
-                    {m.text}
                   </div>
                 </motion.div>
               ))}
@@ -478,7 +537,7 @@ export default function ChatBot() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Suggestions (only on first message) */}
+            {/* Suggestions */}
             {messages.length === 1 && (
               <div style={{ padding: '0 1rem 0.75rem', display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                 {SUGGESTIONS.map(s => (
@@ -570,7 +629,6 @@ export default function ChatBot() {
             : <motion.span key="chat" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><MessageCircle size={22} /></motion.span>
           }
         </AnimatePresence>
-        {/* Unread dot when closed */}
         {!open && (
           <span style={{
             position: 'absolute', top: 2, right: 2,

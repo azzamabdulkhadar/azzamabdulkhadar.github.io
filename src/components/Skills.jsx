@@ -2,52 +2,24 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { SectionLabel } from './About';
-import { useLanguage } from '../LanguageContext';
-import { getTranslation } from '../translations';
-
-const skillGroups = [
-  {
-    category: 'Frontend',
-    color: '#7c3aed',
-    skills: ['React.js', 'Vite.js', 'HTML5', 'CSS3', 'Ant Design', 'Bootstrap'],
-  },
-  {
-    category: 'Backend',
-    color: '#06b6d4',
-    skills: ['Node.js', 'Express.js', 'RESTful APIs', 'Multer', 'CORS', 'Mongoose'],
-  },
-  {
-    category: 'Database',
-    color: '#10b981',
-    skills: ['MongoDB'],
-  },
-  {
-    category: 'Languages',
-    color: '#f59e0b',
-    skills: ['JavaScript', 'Java', 'PHP'],
-  },
-  {
-    category: 'Version Control',
-    color: '#ef4444',
-    skills: ['Git', 'GitHub', 'GitLab', 'Bitbucket'],
-  },
-  {
-    category: 'Tools & IDEs',
-    color: '#8b5cf6',
-    skills: ['Postman', 'VS Code', 'MySQL'],
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function Skills() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
-  const { language } = useLanguage();
+  const { t } = useTranslation();
+
+  const skillGroups = [
+    { categoryKey: 'programmingLanguages', color: '#f59e0b', skills: ['JavaScript', 'TypeScript', 'Dart', 'Java', 'Python'] },
+    { categoryKey: 'frontend', color: '#7c3aed', skills: ['React.js', 'Next.js', 'Vite', 'HTML', 'CSS', 'Tailwind CSS', 'Bootstrap', 'React Bootstrap', 'Ant Design'] },
+    { categoryKey: 'backendDatabase', color: '#06b6d4', skills: ['Node.js', 'Express.js', 'Flask', 'RESTful APIs', 'Redis', 'MongoDB', 'PostgreSQL', 'SQL'] },
+    { categoryKey: 'mobileDevelopment', color: '#10b981', skills: ['Flutter', 'Android Development (Material UI)'] },
+    { categoryKey: 'versionControl', color: '#ef4444', skills: ['Git', 'GitHub', 'GitLab', 'Bitbucket'] },
+    { categoryKey: 'developmentTools', color: '#8b5cf6', skills: ['VS Code', 'Android Studio', 'Postman'] },
+  ];
 
   return (
-    <section id="skills" ref={ref} style={{
-      padding: '6rem 2rem',
-      background: 'var(--bg-secondary)',
-    }}>
+    <section id="skills" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg-secondary)' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -55,22 +27,16 @@ export default function Skills() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          <SectionLabel>{getTranslation(language, 'skillsTitle')}</SectionLabel>
+          <SectionLabel>{t('skills.label')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            {getTranslation(language, 'skillsDescription')}
-          <SectionLabel>Skills</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            Tech{' '}
-            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Stack
-            </span>
+            {t('skills.heading')}
           </h2>
         </motion.div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-          {skillGroups.map(({ category, color, skills }, gi) => (
+          {skillGroups.map(({ categoryKey, color, skills }, gi) => (
             <motion.div
-              key={category}
+              key={categoryKey}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: gi * 0.1, duration: 0.5 }}
@@ -86,7 +52,9 @@ export default function Skills() {
                   width: 10, height: 10, borderRadius: '50%',
                   background: color, boxShadow: `0 0 10px ${color}`,
                 }} />
-                <span style={{ fontWeight: 600, color: 'var(--text-h)', fontSize: '0.95rem' }}>{category}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-h)', fontSize: '0.95rem' }}>
+                  {t(`skills.categories.${categoryKey}`)}
+                </span>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                 {skills.map(skill => (

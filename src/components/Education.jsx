@@ -3,32 +3,31 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { GraduationCap } from 'lucide-react';
 import { SectionLabel } from './About';
-import { useLanguage } from '../LanguageContext';
-import { getTranslation } from '../translations';
-
-const education = [
-  {
-    degree: 'Bachelor of Technology in Computer Science',
-    institution: 'Visvesvaraya Technological University (VTU)',
-    location: 'Belagavi, Karnataka',
-    period: 'Sep 2021 – Jun 2025',
-    icon: '🎓',
-    color: '#7c3aed',
-  },
-  {
-    degree: 'Pre-University Course (Science Stream)',
-    institution: 'Department of Pre-University Education',
-    location: 'Karnataka',
-    period: 'Jul 2019 – Jul 2021',
-    icon: '📚',
-    color: '#06b6d4',
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function Education() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
-  const { language } = useLanguage();
+  const { t } = useTranslation();
+
+  const education = [
+    {
+      degree: t('education.degree1.title'),
+      institution: t('education.degree1.institution'),
+      location: t('education.degree1.location'),
+      period: t('education.degree1.period'),
+      icon: '🎓',
+      color: '#7c3aed',
+    },
+    {
+      degree: t('education.degree2.title'),
+      institution: t('education.degree2.institution'),
+      location: t('education.degree2.location'),
+      period: t('education.degree2.period'),
+      icon: '📚',
+      color: '#06b6d4',
+    },
+  ];
 
   return (
     <section id="education" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg-secondary)' }}>
@@ -39,15 +38,9 @@ export default function Education() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          <SectionLabel>{getTranslation(language, 'educationTitle')}</SectionLabel>
+          <SectionLabel>{t('education.label')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            {getTranslation(language, 'educationDescription')}
-          <SectionLabel>Education</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
-            Academic{' '}
-            <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Background
-            </span>
+            {t('education.heading')}
           </h2>
         </motion.div>
 
@@ -62,7 +55,7 @@ export default function Education() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {education.map(({ degree, institution, location, period, icon, color }, i) => (
               <motion.div
-                key={degree}
+                key={i}
                 initial={{ opacity: 0, x: -30 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ delay: i * 0.2, duration: 0.6 }}
