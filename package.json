@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "git push live azzam/resume:main --force",
     "lint": "eslint .",
     "preview": "vite preview"
   },
