@@ -39,6 +39,10 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   const handleNav = (id) => {
     setOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -70,12 +74,12 @@ export default function Navbar() {
       </span>
 
       {/* Desktop links */}
-      <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none', margin: 0 }} className="nav-desktop">
+      <ul style={{ display: 'flex', gap: 'var(--space-lg)', listStyle: 'none', margin: 0 }} className="nav-desktop">
         {links.map(({ id, label }) => (
           <li key={id}>
             <button onClick={() => handleNav(id)} style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              color: 'var(--text)', fontSize: '0.9rem', fontFamily: 'var(--font)',
+              color: 'var(--text)', fontSize: 'var(--text-base)', fontFamily: 'var(--font)',
               transition: 'color 0.2s',
             }}
               onMouseEnter={e => e.target.style.color = 'var(--accent)'}
@@ -90,11 +94,12 @@ export default function Navbar() {
         {/* Games button */}
         <button
           onClick={() => setGamesOpen(true)}
+          aria-label="Open games"
           style={{
-            background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
+            background: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
             cursor: 'pointer', color: 'var(--text-h)', padding: '6px 10px',
             display: 'flex', alignItems: 'center', gap: '6px',
-            fontSize: '0.8rem', fontFamily: 'var(--font)',
+            fontSize: 'var(--text-xs)', fontFamily: 'var(--font)',
             transition: 'border-color 0.2s, color 0.2s',
           }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
@@ -108,11 +113,12 @@ export default function Navbar() {
         <button
           onClick={() => setLanguageOpen(!languageOpen)}
           title="Switch language"
+          aria-label="Switch language"
           style={{
-            background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
+            background: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
             cursor: 'pointer', color: 'var(--text-h)', padding: '6px 10px',
             display: 'flex', alignItems: 'center', gap: '6px',
-            fontSize: '0.8rem', fontFamily: 'var(--font)',
+            fontSize: 'var(--text-xs)', fontFamily: 'var(--font)',
             transition: 'border-color 0.2s, color 0.2s',
           }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
@@ -131,7 +137,7 @@ export default function Navbar() {
               style={{
                 position: 'absolute', top: 'calc(100% + 8px)', right: 0,
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: '10px', overflow: 'hidden', minWidth: '140px',
+                borderRadius: 'var(--radius-sm)', overflow: 'hidden', minWidth: '140px',
                 boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
               }}
             >
@@ -143,7 +149,7 @@ export default function Navbar() {
                     width: '100%', background: language === code ? 'var(--accent-glow)' : 'none',
                     border: 'none', cursor: 'pointer', color: language === code ? 'var(--accent)' : 'var(--text)',
                     padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '8px',
-                    fontSize: '0.85rem', fontFamily: 'var(--font)', textAlign: 'left',
+                    fontSize: 'var(--text-sm)', fontFamily: 'var(--font)', textAlign: 'left',
                     transition: 'background 0.15s',
                   }}
                   onMouseEnter={e => { if (language !== code) e.currentTarget.style.background = 'var(--bg-secondary)'; }}
@@ -160,11 +166,12 @@ export default function Navbar() {
         <button
           onClick={() => setThemeOpen(!themeOpen)}
           title="Switch theme"
+          aria-label="Switch theme"
           style={{
-            background: 'none', border: '1px solid var(--border)', borderRadius: '8px',
+            background: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
             cursor: 'pointer', color: 'var(--text-h)', padding: '6px 10px',
             display: 'flex', alignItems: 'center', gap: '6px',
-            fontSize: '0.8rem', fontFamily: 'var(--font)',
+            fontSize: 'var(--text-xs)', fontFamily: 'var(--font)',
             transition: 'border-color 0.2s, color 0.2s',
           }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
@@ -183,7 +190,7 @@ export default function Navbar() {
               style={{
                 position: 'absolute', top: 'calc(100% + 8px)', right: 0,
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: '10px', overflow: 'hidden', minWidth: '130px',
+                borderRadius: 'var(--radius-sm)', overflow: 'hidden', minWidth: '130px',
                 boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
               }}
             >
@@ -195,7 +202,7 @@ export default function Navbar() {
                     width: '100%', background: theme === value ? 'var(--accent-glow)' : 'none',
                     border: 'none', cursor: 'pointer', color: theme === value ? 'var(--accent)' : 'var(--text)',
                     padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '8px',
-                    fontSize: '0.85rem', fontFamily: 'var(--font)', textAlign: 'left',
+                    fontSize: 'var(--text-sm)', fontFamily: 'var(--font)', textAlign: 'left',
                     transition: 'background 0.15s',
                   }}
                   onMouseEnter={e => { if (theme !== value) e.currentTarget.style.background = 'var(--bg-secondary)'; }}
@@ -210,7 +217,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile hamburger */}
-      <button onClick={() => setOpen(!open)} style={{
+      <button onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"} style={{
         background: 'none', border: 'none', cursor: 'pointer',
         color: 'var(--text-h)', display: 'none',
       }} className="nav-mobile-btn">

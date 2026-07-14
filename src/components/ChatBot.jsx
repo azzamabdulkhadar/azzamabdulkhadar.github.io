@@ -18,25 +18,25 @@ Always format your responses using markdown:
 - IMPORTANT: Always add spaces around bold and code text. Write "is a **Full Stack** Developer" NOT "is a**Full Stack**Developer".
 
 About Azzam:
-- Full-stack and Flutter Developer currently based in Hyderabad, Telangana
+- Full-Stack and App Developer currently based in Hyderabad, Telangana
 - B.Tech in Computer Science from Visvesvaraya Technological University (VTU), graduated 06/2025, Belagavi, Karnataka
 - Pre-University Course from Department of Pre-University Education Karnataka, 07/2019 – 07/2021, Bidar, Karnataka
 
 ### Experience:
 1. **App Developer Trainee** at **Atmez AI Solutions**, Hyderabad, Telangana (01/2026 – Present)
-   - Built Flutter-based UIs for Employee Management System (EMS) and Master Admin apps
-   - Crafted responsive, role-based UI components for dashboards, attendance tracking, and employee workflows
-   - Integrated REST APIs using HTTP/Dio with a MySQL backend
+   - Engineered and maintained 4+ production Flutter apps across HR, education, and productivity domains (incl. EMS & Master Admin), serving real users
+   - Built 20+ responsive UI screens and integrated 10+ RESTful APIs for real-time data synchronization
+   - Crafted role-based UI components for dashboards, attendance tracking, and employee workflows with HTTP/Dio and MySQL backend
    - Implemented Provider-based state management for efficient UI updates
-   - Optimized rendering performance, improving UI responsiveness by 20–30%
+   - Optimized UI performance by 20–30% via efficient state management and widget rendering, cutting crash rate by 15%
    - Collaborated in Agile teams for feature delivery, debugging, and iterative improvements
 
-2. **Full Stack Trainee** at **Zenexis Solutions**, Bidar, Karnataka (02/2025 – 06/2025)
-   - Engineered 2+ full-stack web applications using the MERN stack
-   - Built and deployed TaskHive, a task management platform with 15+ REST APIs and real-time data handling
-   - Optimized backend performance using Mongoose, reducing response time by 30%
-   - Implemented secure file upload using Multer and configured CORS for cross-origin access
-   - Developed responsive front-end interfaces using React.js, Vite, Bootstrap, and Ant Design
+2. **Full Stack Trainee** at **Zenexis Solutions Pvt Ltd**, Bidar, Karnataka (02/2025 – 06/2025)
+   - Collaborated on 2+ full-stack MERN applications with 15+ REST APIs, reducing backend response times by 30% through Mongoose query optimization and scalable database schema redesign
+   - Implemented 5+ secure React.js interfaces with file uploads (Multer) and production-ready APIs, reducing form error rates by 20%
+   - Built and deployed TaskHive with real-time data handling, responsive UI using Vite, Bootstrap, and Ant Design
+   - Configured CORS for secure cross-origin access across multiple domains
+   - Conducted peer code reviews and resolved high-priority bugs, contributing to on-time releases and improved application stability
    - Contributed to Agile workflows including sprint planning, code reviews, and debugging
 
 ### Skills:
@@ -46,6 +46,8 @@ About Azzam:
 - **Mobile Development:** \`Flutter\`, Android Development (Material UI)
 - **Version Control:** \`Git\`, \`GitHub\`, \`GitLab\`, \`Bitbucket\`
 - **Development Tools:** \`VS Code\`, \`Android Studio\`, \`Postman\`
+- **Deployment & Publishing:** \`Vercel\`, \`Render\`, \`Coolify\`, Google Play Console, App Store Connect
+- **Architecture:** System Design, Scalable Architecture, Agile/Scrum
 
 ### Projects:
 1. **Employee Management System (EMS)** (Present) – Flutter-based system for managing employee tasks, attendance, and profiles. Reusable UI components, REST API integration with MySQL via Dio, optimized rendering.
@@ -56,8 +58,8 @@ About Azzam:
 - **Email:** azzamcse@gmail.com
 - **Phone:** +91 7349701430
 - **Location:** Hyderabad, Telangana
-- **GitHub:** github.com/Azzam-Abdul-Khadar
-- **LinkedIn:** linkedin.com/in/azzam-abdul-khadar
+- **GitHub:** github.com/azzamabdulkhadar
+- **LinkedIn:** linkedin.com/in/azzamabdulkhadar
 
 If asked something unrelated to Azzam or tech, politely redirect.`;
 
@@ -337,7 +339,7 @@ export default function ChatBot() {
             transition={{ type: 'spring', stiffness: 300, damping: 26 }}
             style={{
               position: 'absolute', bottom: '4.5rem', right: 0,
-              width: 360, maxHeight: 520,
+              width: 'min(360px, calc(100vw - 3rem))', maxHeight: 'min(520px, calc(100vh - 8rem))',
               background: 'var(--bg-secondary)', border: '1px solid var(--border)',
               borderRadius: 20, display: 'flex', flexDirection: 'column',
               boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
@@ -371,6 +373,7 @@ export default function ChatBot() {
                 <button
                   onClick={handleClearChat}
                   title="Clear chat"
+                  aria-label="Clear chat"
                   style={{
                     background: 'var(--bg-secondary)', border: '1px solid var(--border)',
                     cursor: 'pointer', color: 'var(--text)', display: 'flex', alignItems: 'center',
@@ -394,6 +397,7 @@ export default function ChatBot() {
                 <button
                   onClick={() => setOpen(false)}
                   title="Close chat"
+                  aria-label="Close chat"
                   style={{
                     background: 'var(--bg-secondary)', border: '1px solid var(--border)',
                     cursor: 'pointer', color: 'var(--text)', display: 'flex', alignItems: 'center',
@@ -465,6 +469,7 @@ export default function ChatBot() {
                         <button
                           onClick={() => handleCopy(m.text, m.id)}
                           title="Copy message"
+                          aria-label="Copy message"
                           style={{
                             background: 'none', border: 'none', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -478,6 +483,7 @@ export default function ChatBot() {
                         <button
                           onClick={() => handleFeedback(m.id, 'like')}
                           title="Helpful"
+                          aria-label="Mark as helpful"
                           style={{
                             background: 'none', border: 'none', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -492,6 +498,7 @@ export default function ChatBot() {
                         <button
                           onClick={() => handleFeedback(m.id, 'dislike')}
                           title="Not helpful"
+                          aria-label="Mark as not helpful"
                           style={{
                             background: 'none', border: 'none', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -566,6 +573,7 @@ export default function ChatBot() {
                 onClick={toggleVoiceInput}
                 disabled={loading}
                 title={isListening ? 'Stop listening' : 'Start voice input'}
+                aria-label={isListening ? 'Stop listening' : 'Start voice input'}
                 style={{
                   width: 36, height: 36, borderRadius: '50%', border: 'none',
                   background: isListening ? '#ef4444' : 'var(--border)',
@@ -595,6 +603,7 @@ export default function ChatBot() {
               <button
                 onClick={() => send()}
                 disabled={!input.trim() || loading}
+                aria-label="Send message"
                 style={{
                   width: 36, height: 36, borderRadius: '50%', border: 'none',
                   background: input.trim() && !loading ? 'var(--accent)' : 'var(--border)',
@@ -615,6 +624,7 @@ export default function ChatBot() {
         onClick={() => setOpen(v => !v)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
+        aria-label={open ? 'Close chat assistant' : 'Open chat assistant'}
         style={{
           width: 54, height: 54, borderRadius: '50%', border: 'none',
           background: 'var(--gradient)', cursor: 'pointer',

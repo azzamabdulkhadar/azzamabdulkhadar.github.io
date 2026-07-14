@@ -1,12 +1,25 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Gamepad2, Brain, AlertTriangle, Bird } from 'lucide-react';
 import { useTheme } from '../../ThemeContext';
 import { useTranslation } from 'react-i18next';
-import DinoGame from './DinoGame';
-import QuizGame from './QuizGame';
-import FlappyBird from './FlappyBird';
+import ErrorBoundary from './ErrorBoundary';
+
+const DinoGame = lazy(() => import('./DinoGame'));
+const QuizGame = lazy(() => import('./QuizGame'));
+const FlappyBird = lazy(() => import('./FlappyBird'));
+
+function GameLoadingFallback() {
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '3rem 1rem', color: 'var(--text)', fontFamily: 'var(--font)',
+    }}>
+      Loading game…
+    </div>
+  );
+}
 
 function QuitConfirm({ message, onConfirm, onCancel, t }) {
   return (
@@ -18,7 +31,7 @@ function QuitConfirm({ message, onConfirm, onCancel, t }) {
         position: 'absolute', inset: 0, zIndex: 10,
         background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        borderRadius: 20,
+        borderRadius: 'var(--radius-lg)',
       }}
     >
       <motion.div
@@ -27,7 +40,7 @@ function QuitConfirm({ message, onConfirm, onCancel, t }) {
         exit={{ scale: 0.88, opacity: 0 }}
         style={{
           background: 'var(--bg-card)', border: '1px solid var(--border)',
-          borderRadius: 16, padding: '2rem', maxWidth: 340, width: '90%',
+          borderRadius: 'var(--radius-lg)', padding: '2rem', maxWidth: 340, width: '90%',
           textAlign: 'center', boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
         }}
       >
@@ -43,7 +56,7 @@ function QuitConfirm({ message, onConfirm, onCancel, t }) {
             onClick={onCancel}
             style={{
               flex: 1, background: 'var(--bg-secondary)', border: '1px solid var(--border)',
-              borderRadius: 10, padding: '0.65rem', cursor: 'pointer',
+              borderRadius: 'var(--radius-sm)', padding: '0.65rem', cursor: 'pointer',
               color: 'var(--text-h)', fontFamily: 'var(--font)', fontSize: '0.9rem', fontWeight: 500,
             }}
           >
@@ -53,7 +66,7 @@ function QuitConfirm({ message, onConfirm, onCancel, t }) {
             onClick={onConfirm}
             style={{
               flex: 1, background: '#ef4444', border: 'none',
-              borderRadius: 10, padding: '0.65rem', cursor: 'pointer',
+              borderRadius: 'var(--radius-sm)', padding: '0.65rem', cursor: 'pointer',
               color: '#fff', fontFamily: 'var(--font)', fontSize: '0.9rem', fontWeight: 700,
             }}
           >
@@ -94,6 +107,7 @@ export default function GamesModal({ onClose }) {
   };
 
   const requestClose = () => {
+    // Confirm (and pause) only when a game is actively in progress; otherwise close.
     if (isDinoRunning() || isFlappyRunning() || isQuizPlaying()) { showConfirm('close'); return; }
     onClose();
   };
@@ -105,6 +119,11 @@ export default function GamesModal({ onClose }) {
     flappyRunning.current = false;
     quizPlaying.current = false;
 
+    if (confirm === 'close') {
+      setConfirm(null);
+      onClose();
+      return;
+    }
     if (confirm?.startsWith('tab:')) {
       setTab(confirm.split(':')[1]);
     }
@@ -138,8 +157,9 @@ export default function GamesModal({ onClose }) {
     { id: 'quiz', label: t('games.skillQuiz'), icon: <Brain size={16} /> },
   ];
 
+  const hasActiveGame = isDinoRunning() || isFlappyRunning() || isQuizPlaying();
   const confirmMessage = confirm === 'close'
-    ? t('games.quitClose')
+    ? (hasActiveGame ? t('games.quitClose') : t('games.quitCloseIdle'))
     : t('games.quitSwitch');
 
   return createPortal(
@@ -149,7 +169,6 @@ export default function GamesModal({ onClose }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={requestClose}
         style={{
           position: 'fixed', inset: 0, zIndex: 200,
           background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)',
@@ -166,7 +185,7 @@ export default function GamesModal({ onClose }) {
           dir="ltr"
           style={{
             background: 'var(--bg-secondary)', border: '1px solid var(--border)',
-            borderRadius: 20, width: '100%', maxWidth: 860,
+            borderRadius: 'var(--radius-lg)', width: '100%', maxWidth: 860,
             maxHeight: '90vh', overflow: 'hidden',
             display: 'flex', flexDirection: 'column',
             boxShadow: '0 24px 80px rgba(0,0,0,0.4)',
@@ -179,22 +198,22 @@ export default function GamesModal({ onClose }) {
             padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)',
             background: 'var(--bg-secondary)',
           }}>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               {tabs.map(tabItem => (
                 <button key={tabItem.id} onClick={() => requestTabChange(tabItem.id)} style={{
                   display: 'flex', alignItems: 'center', gap: '0.4rem',
                   background: tab === tabItem.id ? 'var(--accent-glow)' : 'transparent',
                   border: `1px solid ${tab === tabItem.id ? 'var(--accent)' : 'var(--border)'}`,
                   color: tab === tabItem.id ? 'var(--accent)' : 'var(--text)',
-                  borderRadius: 8, padding: '0.4rem 0.9rem', cursor: 'pointer',
+                  borderRadius: 'var(--radius-sm)', padding: '0.4rem 0.9rem', cursor: 'pointer',
                   fontFamily: 'var(--font)', fontSize: '0.85rem', fontWeight: tab === tabItem.id ? 600 : 400,
-                  transition: 'all 0.2s',
+                  transition: 'all 0.2s', whiteSpace: 'nowrap',
                 }}>
                   {tabItem.icon} {tabItem.label}
                 </button>
               ))}
             </div>
-            <button onClick={requestClose} style={{
+            <button onClick={requestClose} aria-label="Close games" style={{
               background: 'none', border: 'none', cursor: 'pointer',
               color: 'var(--text)', padding: 4, borderRadius: 6,
               display: 'flex', alignItems: 'center',
@@ -205,9 +224,13 @@ export default function GamesModal({ onClose }) {
 
           {/* Content */}
           <div style={{ padding: '1.5rem', overflowY: 'auto', overscrollBehavior: 'contain', flex: 1, background: 'var(--bg-secondary)' }}>
-            {tab === 'dino' && <DinoGame ref={dinoRef} onRunningChange={v => { dinoRunning.current = v; }} />}
-            {tab === 'flappy' && <FlappyBird ref={flappyRef} onRunningChange={v => { flappyRunning.current = v; }} />}
-            {tab === 'quiz' && <QuizGame onPlayingChange={v => { quizPlaying.current = v; }} />}
+            <ErrorBoundary>
+              <Suspense fallback={<GameLoadingFallback />}>
+                {tab === 'dino' && <DinoGame ref={dinoRef} onRunningChange={v => { dinoRunning.current = v; }} />}
+                {tab === 'flappy' && <FlappyBird ref={flappyRef} onRunningChange={v => { flappyRunning.current = v; }} />}
+                {tab === 'quiz' && <QuizGame onPlayingChange={v => { quizPlaying.current = v; }} />}
+              </Suspense>
+            </ErrorBoundary>
           </div>
 
           {/* Quit confirmation overlay */}

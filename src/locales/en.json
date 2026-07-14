@@ -11,9 +11,9 @@
   "hero": {
     "greeting": "Hello, I'm",
     "name": "Azzam Abdul Khadar",
-    "subtitle": "Full-stack and Flutter Developer",
-    "description": "I engineer scalable web and mobile applications using MERN stack and Flutter, delivering high-performance solutions with clean architecture and seamless user experience.",
-    "badge": "MERN Stack & Flutter Developer",
+    "subtitle": "Full-Stack and App Developer",
+    "description": "Full Stack & App Developer with 1+ year of experience building scalable web and mobile applications using MERN stack and Flutter, delivering high-performance solutions with clean architecture and seamless user experience.",
+    "badge": "MERN Stack & App Developer",
     "viewProjects": "View Projects",
     "downloadResume": "Download Resume",
     "contactMe": "Contact Me",
@@ -24,18 +24,18 @@
   "about": {
     "label": "About Me",
     "heading": "Turning ideas into real products",
-    "para1": "I'm a Full Stack and Flutter Developer from Hyderabad, India, with a B.Tech in Computer Science from VTU. Experienced in delivering production-ready applications with clean architecture, efficient state management, and measurable improvements in speed and usability.",
+    "para1": "I'm a Full Stack and App Developer from Hyderabad, India, with a B.Tech in Computer Science from VTU. Experienced in delivering production-ready applications with clean architecture, efficient state management, and measurable improvements in speed and usability.",
     "para2_prefix": "At ",
     "para2_company": "Atmez AI Solutions",
-    "para2_suffix": ", I build Flutter-based user interfaces for Employee Management and Master Admin applications, crafting responsive, role-based UI components and integrating REST APIs with a MySQL backend.",
+    "para2_suffix": ", I engineer and maintain 4+ production Flutter apps across HR, education, and productivity domains, building 20+ responsive UI screens and integrating 10+ REST APIs for real-time data synchronization.",
     "para3_prefix": "Previously at ",
-    "para3_company": "Zenexis Solutions",
-    "para3_suffix": ", I engineered 2+ full-stack web applications using the MERN stack, building platforms like TaskHive with 15+ REST APIs and optimizing backend performance by 30%.",
+    "para3_company": "Zenexis Solutions Pvt Ltd",
+    "para3_suffix": ", I collaborated on 2+ full-stack MERN applications with 15+ REST APIs, reducing backend response times by 30% through query optimization and scalable schema redesign.",
     "stats": {
       "projectsBuilt": "Projects Built",
       "apiEndpoints": "API Endpoints",
       "fasterQueries": "Faster Queries",
-      "responsiveUI": "Responsive UI"
+      "responsiveUI": "UI Screens Built"
     },
     "highlights": {
       "frontend": "Frontend",
@@ -59,7 +59,9 @@
       "backendDatabase": "Backend & Database",
       "mobileDevelopment": "Mobile Development",
       "versionControl": "Version Control",
-      "developmentTools": "Development Tools"
+      "developmentTools": "Development Tools",
+      "deployment": "Deployment & Publishing",
+      "architecture": "Architecture"
     }
   },
   "projects": {
@@ -70,6 +72,7 @@
     "viewMore": "Tap to view details →",
     "viewAllGithub": "View All on GitHub",
     "technologiesUsed": "Technologies Used",
+    "liveApp": "Live App",
     "ems": {
       "title": "Employee Management System (EMS)",
       "date": "Present",
@@ -143,25 +146,25 @@
       "location": "Hyderabad, Telangana",
       "period": "01/2026 – Present",
       "responsibilities": [
-        "Built Flutter-based user interfaces for Employee Management System (EMS) and Master Admin applications.",
-        "Crafted responsive, role-based UI components for dashboards, attendance tracking, and employee workflows.",
-        "Integrated REST APIs using HTTP/Dio with a MySQL backend.",
+        "Engineered and maintained 4+ production Flutter apps across HR, education, and productivity domains (incl. EMS & Master Admin), serving real users.",
+        "Built 20+ responsive UI screens and integrated 10+ RESTful APIs for real-time data synchronization, enhancing functionality and user engagement.",
+        "Crafted role-based UI components for dashboards, attendance tracking, and employee workflows with REST API integration using HTTP/Dio and a MySQL backend.",
         "Implemented Provider-based state management for efficient UI updates.",
-        "Optimized rendering performance, improving UI responsiveness by 20–30%.",
+        "Optimized UI performance by 20–30% via efficient state management and widget rendering, cutting crash rate by 15%.",
         "Collaborated in Agile teams for feature delivery, debugging, and iterative improvements."
       ]
     },
     "job2": {
       "position": "Full Stack Trainee",
-      "company": "Zenexis Solutions",
+      "company": "Zenexis Solutions Pvt Ltd",
       "location": "Bidar, Karnataka",
       "period": "02/2025 – 06/2025",
       "responsibilities": [
-        "Engineered 2+ full-stack web applications using the MERN stack.",
-        "Built and deployed TaskHive, a task management platform with 15+ REST APIs and real-time data handling.",
-        "Optimized backend performance using Mongoose, reducing response time by 30%.",
-        "Implemented secure file upload functionality using Multer and configured CORS for cross-origin access.",
-        "Developed responsive front-end interfaces using React.js, Vite, Bootstrap, and Ant Design.",
+        "Collaborated on 2+ full-stack MERN applications with 15+ REST APIs, reducing backend response times by 30% through Mongoose query optimization and scalable database schema redesign.",
+        "Implemented 5+ secure React.js interfaces with file uploads (Multer) and production-ready APIs, reducing form error rates by 20%.",
+        "Built and deployed TaskHive, a task management platform with real-time data handling, responsive UI using Vite, Bootstrap, and Ant Design.",
+        "Configured CORS for secure cross-origin access across multiple domains.",
+        "Conducted peer code reviews and resolved high-priority bugs, contributing to on-time releases and improved application stability.",
         "Contributed to Agile workflows including sprint planning, code reviews, and debugging."
       ]
     }
@@ -223,6 +226,7 @@
     "title": "Games",
     "quitTitle": "Quit Game?",
     "quitClose": "Your current game progress will be lost. You will return to the game selection screen.",
+    "quitCloseIdle": "Are you sure you want to close the games?",
     "quitSwitch": "Switching games will end your current session. Are you sure?",
     "keepPlaying": "Keep Playing",
     "exitGame": "Exit Game",

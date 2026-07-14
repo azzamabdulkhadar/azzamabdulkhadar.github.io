@@ -10,7 +10,7 @@ export default function Hero() {
   return (
     <section style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center',
-      justifyContent: 'center', padding: '6rem 2rem 4rem',
+      justifyContent: 'center', padding: 'var(--space-2xl) 2rem 4rem',
       position: 'relative', overflow: 'hidden',
       background: 'var(--bg-secondary)',
     }}>
@@ -31,7 +31,7 @@ export default function Hero() {
       <div style={{
         maxWidth: '1100px', width: '100%', margin: '0 auto',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        gap: '3rem', flexWrap: 'wrap',
+        gap: 'var(--space-xl)', flexWrap: 'wrap',
       }}>
         {/* Text side */}
         <motion.div
@@ -44,7 +44,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            style={{ fontFamily: 'var(--mono)', color: 'var(--accent-2)', fontSize: '0.9rem', marginBottom: '1rem' }}
+            style={{ fontFamily: 'var(--mono)', color: 'var(--accent-2)', fontSize: 'var(--text-base)', marginBottom: '1rem' }}
           >
             👋 {t('hero.greeting')}
           </motion.p>
@@ -53,7 +53,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7 }}
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: '0.75rem' }}
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: 'var(--space-sm)' }}
           >
             Azzam Abdul{' '}
             <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -68,11 +68,11 @@ export default function Hero() {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.3)',
-              borderRadius: '100px', padding: '0.4rem 1rem', marginBottom: '1.5rem',
+              borderRadius: '100px', padding: 'var(--space-xs) 1rem', marginBottom: '1.5rem',
             }}
           >
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 2s infinite' }} />
-            <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85rem', color: 'var(--text-h)' }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 'var(--text-sm)', color: 'var(--text-h)' }}>
               {t('hero.subtitle')}
             </span>
           </motion.div>
@@ -81,7 +81,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            style={{ fontSize: '0.92rem', color: 'var(--text)', lineHeight: 1.7, marginBottom: '1rem', maxWidth: '520px' }}
+            style={{ fontSize: 'var(--text-base)', color: 'var(--text)', lineHeight: 1.7, marginBottom: '1rem', maxWidth: '520px' }}
           >
             {t('hero.description')}
           </motion.p>
@@ -90,13 +90,13 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.65 }}
-            style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}
+            style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-xs)', marginBottom: 'var(--space-sm)' }}
           >
             {['MongoDB', 'Express', 'React', 'Node.js', 'Flutter', 'MySQL'].map(tech => (
               <span key={tech} style={{
                 background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.25)',
-                color: 'var(--accent)', borderRadius: '6px', padding: '0.2rem 0.6rem',
-                fontSize: '0.75rem', fontFamily: 'var(--mono)', fontWeight: 500,
+                color: 'var(--accent)', borderRadius: 'var(--radius-sm)', padding: '0.2rem 0.6rem',
+                fontSize: 'var(--text-xs)', fontFamily: 'var(--mono)', fontWeight: 500,
               }}>{tech}</span>
             ))}
           </motion.div>
@@ -105,7 +105,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            style={{ fontSize: '0.82rem', color: 'var(--accent-2)', fontFamily: 'var(--mono)', marginBottom: '1.5rem' }}
+            style={{ fontSize: 'var(--text-sm)', color: 'var(--accent-2)', fontFamily: 'var(--mono)', marginBottom: '1.5rem' }}
           >
             {t('hero.performanceNote')}
           </motion.p>
@@ -114,12 +114,12 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.75 }}
-            style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}
+            style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap', marginBottom: 'var(--space-lg)' }}
           >
             <button onClick={() => scrollTo('projects')} style={{
               background: 'var(--gradient)', color: '#fff', border: 'none',
-              padding: '0.65rem 1.4rem', borderRadius: '8px', cursor: 'pointer',
-              fontWeight: 600, fontSize: '0.88rem', fontFamily: 'var(--font)',
+              padding: '0.65rem 1.4rem', borderRadius: 'var(--radius-sm)', cursor: 'pointer',
+              fontWeight: 600, fontSize: 'var(--text-sm)', fontFamily: 'var(--font)',
               transition: 'opacity 0.2s, transform 0.2s',
             }}
               onMouseEnter={e => { e.target.style.opacity = '0.85'; e.target.style.transform = 'translateY(-2px)'; }}
@@ -127,12 +127,12 @@ export default function Hero() {
             >
               {t('hero.viewProjects')}
             </button>
-            <a href="/resume.pdf" download="Azzam_Resume.pdf" style={{
-              display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+            <a href="/azzamResume/Azzam_Resume.pdf" download="Azzam_Resume.pdf" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 'var(--space-xs)',
               background: 'transparent', color: 'var(--text-h)',
               border: '1px solid var(--border)', padding: '0.65rem 1.4rem',
-              borderRadius: '8px', fontWeight: 500, textDecoration: 'none',
-              fontSize: '0.88rem', fontFamily: 'var(--font)', transition: 'border-color 0.2s, transform 0.2s',
+              borderRadius: 'var(--radius-sm)', fontWeight: 500, textDecoration: 'none',
+              fontSize: 'var(--text-sm)', fontFamily: 'var(--font)', transition: 'border-color 0.2s, transform 0.2s',
             }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
@@ -142,8 +142,8 @@ export default function Hero() {
             <button onClick={() => scrollTo('contact')} style={{
               background: 'transparent', color: 'var(--text-h)',
               border: '1px solid var(--border)', padding: '0.65rem 1.4rem',
-              borderRadius: '8px', cursor: 'pointer', fontWeight: 500,
-              fontSize: '0.88rem', fontFamily: 'var(--font)', transition: 'border-color 0.2s, transform 0.2s',
+              borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: 500,
+              fontSize: 'var(--text-sm)', fontFamily: 'var(--font)', transition: 'border-color 0.2s, transform 0.2s',
             }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
@@ -159,12 +159,12 @@ export default function Hero() {
             style={{ display: 'flex', gap: '1rem' }}
           >
             {[
-              { icon: <Code2 size={20} />, href: 'https://github.com/Azzam-Abdul-Khadar' },
-              { icon: <Link size={20} />, href: 'https://linkedin.com/in/azzam-abdul-khadar' },
-              { icon: <Mail size={20} />, href: 'mailto:azzamcse@gmail.com' },
-            ].map(({ icon, href }, i) => (
-              <a key={i} href={href} target="_blank" rel="noreferrer" style={{
-                width: 42, height: 42, borderRadius: '10px',
+              { icon: <Code2 size={20} />, href: 'https://github.com/azzamabdulkhadar', label: 'GitHub' },
+              { icon: <Link size={20} />, href: 'https://linkedin.com/in/azzamabdulkhadar', label: 'LinkedIn' },
+              { icon: <Mail size={20} />, href: 'mailto:azzamcse@gmail.com', label: 'Email' },
+            ].map(({ icon, href, label }, i) => (
+              <a key={i} href={href} target="_blank" rel="noreferrer" aria-label={label} style={{
+                width: 42, height: 42, borderRadius: 'var(--radius-sm)',
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: 'var(--text)', transition: 'all 0.2s',
@@ -196,7 +196,7 @@ export default function Hero() {
                 background: 'var(--bg-card)', overflow: 'hidden',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <img src={heroImg} alt="Azzam" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={heroImg} alt="Azzam Abdul Khadar, full stack developer" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </div>
             {/* Floating badge */}
@@ -206,15 +206,15 @@ export default function Hero() {
               style={{
                 position: 'absolute', bottom: 10, right: -20,
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: '12px', padding: '0.5rem 0.9rem',
+                borderRadius: 'var(--radius-md)', padding: '0.5rem 0.9rem',
                 display: 'flex', alignItems: 'center', gap: '0.5rem',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
               }}
             >
-              <span style={{ fontSize: '1.2rem' }}>⚡</span>
+              <span style={{ fontSize: 'var(--text-xl)' }}>⚡</span>
               <div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text)', lineHeight: 1 }}>{t('hero.experienceLabel')}</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-h)' }}>{t('hero.experienceBadge')}</div>
+                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-h)' }}>{t('hero.experienceBadge')}</div>
               </div>
             </motion.div>
           </div>
@@ -227,7 +227,7 @@ export default function Hero() {
         transition={{ repeat: Infinity, duration: 2 }}
         onClick={() => scrollTo('about')}
         style={{
-          position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)',
+          position: 'absolute', bottom: 'var(--space-lg)', left: '50%', transform: 'translateX(-50%)',
           cursor: 'pointer', color: 'var(--text)', opacity: 0.5,
         }}
       >

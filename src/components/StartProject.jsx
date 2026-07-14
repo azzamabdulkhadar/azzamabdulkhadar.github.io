@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { Rocket, ChevronRight, ChevronLeft, Send, CheckCircle, AlertCircle, Briefcase, FileText, DollarSign, User } from 'lucide-react';
-import { SectionLabel } from './About';
+import SectionLabel from './SectionLabel';
 import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
 
