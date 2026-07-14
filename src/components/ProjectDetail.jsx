@@ -257,6 +257,28 @@ export default function ProjectDetail({ project, onClose }) {
               ))}
             </div>
 
+            {/* Live app / store links */}
+            {Array.isArray(project.stores) && project.stores.length > 0 && (
+              <>
+                <h3 className="section-heading" style={{ marginTop: '1.5rem' }}>{t('projects.liveApp')}</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                  {project.stores.map(s => (
+                    <a
+                      key={s.url}
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      className="github-link"
+                      style={{ marginTop: 0 }}
+                    >
+                      {s.label} <ExternalLink size={14} />
+                    </a>
+                  ))}
+                </div>
+              </>
+            )}
+
             {/* GitHub link */}
             {project.github && (
               <a

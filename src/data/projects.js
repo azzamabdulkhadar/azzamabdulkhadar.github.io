@@ -18,10 +18,14 @@ export const projects = [
     id: 'ems',
     i18nKey: 'projects.ems',
     type: 'mobile', // Flutter mobile app
-    stack: ['Flutter', 'Dart', 'Dio', 'MySQL', 'REST APIs', 'Provider'],
+    stack: ['Flutter', 'Dart', 'Dio', 'MySQL', 'REST APIs', 'Provider', 'Material UI'],
     color: '#7c3aed',
     emoji: '👥',
     images: [emsAdminDash, emsStaffDash, emsAdminAttendance, emsStaffCalendar, emsStaffVacation],
+    stores: [
+      { label: 'Admin App', url: 'https://play.google.com/store/apps/details?id=com.atmezai.admin.admin' },
+      { label: 'Employee App', url: 'https://play.google.com/store/apps/details?id=com.atmezai.employee.atmezai_employee' },
+    ],
   },
   {
     id: 'taskhive',
@@ -30,7 +34,7 @@ export const projects = [
     stack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Ant Design', 'Multer', 'Mongoose', 'REST APIs'],
     color: '#f59e0b',
     emoji: '📋',
-    github: 'https://github.com/Azzam-Abdul-Khadar/TaskHive.git',
+    github: 'https://github.com/azzamabdulkhadar/TaskHive.git',
     images: [taskhiveEvents, taskhiveNotes, taskhiveTasks],
   },
   {
@@ -40,7 +44,7 @@ export const projects = [
     stack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'JWT', 'REST APIs', 'Bootstrap'],
     color: '#ef4444',
     emoji: '🩸',
-    github: 'https://github.com/Azzam-Abdul-Khadar/BloodHub.git',
+    github: 'https://github.com/azzamabdulkhadar/BloodHub.git',
     images: [
       // Add your BloodHub screenshots to src/assets/images/bloodHud/ folder
       // Recommended: 1280x800px or 1440x900px PNG screenshots

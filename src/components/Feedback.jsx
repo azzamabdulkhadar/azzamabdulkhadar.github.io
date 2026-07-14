@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Star, Send, CheckCircle, AlertCircle } from 'lucide-react';
-import { SectionLabel } from './About';
+import SectionLabel from './SectionLabel';
 import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
 
@@ -60,19 +60,19 @@ export default function Feedback() {
   const activeRating = hover || rating;
 
   return (
-    <section id="feedback" ref={ref} style={{ padding: '5rem 2rem', background: 'var(--bg)' }}>
+    <section id="feedback" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg)' }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          style={{ textAlign: 'center', marginBottom: '2rem' }}
+          style={{ textAlign: 'center', marginBottom: 'var(--space-lg)' }}
         >
           <SectionLabel>{t('feedback.label')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 700, marginBottom: '0.5rem' }}>
             {t('feedback.heading')}
           </h2>
-          <p style={{ color: 'var(--text)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+          <p style={{ color: 'var(--text)', fontSize: 'var(--text-base)', lineHeight: 1.6 }}>
             {t('feedback.subtitle')}
           </p>
         </motion.div>
@@ -84,20 +84,21 @@ export default function Feedback() {
           transition={{ delay: 0.2, duration: 0.6 }}
           style={{
             background: 'var(--bg-card)', border: '1px solid var(--border)',
-            borderRadius: '20px', padding: '2rem',
-            display: 'flex', flexDirection: 'column', gap: '1.25rem',
+            borderRadius: 'var(--radius-lg)', padding: 'var(--space-lg)',
+            display: 'flex', flexDirection: 'column', gap: 'var(--space-md)',
           }}
         >
           {/* Star rating */}
           <div style={{ textAlign: 'center' }}>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text)', marginBottom: '0.75rem' }}>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', marginBottom: 'var(--space-sm)' }}>
               {t('feedback.rateQuestion')}
             </p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-xs)', marginBottom: '0.5rem' }}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
+                  aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHover(star)}
                   onMouseLeave={() => setHover(0)}
@@ -122,7 +123,7 @@ export default function Feedback() {
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                  fontSize: '0.8rem', color: '#fbbf24',
+                  fontSize: 'var(--text-xs)', color: '#fbbf24',
                   fontWeight: 500, fontFamily: 'var(--font)',
                 }}
               >
@@ -133,7 +134,7 @@ export default function Feedback() {
 
           {/* Comment */}
           <div>
-            <label style={{ fontSize: '0.82rem', color: 'var(--text)', display: 'block', marginBottom: '0.4rem' }}>
+            <label style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', display: 'block', marginBottom: 'var(--space-xs)' }}>
               {t('feedback.commentLabel')}
             </label>
             <textarea
@@ -144,8 +145,8 @@ export default function Feedback() {
               rows={3}
               style={{
                 width: '100%', background: 'var(--bg)', border: '1px solid var(--border)',
-                borderRadius: '10px', padding: '0.85rem 1rem', color: 'var(--text-h)',
-                fontFamily: 'var(--font)', fontSize: '0.9rem', outline: 'none',
+                borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', color: 'var(--text-h)',
+                fontFamily: 'var(--font)', fontSize: 'var(--text-base)', outline: 'none',
                 transition: 'border-color 0.2s', resize: 'none', minHeight: '80px',
                 boxSizing: 'border-box',
               }}
@@ -162,9 +163,9 @@ export default function Feedback() {
               animate={{ opacity: 1, y: 0 }}
               style={{
                 background: 'rgba(16,185,129,0.15)', border: '1px solid #10b981',
-                borderRadius: '10px', padding: '0.85rem',
+                borderRadius: 'var(--radius-sm)', padding: '0.85rem',
                 display: 'flex', alignItems: 'center', gap: '0.6rem',
-                color: '#10b981', fontSize: '0.88rem', fontWeight: 500,
+                color: '#10b981', fontSize: 'var(--text-sm)', fontWeight: 500,
               }}
             >
               <CheckCircle size={18} />
@@ -178,9 +179,9 @@ export default function Feedback() {
               animate={{ opacity: 1, y: 0 }}
               style={{
                 background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444',
-                borderRadius: '10px', padding: '0.85rem',
+                borderRadius: 'var(--radius-sm)', padding: '0.85rem',
                 display: 'flex', alignItems: 'center', gap: '0.6rem',
-                color: '#ef4444', fontSize: '0.88rem', fontWeight: 500,
+                color: '#ef4444', fontSize: 'var(--text-sm)', fontWeight: 500,
               }}
             >
               <AlertCircle size={18} />
@@ -194,9 +195,9 @@ export default function Feedback() {
             disabled={rating === 0 || status === 'loading'}
             style={{
               background: rating === 0 ? 'var(--border)' : 'var(--gradient)',
-              color: '#fff', border: 'none', borderRadius: '10px',
+              color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)',
               padding: '0.8rem', cursor: rating === 0 || status === 'loading' ? 'not-allowed' : 'pointer',
-              fontWeight: 600, fontSize: '0.92rem', fontFamily: 'var(--font)',
+              fontWeight: 600, fontSize: 'var(--text-base)', fontFamily: 'var(--font)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
               transition: 'opacity 0.2s, transform 0.2s',
               opacity: status === 'loading' ? 0.7 : 1,

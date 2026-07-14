@@ -161,6 +161,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
   const birdIdxRef = useRef(0);
   const pausedRef = useRef(false);
   const [countdown, setCountdown] = useState(null);
+  const [countdownMode, setCountdownMode] = useState('start'); // 'start' | 'resume'
   const [toast, setToast] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
   const reachedRef = useRef(new Set());
@@ -185,6 +186,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
   useImperativeHandle(ref, () => ({
     pause() { pausedRef.current = true; },
     resume() {
+      setCountdownMode('resume');
       let count = 3;
       setCountdown(count);
       countdownRef.current = setInterval(() => {
@@ -224,6 +226,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
     setDisplay({ score: 0, over: false, started: true });
     onRunningChange?.(false);
 
+    setCountdownMode('start');
     let count = 3;
     setCountdown(count);
     countdownRef.current = setInterval(() => {
@@ -578,7 +581,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
               textShadow: '0 0 30px currentColor',
             }}>{countdown}</div>
             <div style={{ color: '#fff', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-              {display.over ? 'Get ready...' : 'Resuming...'}
+              {countdownMode === 'resume' ? 'Resuming...' : 'Starting...'}
             </div>
           </div>
         )}

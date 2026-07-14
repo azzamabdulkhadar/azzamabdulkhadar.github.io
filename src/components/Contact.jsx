@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { Mail, Phone, Code2, Link, Send, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
-import { SectionLabel } from './About';
+import SectionLabel from './SectionLabel';
 import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
 
@@ -70,20 +70,20 @@ export default function Contact() {
     { icon: <Mail size={18} />, label: t('contact.email'), value: 'azzamcse@gmail.com', href: 'mailto:azzamcse@gmail.com' },
     { icon: <Phone size={18} />, label: t('contact.phone'), value: '+91-7349701430', href: 'tel:+917349701430' },
     { icon: <MapPin size={18} />, label: t('contact.location'), value: 'Hyderabad, Telangana', href: null },
-    { icon: <Code2 size={18} />, label: t('contact.github'), value: 'Azzam-Abdul-Khadar', href: 'https://github.com/Azzam-Abdul-Khadar' },
-    { icon: <Link size={18} />, label: t('contact.linkedin'), value: 'azzam-abdul-khadar', href: 'https://linkedin.com/in/azzam-abdul-khadar' },
+    { icon: <Code2 size={18} />, label: t('contact.github'), value: 'azzamabdulkhadar', href: 'https://github.com/azzamabdulkhadar' },
+    { icon: <Link size={18} />, label: t('contact.linkedin'), value: 'azzamabdulkhadar', href: 'https://linkedin.com/in/azzamabdulkhadar' },
   ];
 
   const inputStyle = {
     width: '100%', background: 'var(--bg)', border: '1px solid var(--border)',
-    borderRadius: '10px', padding: '0.85rem 1rem', color: 'var(--text-h)',
-    fontFamily: 'var(--font)', fontSize: '0.95rem', outline: 'none',
+    borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', color: 'var(--text-h)',
+    fontFamily: 'var(--font)', fontSize: 'var(--text-base)', outline: 'none',
     transition: 'border-color 0.2s', boxSizing: 'border-box',
   };
 
   return (
     <section id="contact" ref={ref} style={{
-      padding: '6rem 2rem',
+      padding: 'var(--space-2xl) 2rem',
       background: 'var(--bg-secondary)',
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -91,7 +91,7 @@ export default function Contact() {
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          style={{ textAlign: 'center', marginBottom: '3rem' }}
+          style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}
         >
           <SectionLabel>{t('contact.label')}</SectionLabel>
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
@@ -99,7 +99,7 @@ export default function Contact() {
           </h2>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-lg)' }}>
           {/* Contact info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -110,7 +110,7 @@ export default function Contact() {
               {contacts.map(({ icon, label, value, href }) => (
                 <div key={label} style={{
                   background: 'var(--bg-card)', border: '1px solid var(--border)',
-                  borderRadius: '12px', padding: '1rem 1.25rem',
+                  borderRadius: 'var(--radius-md)', padding: '1rem var(--space-md)',
                   display: 'flex', alignItems: 'center', gap: '1rem',
                   transition: 'border-color 0.2s',
                 }}
@@ -118,7 +118,7 @@ export default function Contact() {
                   onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
                 >
                   <div style={{
-                    width: 38, height: 38, borderRadius: '10px',
+                    width: 38, height: 38, borderRadius: 'var(--radius-sm)',
                     background: 'rgba(124,58,237,0.15)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     color: 'var(--accent)', flexShrink: 0,
@@ -126,15 +126,15 @@ export default function Contact() {
                     {icon}
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text)', marginBottom: '0.1rem' }}>{label}</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text)', marginBottom: '0.1rem' }}>{label}</div>
                     {href ? (
                       <a dir="ltr" href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
-                        style={{ color: 'var(--text-h)', fontSize: '0.9rem', fontWeight: 500, transition: 'color 0.2s', display: 'inline-block' }}
+                        style={{ color: 'var(--text-h)', fontSize: 'var(--text-base)', fontWeight: 500, transition: 'color 0.2s', display: 'inline-block' }}
                         onMouseEnter={e => e.target.style.color = 'var(--accent)'}
                         onMouseLeave={e => e.target.style.color = 'var(--text-h)'}
                       >{value}</a>
                     ) : (
-                      <span dir="ltr" style={{ color: 'var(--text-h)', fontSize: '0.9rem', fontWeight: 500, display: 'inline-block' }}>{value}</span>
+                      <span dir="ltr" style={{ color: 'var(--text-h)', fontSize: 'var(--text-base)', fontWeight: 500, display: 'inline-block' }}>{value}</span>
                     )}
                   </div>
                 </div>
@@ -150,7 +150,7 @@ export default function Contact() {
           >
             <form onSubmit={handleSubmit} style={{
               background: 'var(--bg-card)', border: '1px solid var(--border)',
-              borderRadius: '20px', padding: '2rem',
+              borderRadius: 'var(--radius-lg)', padding: 'var(--space-lg)',
               display: 'flex', flexDirection: 'column', gap: '1rem',
               position: 'relative',
             }}>
@@ -162,9 +162,9 @@ export default function Contact() {
                   exit={{ opacity: 0, y: -10 }}
                   style={{
                     background: 'rgba(16,185,129,0.15)', border: '1px solid #10b981',
-                    borderRadius: '10px', padding: '1rem',
-                    display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    color: '#10b981', fontSize: '0.9rem', fontWeight: 500,
+                    borderRadius: 'var(--radius-sm)', padding: '1rem',
+                    display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
+                    color: '#10b981', fontSize: 'var(--text-base)', fontWeight: 500,
                   }}
                 >
                   <CheckCircle size={18} />
@@ -180,9 +180,9 @@ export default function Contact() {
                   exit={{ opacity: 0, y: -10 }}
                   style={{
                     background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444',
-                    borderRadius: '10px', padding: '1rem',
-                    display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    color: '#ef4444', fontSize: '0.9rem', fontWeight: 500,
+                    borderRadius: 'var(--radius-sm)', padding: '1rem',
+                    display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
+                    color: '#ef4444', fontSize: 'var(--text-base)', fontWeight: 500,
                   }}
                 >
                   <AlertCircle size={18} />
@@ -217,9 +217,9 @@ export default function Contact() {
               />
               <button type="submit" disabled={loading} style={{
                 background: status === 'success' ? '#10b981' : 'var(--gradient)',
-                color: '#fff', border: 'none', borderRadius: '10px',
+                color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)',
                 padding: '0.85rem', cursor: loading ? 'not-allowed' : 'pointer', fontWeight: 600,
-                fontSize: '0.95rem', fontFamily: 'var(--font)',
+                fontSize: 'var(--text-base)', fontFamily: 'var(--font)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
                 transition: 'opacity 0.2s, transform 0.2s',
                 opacity: loading ? 0.7 : 1,

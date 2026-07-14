@@ -34,7 +34,7 @@ Professional personal portfolio website built with React and Vite.
 
 1. Clone repository
 ```bash
-git clone https://github.com/Azzam-Abdul-Khadar/azzam-portfolio.git
+git clone https://github.com/azzamabdulkhadar/azzam-portfolio.git
 cd azzam-portfolio
 ```
 2. Install dependencies

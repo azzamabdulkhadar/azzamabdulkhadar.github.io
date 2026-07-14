@@ -150,7 +150,9 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
   const [charIdx, setCharIdx] = useState(0);
   const charIdxRef = useRef(0);
   const pausedRef = useRef(false);
+  const startingRef = useRef(false); // true while a start/resume countdown is running
   const [countdown, setCountdown] = useState(null);
+  const [countdownMode, setCountdownMode] = useState('start'); // 'start' | 'resume'
   const [toast, setToast] = useState(null);       // current milestone toast
   const [showInfo, setShowInfo] = useState(false); // rules panel
   const reachedRef = useRef(new Set());            // milestones already shown
@@ -174,6 +176,8 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
     },
     resume() {
       // 3-second countdown then unpause
+      setCountdownMode('resume');
+      startingRef.current = true;
       let count = 3;
       setCountdown(count);
       countdownRef.current = setInterval(() => {
@@ -181,6 +185,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
         if (count <= 0) {
           clearInterval(countdownRef.current);
           setCountdown(null);
+          startingRef.current = false;
           pausedRef.current = false;
         } else {
           setCountdown(count);
@@ -193,6 +198,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
     forceStop() {
       clearInterval(countdownRef.current);
       setCountdown(null);
+      startingRef.current = false;
       pausedRef.current = false;
       state.current.running = false;
       onRunningChange?.(false);
@@ -205,6 +211,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
   };
 
   const start = () => {
+    if (startingRef.current) return; // ignore taps/keys while a countdown is running
     clearInterval(countdownRef.current);
     clearTimeout(toastTimerRef.current);
     setToast(null);
@@ -220,6 +227,8 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
     setDisplay({ score: 0, over: false, started: true, diff: 'NORMAL' });
     onRunningChange?.(false);
 
+    setCountdownMode('start');
+    startingRef.current = true;
     let count = 3;
     setCountdown(count);
     countdownRef.current = setInterval(() => {
@@ -227,6 +236,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
       if (count <= 0) {
         clearInterval(countdownRef.current);
         setCountdown(null);
+        startingRef.current = false;
         state.current.running = true;
         onRunningChange?.(true);
       } else {
@@ -622,7 +632,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
               {countdown}
             </div>
             <div style={{ color: '#fff', fontSize: '0.9rem', marginTop: '0.5rem', fontFamily: 'var(--font)' }}>
-              {display.over ? 'Get ready...' : 'Resuming...'}
+              {countdownMode === 'resume' ? 'Resuming...' : 'Starting...'}
             </div>
           </div>
         )}
