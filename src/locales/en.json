@@ -27,7 +27,7 @@
     "para1": "I'm a Full Stack and App Developer from Hyderabad, India, with a B.Tech in Computer Science from VTU. Experienced in delivering production-ready applications with clean architecture, efficient state management, and measurable improvements in speed and usability.",
     "para2_prefix": "At ",
     "para2_company": "Atmez AI Solutions",
-    "para2_suffix": ", I engineer and maintain 4+ production Flutter apps across HR, education, and productivity domains, building 20+ responsive UI screens and integrating 10+ REST APIs for real-time data synchronization.",
+    "para2_suffix": ", I engineer and maintain 4+ production Flutter apps across HR, education, and productivity domains, building 50+ responsive UI screens and integrating 20+ REST APIs for real-time data synchronization.",
     "para3_prefix": "Previously at ",
     "para3_company": "Zenexis Solutions Pvt Ltd",
     "para3_suffix": ", I collaborated on 2+ full-stack MERN applications with 15+ REST APIs, reducing backend response times by 30% through query optimization and scalable schema redesign.",
@@ -147,7 +147,7 @@
       "period": "01/2026 – Present",
       "responsibilities": [
         "Engineered and maintained 4+ production Flutter apps across HR, education, and productivity domains (incl. EMS & Master Admin), serving real users.",
-        "Built 20+ responsive UI screens and integrated 10+ RESTful APIs for real-time data synchronization, enhancing functionality and user engagement.",
+        "Built 50+ responsive UI screens and integrated 20+ RESTful APIs for real-time data synchronization, enhancing functionality and user engagement.",
         "Crafted role-based UI components for dashboards, attendance tracking, and employee workflows with REST API integration using HTTP/Dio and a MySQL backend.",
         "Implemented Provider-based state management for efficient UI updates.",
         "Optimized UI performance by 20–30% via efficient state management and widget rendering, cutting crash rate by 15%.",
