@@ -6,7 +6,6 @@ import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Education from './components/Education';
 import Contact from './components/Contact';
-import StartProject from './components/StartProject';
 import Feedback from './components/Feedback';
 import Footer from './components/Footer';
 import ChatBot from './components/ChatBot';
@@ -25,7 +24,6 @@ function App() {
         <Experience />
         <Education />
         <Contact />
-        <StartProject />
         <Feedback />
       </main>
       <Footer />

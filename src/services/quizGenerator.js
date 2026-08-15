@@ -1,11 +1,6 @@
-const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+import { aiComplete } from './aiProvider';
 
 export async function generateQuizQuestions(topic = 'MERN', difficulty = 'mixed', count = 10) {
-  if (!API_KEY || API_KEY === 'your_groq_api_key_here') {
-    throw new Error('Groq API key not configured');
-  }
-
   const difficultyPrompt = difficulty === 'mixed' 
     ? '3 Easy, 4 Medium, 3 Hard'
     : `All ${difficulty}`;
@@ -35,30 +30,13 @@ Requirements:
 Generate the questions now:`;
 
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: 'You are a quiz question generator. Generate high-quality multiple choice questions. Always respond with valid JSON only.' },
-          { role: 'user', content: prompt },
-        ],
-        temperature: 0.7,
-        max_tokens: 2000,
-      }),
-    });
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err?.error?.message || `HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
+    const { content } = await aiComplete(
+      [
+        { role: 'system', content: 'You are a quiz question generator. Generate high-quality multiple choice questions. Always respond with valid JSON only.' },
+        { role: 'user', content: prompt },
+      ],
+      { maxTokens: 2000, temperature: 0.7 }
+    );
 
     if (!content) {
       throw new Error('No response from API');

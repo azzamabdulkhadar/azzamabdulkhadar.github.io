@@ -2,9 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, User, Loader, ThumbsUp, ThumbsDown, Copy, Check, Mic, MicOff, Trash2 } from 'lucide-react';
 import { useTheme } from '../ThemeContext';
-
-const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+import { aiComplete } from '../services/aiProvider';
 
 const SYSTEM_CONTEXT = `You are Azzam's portfolio assistant. Answer questions about Azzam Abdul Khadar helpfully and in a well-structured format.
 
@@ -242,42 +240,22 @@ export default function ChatBot() {
     setLoading(true);
 
     try {
-      if (!API_KEY || API_KEY === 'your_groq_api_key_here') throw new Error('no_key');
+      const { content: reply } = await aiComplete(
+        [
+          { role: 'system', content: SYSTEM_CONTEXT },
+          { role: 'user', content: msg },
+        ],
+        { maxTokens: 500, temperature: 0.7 }
+      );
 
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: [
-            { role: 'system', content: SYSTEM_CONTEXT },
-            { role: 'user', content: msg },
-          ],
-          max_tokens: 500,
-          temperature: 0.7,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err?.error?.message || `HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-      const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't get a response.";
       const botMsgId = messageIdRef.current++;
       setMessages(m => [...m, { role: 'bot', text: reply, id: botMsgId }]);
     } catch (e) {
       let fallback;
-      if (e.message === 'no_key') {
-        fallback = "⚠️ API key not set. Add your Groq key to the .env file as VITE_GROQ_API_KEY, then restart the dev server.";
-      } else if (e.message.includes('invalid_api_key') || e.message.includes('401')) {
-        fallback = "⚠️ Invalid API key. Please check your VITE_GROQ_API_KEY in the .env file.";
+      if (e.message.includes('No API keys configured')) {
+        fallback = "⚠️ No API keys configured. Add at least one key (VITE_GROQ_API_KEY, VITE_GEMINI_API_KEY, or VITE_OPENROUTER_API_KEY) to the .env file, then restart the dev server.";
       } else {
-        fallback = `⚠️ Error: ${e.message}`;
+        fallback = `⚠️ ${e.message}`;
       }
       const botMsgId = messageIdRef.current++;
       setMessages(m => [...m, { role: 'bot', text: fallback, id: botMsgId }]);
