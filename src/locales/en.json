@@ -5,15 +5,16 @@
     "projects": "Projects",
     "experience": "Experience",
     "education": "Education",
+    "certificates": "Certificates",
     "contact": "Contact",
     "games": "Games"
   },
   "hero": {
     "greeting": "Hello, I'm",
     "name": "Azzam Abdul Khadar",
-    "subtitle": "Full-Stack and App Developer",
-    "description": "Full Stack & App Developer with 1+ year of experience building scalable web and mobile applications using MERN stack and Flutter, delivering high-performance solutions with clean architecture and seamless user experience.",
-    "badge": "MERN Stack & App Developer",
+    "subtitle": "Full-Stack and Mobile App Developer",
+    "description": "Full Stack & Mobile App Developer with 1+ year of experience building scalable web and mobile applications using MERN stack and Flutter, delivering high-performance solutions with clean architecture and seamless user experience.",
+    "badge": "MERN Stack & Mobile App Developer",
     "viewProjects": "View Projects",
     "downloadResume": "Download Resume",
     "contactMe": "Contact Me",
@@ -24,7 +25,7 @@
   "about": {
     "label": "About Me",
     "heading": "Turning ideas into real products",
-    "para1": "I'm a Full Stack and App Developer from Hyderabad, India, with a B.Tech in Computer Science from VTU. Experienced in delivering production-ready applications with clean architecture, efficient state management, and measurable improvements in speed and usability.",
+    "para1": "I'm a Full Stack and Mobile App Developer from Hyderabad, India, with a B.Tech in Computer Science from VTU. Experienced in delivering production-ready applications with clean architecture, efficient state management, and measurable improvements in speed and usability.",
     "para2_prefix": "At ",
     "para2_company": "Atmez AI Solutions",
     "para2_suffix": ", I engineer and maintain 4+ production Flutter apps across HR, education, and productivity domains, building 50+ responsive UI screens and integrating 20+ REST APIs for real-time data synchronization.",
@@ -141,7 +142,7 @@
     "label": "Experience",
     "heading": "Work Experience",
     "job1": {
-      "position": "App Developer Trainee",
+      "position": "Mobile App Developer Trainee",
       "company": "Atmez AI Solutions",
       "location": "Hyderabad, Telangana",
       "period": "01/2026 – Present",
@@ -166,6 +167,19 @@
         "Configured CORS for secure cross-origin access across multiple domains.",
         "Conducted peer code reviews and resolved high-priority bugs, contributing to on-time releases and improved application stability.",
         "Contributed to Agile workflows including sprint planning, code reviews, and debugging."
+      ]
+    },
+    "job3": {
+      "position": "Intern",
+      "company": "PerfAI, Inc.",
+      "location": "Santa Clara, CA, United States (Remote)",
+      "period": "03/2025 – 09/2025",
+      "responsibilities": [
+        "Completed a 6-month internship at PerfAI, Inc., an AI-driven performance testing platform based in Santa Clara, CA.",
+        "Demonstrated commitment, professionalism, and a willingness to learn throughout the internship period.",
+        "Gained hands-on exposure to AI/ML-powered performance and API testing methodologies.",
+        "Collaborated with cross-functional teams on quality assurance and automation workflows.",
+        "Contributed to internal projects focused on performance optimization and testing strategies."
       ]
     }
   },
@@ -203,7 +217,7 @@
     "errorMessage": "Failed to send message. Please try again."
   },
   "footer": {
-    "text": "© 2026 Azzam Abdul Khadar. Built with React & Framer Motion."
+    "text": "© 2026 Azzam Abdul Khadar. All rights reserved."
   },
   "feedback": {
     "label": "Feedback",
