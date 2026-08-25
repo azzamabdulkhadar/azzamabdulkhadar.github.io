@@ -44,10 +44,10 @@ export default function About() {
               {t('about.para1')}
             </p>
             <p style={{ color: 'var(--text)', lineHeight: 1.9, marginBottom: 'var(--space-md)', fontSize: '1rem' }}>
-              {t('about.para2_prefix')}<span style={{ color: 'var(--accent-2)', fontWeight: 500 }}>{t('about.para2_company')}</span>{t('about.para2_suffix')}
+              {t('about.para2_prefix')}<a href="https://atmez.ai/" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-2)', fontWeight: 500, textDecoration: 'none', borderBottom: '1px dashed var(--accent-2)' }}>{t('about.para2_company')}</a>{t('about.para2_suffix')}
             </p>
             <p style={{ color: 'var(--text)', lineHeight: 1.9, fontSize: '1rem' }}>
-              {t('about.para3_prefix')}<span style={{ color: 'var(--accent-2)', fontWeight: 500 }}>{t('about.para3_company')}</span>{t('about.para3_suffix')}
+              {t('about.para3_prefix')}<a href="https://zenexistech.com/" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-2)', fontWeight: 500, textDecoration: 'none', borderBottom: '1px dashed var(--accent-2)' }}>{t('about.para3_company')}</a>{t('about.para3_suffix')}
             </p>
 
             {/* Stats */}

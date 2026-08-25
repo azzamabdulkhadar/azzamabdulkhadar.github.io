@@ -16,12 +16,12 @@ Always format your responses using markdown:
 - IMPORTANT: Always add spaces around bold and code text. Write "is a **Full Stack** Developer" NOT "is a**Full Stack**Developer".
 
 About Azzam:
-- Full-Stack and App Developer currently based in Hyderabad, Telangana
+- Full-Stack and Mobile App Developer currently based in Hyderabad, Telangana
 - B.Tech in Computer Science from Visvesvaraya Technological University (VTU), graduated 06/2025, Belagavi, Karnataka
 - Pre-University Course from Department of Pre-University Education Karnataka, 07/2019 – 07/2021, Bidar, Karnataka
 
 ### Experience:
-1. **App Developer Trainee** at **Atmez AI Solutions**, Hyderabad, Telangana (01/2026 – Present)
+1. **Mobile App Developer Trainee** at **Atmez AI Solutions**, Hyderabad, Telangana (01/2026 – Present)
    - Engineered and maintained 4+ production Flutter apps across HR, education, and productivity domains (incl. EMS & Master Admin), serving real users
    - Built 20+ responsive UI screens and integrated 10+ RESTful APIs for real-time data synchronization
    - Crafted role-based UI components for dashboards, attendance tracking, and employee workflows with HTTP/Dio and MySQL backend

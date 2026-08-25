@@ -12,6 +12,7 @@ export default function Experience() {
 
   const job1Responsibilities = t('experience.job1.responsibilities', { returnObjects: true });
   const job2Responsibilities = t('experience.job2.responsibilities', { returnObjects: true });
+  const job3Responsibilities = t('experience.job3.responsibilities', { returnObjects: true });
 
   return (
     <section id="experience" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg-secondary)' }}>
@@ -32,7 +33,7 @@ export default function Experience() {
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.6 }}
-          style={{ maxWidth: '720px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}
         >
           {/* Atmez AI Solutions */}
           <div style={{
@@ -56,7 +57,9 @@ export default function Experience() {
                       {t('experience.job1.position')}
                     </h3>
                     <div style={{ color: 'var(--accent-2)', fontWeight: 500, fontSize: 'var(--text-base)' }}>
-                      {t('experience.job1.company')}
+                      <a href="https://atmez.ai/" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none', borderBottom: '1px dashed currentColor' }}>
+                        {t('experience.job1.company')}
+                      </a>
                     </div>
                     <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', marginTop: '0.15rem' }}>
                       {t('experience.job1.location')}
@@ -122,7 +125,9 @@ export default function Experience() {
                       {t('experience.job2.position')}
                     </h3>
                     <div style={{ color: '#06b6d4', fontWeight: 500, fontSize: 'var(--text-base)' }}>
-                      {t('experience.job2.company')}
+                      <a href="https://zenexistech.com/" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none', borderBottom: '1px dashed currentColor' }}>
+                        {t('experience.job2.company')}
+                      </a>
                     </div>
                     <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', marginTop: '0.15rem' }}>
                       {t('experience.job2.location')}
@@ -158,6 +163,74 @@ export default function Experience() {
                     <span key={tech} style={{
                       background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)',
                       color: '#06b6d4', borderRadius: 'var(--radius-sm)', padding: '0.2rem 0.6rem',
+                      fontSize: 'var(--text-xs)', fontFamily: 'var(--mono)',
+                    }}>{tech}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* PerfAI Inc. */}
+          <div style={{
+            background: 'var(--bg-card)', border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)', padding: 'var(--space-lg)',
+            borderLeft: '3px solid #f59e0b',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-md)' }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: 'var(--radius-md)',
+                background: 'rgba(245,158,11,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#f59e0b', flexShrink: 0,
+              }}>
+                <Briefcase size={22} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-h)', marginBottom: '0.2rem' }}>
+                      {t('experience.job3.position')}
+                    </h3>
+                    <div style={{ color: '#f59e0b', fontWeight: 500, fontSize: 'var(--text-base)' }}>
+                      <a href="https://perfai.ai/" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none', borderBottom: '1px dashed currentColor' }}>
+                        {t('experience.job3.company')}
+                      </a>
+                    </div>
+                    <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', marginTop: '0.15rem' }}>
+                      {t('experience.job3.location')}
+                    </div>
+                  </div>
+                  <span style={{
+                    fontFamily: 'var(--mono)', fontSize: 'var(--text-xs)',
+                    color: '#f59e0b', background: 'rgba(245,158,11,0.1)',
+                    border: '1px solid rgba(245,158,11,0.3)',
+                    padding: '0.3rem var(--space-sm)', borderRadius: 'var(--radius-sm)', whiteSpace: 'nowrap',
+                  }}>
+                    {t('experience.job3.period')}
+                  </span>
+                </div>
+
+                <ul style={{ listStyle: 'none', marginTop: 'var(--space-md)', display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+                  {Array.isArray(job3Responsibilities) && job3Responsibilities.map((item, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={inView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: 0.4 + i * 0.1 }}
+                      style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'flex-start', color: 'var(--text)', fontSize: 'var(--text-base)', lineHeight: 1.7 }}
+                    >
+                      <span style={{ color: '#f59e0b', marginTop: '0.2rem', flexShrink: 0 }}>▸</span>
+                      {item}
+                    </motion.li>
+                  ))}
+                </ul>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-xs)', marginTop: '1.5rem' }}>
+                  {['AI/ML', 'Performance Testing', 'API Testing', 'Automation', 'Quality Assurance'].map(tech => (
+                    <span key={tech} style={{
+                      background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)',
+                      color: '#f59e0b', borderRadius: 'var(--radius-sm)', padding: '0.2rem 0.6rem',
                       fontSize: 'var(--text-xs)', fontFamily: 'var(--mono)',
                     }}>{tech}</span>
                   ))}

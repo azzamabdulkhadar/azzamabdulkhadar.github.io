@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('default');
+  const [theme, setTheme] = useState('dark');
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <div data-theme={theme} style={{ minHeight: '100vh' }}>
