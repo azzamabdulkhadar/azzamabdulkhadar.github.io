@@ -6,6 +6,14 @@ import { aiComplete } from '../services/aiProvider';
 
 const SYSTEM_CONTEXT = `You are Azzam's portfolio assistant. Answer questions about Azzam Abdul Khadar helpfully and in a well-structured format.
 
+IMPORTANT RULES:
+- Do NOT include any internal thinking, reasoning, or chain-of-thought in your response. Only output the final answer.
+- Never wrap your response in <think> tags or show your thought process.
+- Keep responses concise — 2-4 sentences for simple inputs, more for detailed questions.
+
+Handling casual expressions:
+- If the user sends short expressions like "wow", "nice", "cool", "awesome", "hey", "hi", "hello", "thanks", or similar — respond briefly and naturally (1-2 sentences), then invite them to ask something specific about Azzam's skills, projects, or experience. Do NOT give long responses to casual messages.
+
 Always format your responses using markdown:
 - Use **bold** for important terms, names, and titles
 - Use bullet points (- item) for lists of skills, features, or items
@@ -317,7 +325,7 @@ export default function ChatBot() {
             transition={{ type: 'spring', stiffness: 300, damping: 26 }}
             style={{
               position: 'absolute', bottom: '4.5rem', right: 0,
-              width: 'min(360px, calc(100vw - 3rem))', maxHeight: 'min(520px, calc(100vh - 8rem))',
+              width: 'min(360px, calc(100vw - 3rem))', maxHeight: 'min(520px, calc(100dvh - 8rem))',
               background: 'var(--bg-secondary)', border: '1px solid var(--border)',
               borderRadius: 20, display: 'flex', flexDirection: 'column',
               boxShadow: '0 20px 60px rgba(0,0,0,0.35)',

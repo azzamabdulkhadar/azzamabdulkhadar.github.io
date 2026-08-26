@@ -123,7 +123,7 @@ export default function QuizGame({ onPlayingChange }) {
   const progress = ((idx + 1) / pool.length) * 100;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: 640, margin: '0 auto', position: 'relative' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: 900, margin: '0 auto', width: '100%', position: 'relative' }}>
 
       {/* Exit Confirmation Dialog */}
       <AnimatePresence>
@@ -371,7 +371,7 @@ function Confetti() {
 function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, showInfo, setShowInfo, useAI, setUseAI, loading, error }) {
   const topics = ['All', 'MERN', 'Android'];
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: 560, margin: '0 auto', width: '100%', position: 'relative' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: 900, margin: '0 auto', width: '100%', position: 'relative' }}>
 
       {/* Info panel overlay */}
       <AnimatePresence>
@@ -545,7 +545,7 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
       </div>
 
       {/* Points guide */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 90px), 1fr))', gap: '0.5rem' }}>
         {[['Easy', '10 pts', '#22c55e'], ['Medium', '20 pts', '#f59e0b'], ['Hard', '30 pts', '#ef4444']].map(([d, p, c]) => (
           <div key={d} style={{
             background: 'var(--bg-card)', border: `1px solid ${c}30`,
@@ -594,7 +594,7 @@ function Result({ answers, sessionPoints, points, level, nextLevel, onRetry, lev
   const result = getResultMessage();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: 480, margin: '0 auto', width: '100%', textAlign: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: 900, margin: '0 auto', width: '100%', textAlign: 'center' }}>
       {/* Celebration animation for perfect/excellent scores */}
       {pct >= 80 && <Confetti />}
 

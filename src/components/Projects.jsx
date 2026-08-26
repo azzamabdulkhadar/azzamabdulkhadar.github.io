@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ExternalLink, Code2, Layers } from 'lucide-react';
+import { ExternalLink, Layers } from 'lucide-react';
+import { GitHubIcon } from './icons/BrandIcons';
 import SectionLabel from './SectionLabel';
 import { useTranslation } from 'react-i18next';
 import { projects } from '../data/projects';
@@ -14,8 +15,8 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
 
   return (
-    <section id="projects" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg-secondary)' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <section id="projects" ref={ref} style={{ padding: 'var(--space-2xl) var(--gutter)', background: 'var(--bg-secondary)' }}>
+      <div style={{ maxWidth: 'var(--container)', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -23,7 +24,7 @@ export default function Projects() {
           style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}
         >
           <SectionLabel>{t('projects.label')}</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+          <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700 }}>
             {t('projects.heading')}
           </h2>
         </motion.div>
@@ -45,7 +46,7 @@ export default function Projects() {
                 style={{
                   background: 'var(--bg-card)', border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-lg)', padding: 'var(--space-lg)',
-                  display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                  display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
                   gap: 'var(--space-lg)', alignItems: 'start',
                   transition: 'border-color 0.2s',
                   borderLeft: `3px solid ${project.color}`,
@@ -54,9 +55,12 @@ export default function Projects() {
                 whileHover={{ borderColor: project.color }}
               >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-sm)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-                      <span style={{ fontSize: '1.5rem' }}>{project.emoji}</span>
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    marginBottom: 'var(--space-sm)', flexWrap: 'wrap', gap: 'var(--space-xs)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', minWidth: 0 }}>
+                      <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>{project.emoji}</span>
                       <h3 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-h)' }}>{title}</h3>
                     </div>
                     <span style={{
@@ -64,6 +68,7 @@ export default function Projects() {
                       color: project.color, background: `${project.color}18`,
                       border: `1px solid ${project.color}40`,
                       padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-sm)',
+                      whiteSpace: 'nowrap', flexShrink: 0,
                     }}>{date}</span>
                   </div>
                   <p style={{ color: 'var(--text)', lineHeight: 1.8, fontSize: '1.05rem', marginBottom: 'var(--space-md)' }}>
@@ -134,7 +139,7 @@ export default function Projects() {
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
-            <Code2 size={18} /> {t('projects.viewAllGithub')} <ExternalLink size={14} />
+            <GitHubIcon size={18} /> {t('projects.viewAllGithub')} <ExternalLink size={14} />
           </a>
         </motion.div>
       </div>

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Code2, Link, Mail, Download, ArrowDown } from 'lucide-react';
+import { Mail, Download, ArrowDown } from 'lucide-react';
+import { GitHubIcon, LinkedInIcon } from './icons/BrandIcons';
 import heroImg from '../assets/profile.png';
 import { useTranslation } from 'react-i18next';
 
@@ -8,9 +9,9 @@ export default function Hero() {
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center',
-      justifyContent: 'center', padding: 'var(--space-2xl) 2rem 4rem',
+    <section className="hero-section" style={{
+      display: 'flex', alignItems: 'center',
+      justifyContent: 'center',
       position: 'relative', overflow: 'hidden',
       background: 'var(--bg-secondary)',
     }}>
@@ -28,17 +29,18 @@ export default function Hero() {
         filter: 'blur(40px)', pointerEvents: 'none',
       }} />
 
-      <div style={{
-        maxWidth: '1100px', width: '100%', margin: '0 auto',
+      <div className="hero-inner" style={{
+        maxWidth: 'var(--container)', width: '100%', margin: '0 auto',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         gap: 'var(--space-xl)', flexWrap: 'wrap',
       }}>
         {/* Text side */}
         <motion.div
+          className="hero-text"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          style={{ flex: '1 1 480px' }}
+          style={{ flex: '1 1 26rem', minWidth: 0 }}
         >
           <motion.p
             initial={{ opacity: 0 }}
@@ -53,7 +55,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7 }}
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: 'var(--space-sm)' }}
+            style={{ fontSize: 'clamp(2.2rem, 5.5vw, 3.6rem)', fontWeight: 800, lineHeight: 1.12, marginBottom: 'var(--space-sm)' }}
           >
             Azzam Abdul{' '}
             <span style={{ background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -65,6 +67,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
+            className="hero-status"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.3)',
@@ -81,7 +84,8 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            style={{ fontSize: 'var(--text-base)', color: 'var(--text)', lineHeight: 1.7, marginBottom: '1rem', maxWidth: '520px' }}
+            className="hero-description"
+            style={{ fontSize: 'var(--text-base)', color: 'var(--text)', lineHeight: 1.7, marginBottom: '1rem', maxWidth: '33rem' }}
           >
             {t('hero.description')}
           </motion.p>
@@ -90,6 +94,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.65 }}
+            className="hero-tech"
             style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-xs)', marginBottom: 'var(--space-sm)' }}
           >
             {['MongoDB', 'Express', 'React', 'Node.js', 'Flutter', 'MySQL'].map(tech => (
@@ -114,6 +119,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.75 }}
+            className="hero-actions"
             style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap', marginBottom: 'var(--space-lg)' }}
           >
             <button onClick={() => scrollTo('projects')} style={{
@@ -156,11 +162,12 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
+            className="hero-socials"
             style={{ display: 'flex', gap: '1rem' }}
           >
             {[
-              { icon: <Code2 size={20} />, href: 'https://github.com/azzamabdulkhadar', label: 'GitHub' },
-              { icon: <Link size={20} />, href: 'https://linkedin.com/in/azzamabdulkhadar', label: 'LinkedIn' },
+              { icon: <GitHubIcon size={20} />, href: 'https://github.com/azzamabdulkhadar', label: 'GitHub' },
+              { icon: <LinkedInIcon size={20} />, href: 'https://linkedin.com/in/azzamabdulkhadar', label: 'LinkedIn' },
               { icon: <Mail size={20} />, href: 'mailto:azzamcse@gmail.com', label: 'Email' },
             ].map(({ icon, href, label }, i) => (
               <a key={i} href={href} target="_blank" rel="noreferrer" aria-label={label} style={{
@@ -183,11 +190,15 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4, duration: 0.8 }}
+          className="hero-image"
           style={{ flex: '0 0 auto', display: 'flex', justifyContent: 'center' }}
         >
           <div style={{ position: 'relative' }}>
             <div style={{
-              width: 280, height: 280, borderRadius: '50%',
+              /* Lower bound keeps it visible on phones, upper bound is in rem
+                 so it grows with the root font-size scaling on large displays */
+              width: 'clamp(11rem, 46vw, 20rem)', height: 'clamp(11rem, 46vw, 20rem)',
+              borderRadius: '50%',
               background: 'var(--gradient)', padding: '3px',
               boxShadow: '0 0 60px var(--accent-glow)',
             }}>
@@ -203,18 +214,28 @@ export default function Hero() {
             <motion.div
               animate={{ y: [0, -8, 0] }}
               transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+              className="hero-badge"
               style={{
-                position: 'absolute', bottom: 10, right: -20,
+                position: 'absolute',
+                bottom: 'clamp(6px, 1.5vw, 12px)',
+                right: 'clamp(-14px, -2vw, 0px)',
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)', padding: '0.5rem 0.9rem',
-                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                borderRadius: 'var(--radius-md)',
+                /* One clamped font-size drives the whole badge. Padding, gap and
+                   the child text are all in em, so the badge scales as a single
+                   unit with the viewport instead of each value drifting apart
+                   from the avatar, which scales via clamp(11rem, 46vw, 20rem). */
+                fontSize: 'clamp(10px, 2.1vw, 1rem)',
+                padding: '0.5em 0.85em',
+                display: 'flex', alignItems: 'center', gap: '0.5em',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                whiteSpace: 'nowrap',
               }}
             >
-              <span style={{ fontSize: 'var(--text-xl)' }}>⚡</span>
+              <span style={{ fontSize: '1.3em', lineHeight: 1 }}>⚡</span>
               <div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text)', lineHeight: 1 }}>{t('hero.experienceLabel')}</div>
-                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-h)' }}>{t('hero.experienceBadge')}</div>
+                <div className="hero-badge-label" style={{ fontSize: '0.78em', color: 'var(--text)', lineHeight: 1.1 }}>{t('hero.experienceLabel')}</div>
+                <div style={{ fontSize: '0.95em', fontWeight: 700, color: 'var(--text-h)', lineHeight: 1.2 }}>{t('hero.experienceBadge')}</div>
               </div>
             </motion.div>
           </div>
@@ -238,6 +259,83 @@ export default function Hero() {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.4; }
+        }
+
+        /* The hero is sized by its padding rather than a forced 100vh.
+           Centring short content inside a full-viewport box was what created
+           the large dead gap under the buttons.
+
+           The top value is its own clamp rather than --space-2xl: that token is
+           tuned for the larger gaps between sections, and reusing it here left
+           roughly 66px of dead space under the navbar. The fixed navbar is
+           about 82px tall (12px outer + 10px inner padding around a 38px logo),
+           so ~112px leaves a deliberate ~30px breathing gap below it. */
+        .hero-section {
+          padding: clamp(7rem, 7.5vw, 8.5rem) var(--gutter) var(--space-2xl);
+        }
+
+        /* Stack and centre the hero on tablets and phones */
+        @media (max-width: 860px) {
+          .hero-inner {
+            flex-direction: column;
+            text-align: center;
+          }
+          .hero-text {
+            flex: 1 1 auto !important;
+            order: 2;
+          }
+          .hero-image {
+            order: 1;
+          }
+          .hero-description {
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .hero-actions,
+          .hero-socials,
+          .hero-tech,
+          .hero-status {
+            justify-content: center;
+          }
+        }
+
+        /* On the narrowest screens the secondary "Experience" label scales down
+           to around 8px, which isn't legible. Drop it and keep the stack name,
+           which carries the actual meaning. */
+        @media (max-width: 380px) {
+          .hero-badge-label {
+            display: none;
+          }
+        }
+
+        /* Full-width stacked buttons on small phones */
+        @media (max-width: 420px) {
+          .hero-actions {
+            flex-direction: column;
+            align-items: stretch;
+          }
+          .hero-actions > button,
+          .hero-actions > a {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        /* Large displays: widen the gap between the two columns so the extra
+           container width is shared instead of stretching the text column. */
+        @media (min-width: 1500px) {
+          .hero-inner {
+            gap: calc(var(--space-xl) * 1.6);
+          }
+        }
+
+        /* Social icon buttons are px-sized boxes, so scale them in step with
+           the root font-size bump applied on large displays. */
+        @media (min-width: 1800px) {
+          .hero-socials a {
+            width: 3rem !important;
+            height: 3rem !important;
+          }
         }
       `}</style>
     </section>

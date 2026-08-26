@@ -107,8 +107,8 @@ export default function Certificates() {
   };
 
   return (
-    <section id="certificates" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <section id="certificates" ref={ref} style={{ padding: 'var(--space-2xl) var(--gutter)', background: 'var(--bg)' }}>
+      <div style={{ maxWidth: 'var(--container)', margin: '0 auto' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -117,10 +117,10 @@ export default function Certificates() {
           style={{ textAlign: 'center', marginBottom: 'var(--space-lg)' }}
         >
           <SectionLabel>Certificates</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700, marginBottom: '0.75rem' }}>
             Achievements & Credentials
           </h2>
-          <p style={{ color: 'var(--text)', fontSize: 'var(--text-base)', maxWidth: '550px', margin: '0 auto', lineHeight: 1.6 }}>
+          <p style={{ color: 'var(--text)', fontSize: 'var(--text-base)', maxWidth: '34rem', margin: '0 auto', lineHeight: 1.6 }}>
             Professional certifications, courses, and recognitions that validate my skills and expertise.
           </p>
         </motion.div>
@@ -162,7 +162,7 @@ export default function Certificates() {
           layout
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
             gap: 'var(--space-md)',
           }}
         >
@@ -302,7 +302,7 @@ export default function Certificates() {
               position: 'fixed', inset: 0, zIndex: 2000,
               background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              padding: '2rem',
+              padding: 'clamp(0.75rem, 4vw, 2rem)',
             }}
           >
             <motion.div
@@ -312,8 +312,9 @@ export default function Certificates() {
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={e => e.stopPropagation()}
               style={{
-                position: 'relative', maxWidth: '800px', width: '100%',
-                borderRadius: 'var(--radius-lg)', overflow: 'hidden',
+                position: 'relative', maxWidth: '50rem', width: '100%',
+                maxHeight: '92dvh', overflowY: 'auto',
+                borderRadius: 'var(--radius-lg)', overflowX: 'hidden',
                 background: 'var(--bg-card)', border: '1px solid var(--border)',
                 boxShadow: '0 24px 64px rgba(0,0,0,0.4)',
               }}
@@ -407,13 +408,6 @@ export default function Certificates() {
         )}
       </AnimatePresence>
 
-      <style>{`
-        @media (max-width: 640px) {
-          #certificates [style*="grid-template-columns"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

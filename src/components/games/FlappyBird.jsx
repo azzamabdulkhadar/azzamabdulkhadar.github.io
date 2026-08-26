@@ -3,19 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Info, X } from 'lucide-react';
 import { useTheme } from '../../ThemeContext';
 
-const W = 760, H = 320;
-const GRAVITY = 0.22;
-const JUMP_V = -6.5;
-const PIPE_W = 58;
-const BIRD_R = 16;
-const GROUND_H = 50;
+const W = 1100, H = 500;
+const GRAVITY = 0.28;
+const JUMP_V = -7.5;
+const PIPE_W = 68;
+const BIRD_R = 20;
+const GROUND_H = 60;
 
 const LEVELS = [
-  { name: 'Simple',   minScore: 0,  pipeSpeed: 2.8, pipeGap: 175, spawnRate: 110, color: '#22c55e' },
-  { name: 'Medium',   minScore: 8,  pipeSpeed: 3.6, pipeGap: 155, spawnRate: 100, color: '#f59e0b' },
-  { name: 'Advanced', minScore: 18, pipeSpeed: 4.6, pipeGap: 135, spawnRate: 90,  color: '#ef4444' },
-  { name: 'Insane',   minScore: 30, pipeSpeed: 5.8, pipeGap: 118, spawnRate: 80,  color: '#c026d3' },
-  { name: 'Hell',     minScore: 45, pipeSpeed: 7.2, pipeGap: 100, spawnRate: 70,  color: '#ff0000' },
+  { name: 'Simple',   minScore: 0,  pipeSpeed: 3.2, pipeGap: 220, spawnRate: 110, color: '#22c55e' },
+  { name: 'Medium',   minScore: 8,  pipeSpeed: 4.2, pipeGap: 195, spawnRate: 100, color: '#f59e0b' },
+  { name: 'Advanced', minScore: 18, pipeSpeed: 5.2, pipeGap: 170, spawnRate: 90,  color: '#ef4444' },
+  { name: 'Insane',   minScore: 30, pipeSpeed: 6.5, pipeGap: 150, spawnRate: 80,  color: '#c026d3' },
+  { name: 'Hell',     minScore: 45, pipeSpeed: 8.0, pipeGap: 130, spawnRate: 70,  color: '#ff0000' },
 ];
 
 function getLevel(score) {
@@ -164,6 +164,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
   const [countdownMode, setCountdownMode] = useState('start'); // 'start' | 'resume'
   const [toast, setToast] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
+  const showInfoRef = useRef(false);
   const reachedRef = useRef(new Set());
   const toastTimerRef = useRef(null);
   const countdownRef = useRef(null);
@@ -296,7 +297,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
         return;
       }
 
-      if (s.running && !pausedRef.current) {
+      if (s.running && !pausedRef.current && !showInfoRef.current) {
         s.frame++;
         s.scrollX += getLevel(s.score).pipeSpeed;
         s.wingTimer++;
@@ -437,7 +438,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
       </div>
 
       {/* Score + level row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: W, alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
         <span style={{ fontFamily: 'var(--mono)', color: 'var(--accent)', fontSize: '0.9rem' }}>
           {BIRDS[birdIdx].emoji} Flappy Bird
         </span>
@@ -455,7 +456,11 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
           <span style={{ fontFamily: 'var(--mono)', color: 'var(--text-h)', fontSize: '0.9rem' }}>
             Score: {display.score}
           </span>
-          <button onClick={() => setShowInfo(v => !v)} title='How to play' style={{
+          <button onClick={() => {
+            const next = !showInfo;
+            showInfoRef.current = next;
+            setShowInfo(next);
+          }} title='How to play' style={{
             background: 'var(--bg-card)', border: '1px solid var(--border)',
             borderRadius: '50%', width: 28, height: 28, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -467,7 +472,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
           </button>
         </div>
       </div>
-      <div style={{ position: 'relative', maxWidth: '100%', width: '100%' }}>
+      <div style={{ position: 'relative', width: '100%' }}>
         <canvas
           ref={canvasRef}
           width={W} height={H}
@@ -477,10 +482,11 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
             if (s.over) return; // button only
             flap();
           }}
+          className="game-canvas"
           style={{
-            borderRadius: '12px', border: '1px solid var(--border)',
-            cursor: 'pointer', maxWidth: '100%', display: 'block',
-            margin: '0 auto',
+            borderRadius: '12px', border: '1.5px solid var(--border)',
+            cursor: 'pointer', width: '100%', height: 'auto', display: 'block',
+            background: 'var(--bg)',
           }}
         />
 
@@ -532,7 +538,10 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontWeight: 700, color: 'var(--text-h)', fontSize: '1rem' }}>?? How to Play</span>
-                <button onClick={() => setShowInfo(false)} style={{
+                <button onClick={() => {
+                  showInfoRef.current = false;
+                  setShowInfo(false);
+                }} style={{
                   background: 'none', border: 'none', cursor: 'pointer',
                   color: 'var(--text)', display: 'flex', alignItems: 'center',
                 }}><X size={18} /></button>
@@ -588,7 +597,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
 
         {/* Game over replay button */}
         <AnimatePresence>
-          {display.over && (
+          {display.over && !showInfo && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}

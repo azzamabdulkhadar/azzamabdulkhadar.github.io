@@ -312,10 +312,14 @@ export default function ProjectDetail({ project, onClose }) {
           background: var(--bg-card);
           border: 1px solid var(--border);
           border-radius: 20px;
-          max-width: 1100px;
+          max-width: var(--container);
           width: 100%;
           height: 82vh;
           max-height: 82vh;
+          /* dvh tracks the visible viewport, so mobile browser chrome
+             showing/hiding doesn't clip the modal. vh above is the fallback. */
+          height: 82dvh;
+          max-height: 82dvh;
           overflow: hidden;
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -470,6 +474,7 @@ export default function ProjectDetail({ project, onClose }) {
           padding: 2.5rem 2rem;
           overflow-y: auto;
           max-height: 82vh;
+          max-height: 82dvh;
         }
         .project-info-panel::-webkit-scrollbar { width: 6px; }
         .project-info-panel::-webkit-scrollbar-track { background: transparent; }
@@ -572,8 +577,8 @@ export default function ProjectDetail({ project, onClose }) {
         @media (max-width: 768px) {
           .project-detail-modal {
             grid-template-columns: 1fr !important;
-            height: 92vh !important;
-            max-height: 92vh !important;
+            height: 92dvh !important;
+            max-height: 92dvh !important;
           }
           .carousel-container {
             border-radius: 20px 20px 0 0 !important;
@@ -585,7 +590,7 @@ export default function ProjectDetail({ project, onClose }) {
             max-width: 40%;
           }
           .project-info-panel {
-            max-height: calc(92vh - 280px) !important;
+            max-height: calc(92dvh - 280px) !important;
             padding: 1.5rem 1.25rem;
           }
           .project-info-header {
@@ -607,7 +612,7 @@ export default function ProjectDetail({ project, onClose }) {
             max-width: 35%;
           }
           .project-info-panel {
-            max-height: calc(92vh - 220px) !important;
+            max-height: calc(92dvh - 220px) !important;
           }
         }
       `}</style>

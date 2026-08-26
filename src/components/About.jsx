@@ -26,19 +26,19 @@ export default function About() {
   ];
 
   return (
-    <section id="about" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg-secondary)' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <section id="about" ref={ref} style={{ padding: 'var(--space-2xl) var(--gutter)', background: 'var(--bg-secondary)' }}>
+      <div style={{ maxWidth: 'var(--container)', margin: '0 auto' }}>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7 }}
       >
         <SectionLabel>{t('about.label')}</SectionLabel>
-        <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: 'var(--space-xl)' }}>
+        <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700, marginBottom: 'var(--space-xl)' }}>
           {t('about.heading')}
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-xl)', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'var(--space-xl)', alignItems: 'start' }}>
           <div>
             <p style={{ color: 'var(--text)', lineHeight: 1.9, marginBottom: 'var(--space-md)', fontSize: '1rem' }}>
               {t('about.para1')}

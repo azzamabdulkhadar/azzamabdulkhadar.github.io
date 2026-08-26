@@ -28,27 +28,32 @@ const PROVIDERS = [
       name: 'Groq',
       apiUrl: 'https://api.groq.com/openai/v1/chat/completions',
       apiKey: key,
-      model: 'llama-3.3-70b-versatile',
+      model: 'qwen/qwen3.6-27b',
       headers: (key) => ({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${key}`,
       }),
       buildBody: (messages, options = {}) => ({
-        model: 'llama-3.3-70b-versatile',
+        model: 'qwen/qwen3.6-27b',
         messages,
         max_tokens: options.maxTokens || 500,
         temperature: options.temperature || 0.7,
+        chat_template_kwargs: { enable_thinking: false },
       }),
-      extractContent: (data) => data.choices?.[0]?.message?.content,
+      extractContent: (data) => {
+        const raw = data.choices?.[0]?.message?.content || '';
+        // Strip <think>...</think> blocks if present
+        return raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+      },
     })),
 
   // Google Gemini
   ...(isGeminiKey(import.meta.env.VITE_GEMINI_API_KEY)
     ? [{
         name: 'Gemini',
-        apiUrl: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
+        apiUrl: `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
         apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-        model: 'gemini-2.0-flash',
+        model: 'gemini-3.5-flash-lite',
         headers: () => ({
           'Content-Type': 'application/json',
         }),
@@ -67,7 +72,10 @@ const PROVIDERS = [
             temperature: options.temperature || 0.7,
           },
         }),
-        extractContent: (data) => data.candidates?.[0]?.content?.parts?.[0]?.text,
+        extractContent: (data) => {
+          const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          return raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+        },
       }]
     : []),
 
@@ -77,7 +85,7 @@ const PROVIDERS = [
         name: 'OpenRouter',
         apiUrl: 'https://openrouter.ai/api/v1/chat/completions',
         apiKey: import.meta.env.VITE_OPENROUTER_API_KEY,
-        model: 'meta-llama/llama-3-8b-instruct:free',
+        model: 'meta-llama/llama-4-scout:free',
         headers: (key) => ({
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${key}`,
@@ -85,12 +93,15 @@ const PROVIDERS = [
           'X-Title': 'Azzam Portfolio',
         }),
         buildBody: (messages, options = {}) => ({
-          model: 'meta-llama/llama-3-8b-instruct:free',
+          model: 'meta-llama/llama-4-scout:free',
           messages,
           max_tokens: options.maxTokens || 500,
           temperature: options.temperature || 0.7,
         }),
-        extractContent: (data) => data.choices?.[0]?.message?.content,
+        extractContent: (data) => {
+          const raw = data.choices?.[0]?.message?.content || '';
+          return raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+        },
       }]
     : []),
 ];
@@ -142,9 +153,10 @@ export async function aiComplete(messages, options = {}) {
     }
   }
 
-  // All providers failed
+  // All providers failed — log details for debugging but show user-friendly message
   const summary = errors.map(e => `${e.provider}: ${e.error}`).join('; ');
-  throw new Error(`All AI providers failed — ${summary}`);
+  console.error(`[AI Provider] All providers failed: ${summary}`);
+  throw new Error('Unable to chat right now — the server is busy. Please try again later.');
 }
 
 /**

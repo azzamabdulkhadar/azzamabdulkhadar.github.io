@@ -141,6 +141,10 @@
   "experience": {
     "label": "تجربہ",
     "heading": "کام کا تجربہ",
+    "viewDetails": "تفصیلات دیکھیں",
+    "viewMoreCount": "مزید {{n}} اور ٹیک اسٹیک دیکھیں",
+    "responsibilitiesLabel": "ذمہ داریاں",
+    "techLabel": "ٹیکنالوجی اور ٹولز",
     "job1": {
       "position": "موبائل ایپ ڈیولپر ٹرینی",
       "company": "Atmez AI Solutions",

@@ -141,6 +141,10 @@
   "experience": {
     "label": "अनुभव",
     "heading": "कार्य अनुभव",
+    "viewDetails": "विवरण देखें",
+    "viewMoreCount": "{{n}} और + तकनीकी स्टैक देखें",
+    "responsibilitiesLabel": "जिम्मेदारियाँ",
+    "techLabel": "तकनीक और टूल्स",
     "job1": {
       "position": "मोबाइल ऐप डेवलपर ट्रेनी",
       "company": "Atmez AI Solutions",

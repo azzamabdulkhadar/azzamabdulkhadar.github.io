@@ -141,6 +141,10 @@
   "experience": {
     "label": "Experience",
     "heading": "Work Experience",
+    "viewDetails": "View details",
+    "viewMoreCount": "View {{n}} more + tech stack",
+    "responsibilitiesLabel": "Responsibilities",
+    "techLabel": "Tech & Tools",
     "job1": {
       "position": "Mobile App Developer Trainee",
       "company": "Atmez AI Solutions",

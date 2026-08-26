@@ -141,6 +141,10 @@
   "experience": {
     "label": "ಅನುಭವ",
     "heading": "ಕೆಲಸದ ಅನುಭವ",
+    "viewDetails": "ವಿವರಗಳನ್ನು ನೋಡಿ",
+    "viewMoreCount": "ಇನ್ನೂ {{n}} + ತಂತ್ರಜ್ಞಾನ ನೋಡಿ",
+    "responsibilitiesLabel": "ಜವಾಬ್ದಾರಿಗಳು",
+    "techLabel": "ತಂತ್ರಜ್ಞಾನ ಮತ್ತು ಪರಿಕರಗಳು",
     "job1": {
       "position": "ಮೊಬೈಲ್ ಆ್ಯಪ್ ಡೆವಲಪರ್ ಟ್ರೈನಿ",
       "company": "Atmez AI Solutions",
