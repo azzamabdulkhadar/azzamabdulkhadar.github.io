@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { Mail, Phone, Code2, Link, Send, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Phone, Send, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
+import { GitHubIcon, LinkedInIcon } from './icons/BrandIcons';
 import SectionLabel from './SectionLabel';
 import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
@@ -70,8 +71,8 @@ export default function Contact() {
     { icon: <Mail size={18} />, label: t('contact.email'), value: 'azzamcse@gmail.com', href: 'mailto:azzamcse@gmail.com' },
     { icon: <Phone size={18} />, label: t('contact.phone'), value: '+91-7349701430', href: 'tel:+917349701430' },
     { icon: <MapPin size={18} />, label: t('contact.location'), value: 'Hyderabad, Telangana', href: null },
-    { icon: <Code2 size={18} />, label: t('contact.github'), value: 'azzamabdulkhadar', href: 'https://github.com/azzamabdulkhadar' },
-    { icon: <Link size={18} />, label: t('contact.linkedin'), value: 'azzamabdulkhadar', href: 'https://linkedin.com/in/azzamabdulkhadar' },
+    { icon: <GitHubIcon size={18} />, label: t('contact.github'), value: 'azzamabdulkhadar', href: 'https://github.com/azzamabdulkhadar' },
+    { icon: <LinkedInIcon size={18} />, label: t('contact.linkedin'), value: 'azzamabdulkhadar', href: 'https://linkedin.com/in/azzamabdulkhadar' },
   ];
 
   const inputStyle = {
@@ -83,10 +84,10 @@ export default function Contact() {
 
   return (
     <section id="contact" ref={ref} style={{
-      padding: 'var(--space-2xl) 2rem',
+      padding: 'var(--space-2xl) var(--gutter)',
       background: 'var(--bg-secondary)',
     }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div style={{ maxWidth: 'var(--container)', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -94,12 +95,12 @@ export default function Contact() {
           style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}
         >
           <SectionLabel>{t('contact.label')}</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+          <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700 }}>
             {t('contact.heading')}
           </h2>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-lg)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 'var(--space-lg)' }}>
           {/* Contact info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}

@@ -21,8 +21,8 @@ export default function Skills() {
   ];
 
   return (
-    <section id="skills" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg-secondary)' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <section id="skills" ref={ref} style={{ padding: 'var(--space-2xl) var(--gutter)', background: 'var(--bg-secondary)' }}>
+      <div style={{ maxWidth: 'var(--container)', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -30,12 +30,12 @@ export default function Skills() {
           style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}
         >
           <SectionLabel>{t('skills.label')}</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+          <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700 }}>
             {t('skills.heading')}
           </h2>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 'var(--space-md)' }}>
           {skillGroups.map(({ categoryKey, color, skills }, gi) => (
             <motion.div
               key={categoryKey}

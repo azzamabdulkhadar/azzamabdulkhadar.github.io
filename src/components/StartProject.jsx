@@ -301,8 +301,8 @@ export default function StartProject() {
   };
 
   return (
-    <section id="start-project" ref={ref} style={{ padding: '6rem 2rem', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: '750px', margin: '0 auto' }}>
+    <section id="start-project" ref={ref} style={{ padding: 'var(--space-2xl) var(--gutter)', background: 'var(--bg)' }}>
+      <div style={{ maxWidth: '47rem', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -310,10 +310,10 @@ export default function StartProject() {
           style={{ textAlign: 'center', marginBottom: '2.5rem' }}
         >
           <SectionLabel>{t('startProject.label')}</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700, marginBottom: '0.75rem' }}>
             {t('startProject.heading')}
           </h2>
-          <p style={{ color: 'var(--text)', fontSize: '1rem', lineHeight: 1.7, maxWidth: '550px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--text)', fontSize: '1rem', lineHeight: 1.7, maxWidth: '34rem', margin: '0 auto' }}>
             {t('startProject.subtitle')}
           </p>
         </motion.div>
@@ -324,11 +324,11 @@ export default function StartProject() {
           transition={{ delay: 0.2, duration: 0.6 }}
           style={{
             background: 'var(--bg-card)', border: '1px solid var(--border)',
-            borderRadius: '20px', padding: '2rem', position: 'relative',
+            borderRadius: '20px', padding: 'clamp(1.1rem, 4vw, 2rem)', position: 'relative',
           }}
         >
           {/* Step indicator */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
+          <div className="step-indicator" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2rem' }}>
             {steps.map((s, i) => (
               <button key={i} onClick={() => { if (i < step) setStep(i); else handleNext(); }}
                 style={{
@@ -377,7 +377,7 @@ export default function StartProject() {
           {renderStep()}
 
           {/* Navigation buttons */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', gap: '1rem' }}>
+          <div className="sp-nav" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', gap: '1rem' }}>
             {step > 0 ? (
               <button type="button" onClick={() => setStep(s => s - 1)}
                 style={{
@@ -434,8 +434,26 @@ export default function StartProject() {
       </div>
 
       <style>{`
+        /* Hide step text labels once the stepper gets tight, icons carry it */
         @media (max-width: 600px) {
           .step-label { display: none; }
+        }
+
+        /* Stack the Back/Next buttons full width on small phones so they are
+           easy to hit and never overlap */
+        @media (max-width: 420px) {
+          .sp-nav {
+            flex-direction: column-reverse;
+            align-items: stretch;
+          }
+          .sp-nav > button {
+            width: 100%;
+            justify-content: center;
+          }
+          /* the empty spacer div rendered when on step 0 */
+          .sp-nav > div:empty {
+            display: none;
+          }
         }
       `}</style>
     </section>

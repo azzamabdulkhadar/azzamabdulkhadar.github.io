@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Info, X } from 'lucide-react';
 import { useTheme } from '../../ThemeContext';
 
-const W = 800, H = 300;
-const GROUND = 240;
-const DINO_X = 80;
-const GRAVITY = 0.6;
-const JUMP_V = -13;
+const W = 1200, H = 400;
+const GROUND = 340;
+const DINO_X = 100;
+const GRAVITY = 0.7;
+const JUMP_V = -15;
 
 const MILESTONES = [
   { score: 300,  emoji: '⚡', label: 'Speed Demon!',    sub: 'You hit 300 — birds incoming!',        color: '#38bdf8' },
@@ -155,6 +155,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
   const [countdownMode, setCountdownMode] = useState('start'); // 'start' | 'resume'
   const [toast, setToast] = useState(null);       // current milestone toast
   const [showInfo, setShowInfo] = useState(false); // rules panel
+  const showInfoRef = useRef(false);               // ref mirror for game loop
   const reachedRef = useRef(new Set());            // milestones already shown
   const toastTimerRef = useRef(null);
 
@@ -329,7 +330,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
         return;
       }
 
-      if (s.running && !pausedRef.current) {
+      if (s.running && !pausedRef.current && !showInfoRef.current) {
         s.frame++;
         s.legFrame = (s.legFrame + 1) % 20;
         s.score += 0.1;
@@ -476,7 +477,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
       </div>
 
       {/* Score + difficulty row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: W, alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
         <span style={{ fontFamily: 'var(--mono)', color: 'var(--accent)', fontSize: '0.9rem' }}>
           {CHARACTERS[charIdx].emoji} {CHARACTERS[charIdx].label} Runner
         </span>
@@ -495,7 +496,11 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
             Score: {display.score}
           </span>
           <button
-            onClick={() => setShowInfo(v => !v)}
+            onClick={() => {
+              const next = !showInfo;
+              showInfoRef.current = next;
+              setShowInfo(next);
+            }}
             title="How to play"
             style={{
               background: 'var(--bg-card)', border: '1px solid var(--border)',
@@ -512,8 +517,9 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
         </div>
       </div>
 
-      <div style={{ position: 'relative', maxWidth: '100%', width: '100%' }}>
+      <div style={{ position: 'relative', width: '100%' }}>
         <canvas
+          className="game-canvas"
           ref={canvasRef}
           width={W} height={H}
           onClick={() => {
@@ -523,8 +529,8 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
             else jump();
           }}
           style={{
-            borderRadius: '12px', border: '1px solid var(--border)',
-            cursor: 'pointer', maxWidth: '100%', display: 'block',
+            borderRadius: '12px', border: '1.5px solid var(--border)',
+            cursor: 'pointer', width: '100%', height: 'auto', display: 'block',
             background: 'var(--bg)',
           }}
         />
@@ -577,7 +583,10 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontWeight: 700, color: 'var(--text-h)', fontSize: '1rem' }}>🎮 How to Play</span>
-                <button onClick={() => setShowInfo(false)} style={{
+                <button onClick={() => {
+                  showInfoRef.current = false;
+                  setShowInfo(false);
+                }} style={{
                   background: 'none', border: 'none', cursor: 'pointer',
                   color: 'var(--text)', display: 'flex', alignItems: 'center',
                 }}>
@@ -639,7 +648,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
 
         {/* Game over replay button */}
         <AnimatePresence>
-          {display.over && (
+          {display.over && !showInfo && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}

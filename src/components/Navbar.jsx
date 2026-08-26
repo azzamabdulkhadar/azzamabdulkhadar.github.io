@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-motion';
-import { Menu, X, Sun, Moon, Gamepad2, Globe, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon, Gamepad2, Globe, ChevronDown, Gem, Feather, Palette } from 'lucide-react';
 import { useTheme } from '../ThemeContext';
 import { useTranslation } from 'react-i18next';
 import GamesModal from './games/GamesModal';
@@ -14,7 +14,11 @@ const LANGUAGES = {
 
 const themeOptions = [
   { value: 'dark', label: 'Dark', icon: Moon },
-  { value: 'light', label: 'Light', icon: Sun },
+  // { value: 'light', label: 'Light', icon: Sun },
+  // { value: 'onyx', label: 'Onyx', icon: Gem },
+  { value: 'onyx-light', label: 'Light', icon: Gem },
+  { value: 'avocet', label: 'Avocet', icon: Feather },
+  { value: 'avocet-light', label: 'Avocet Light', icon: Feather },
 ];
 
 const navIds = ['about', 'skills', 'projects', 'experience', 'education', 'certificates', 'contact'];
@@ -123,7 +127,14 @@ export default function Navbar() {
             </div>
             <div className="navbar-logo-text">
               <span className="navbar-logo-name">Azzam</span>
-              <span className="navbar-logo-tag">Developer</span>
+              {/* Full surname on wider screens, initials once space is tight.
+                  aria-hidden on the abbreviation so screen readers don't hear
+                  the name twice; the full version stays in the accessibility
+                  tree even when visually hidden. */}
+              <span className="navbar-logo-tag">
+                <span className="navbar-logo-tag-full">Abdul Khadar</span>
+                <span className="navbar-logo-tag-short" aria-hidden="true">AK</span>
+              </span>
             </div>
           </motion.a>
 
@@ -338,7 +349,9 @@ const navbarStyles = `
   }
 
   .navbar-inner {
-    max-width: 1200px;
+    /* +48px accounts for this element's own 24px horizontal padding, so the
+       logo and action buttons line up with the section content below. */
+    max-width: calc(var(--container) + 48px);
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -413,6 +426,22 @@ const navbarStyles = `
     filter: brightness(0.95) drop-shadow(0 0 3px rgba(124, 58, 237, 0.2));
   }
 
+  [data-theme="onyx"] .navbar-logo-icon {
+    filter: brightness(1.15) drop-shadow(0 0 4px rgba(216, 216, 210, 0.35));
+  }
+
+  [data-theme="onyx-light"] .navbar-logo-icon {
+    filter: brightness(0.95) drop-shadow(0 0 3px rgba(24, 27, 32, 0.2));
+  }
+
+  [data-theme="avocet"] .navbar-logo-icon {
+    filter: brightness(1.1) drop-shadow(0 0 4px rgba(194, 72, 42, 0.4));
+  }
+
+  [data-theme="avocet-light"] .navbar-logo-icon {
+    filter: brightness(0.95) drop-shadow(0 0 3px rgba(194, 72, 42, 0.25));
+  }
+
   .navbar-logo-text {
     display: flex;
     flex-direction: column;
@@ -434,18 +463,25 @@ const navbarStyles = `
   }
 
   .navbar-logo-tag {
-    font-family: var(--mono);
-    font-size: 0.6rem;
+    font-family: var(--font);
+    font-size: 0.65rem;
     font-weight: 500;
-    color: var(--accent);
-    opacity: 0.7;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    transition: opacity 0.3s;
+    color: var(--text);
+    opacity: 0.8;
+    letter-spacing: 0.3px;
+    transition: opacity 0.3s, color 0.3s;
   }
 
   .navbar-logo:hover .navbar-logo-tag {
     opacity: 1;
+    color: var(--accent);
+  }
+
+  /* Initials are only used on narrow screens; see the max-width: 480px block */
+  .navbar-logo-tag-short {
+    display: none;
+    letter-spacing: 0.08em;
+    font-weight: 600;
   }
 
   .navbar-links {
@@ -736,8 +772,22 @@ const navbarStyles = `
     .navbar-actions {
       gap: 4px;
     }
-    .navbar-logo-tag {
-      display: none;
+    /* Swap the surname for initials rather than dropping it entirely.
+       The full text is visually hidden but kept available to screen readers,
+       so the logo still announces as "Azzam Abdul Khadar". */
+    .navbar-logo-tag-full {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .navbar-logo-tag-short {
+      display: inline;
     }
     .navbar-logo-name {
       font-size: 1rem;

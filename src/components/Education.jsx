@@ -30,8 +30,8 @@ export default function Education() {
   ];
 
   return (
-    <section id="education" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg-secondary)' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <section id="education" ref={ref} style={{ padding: 'var(--space-2xl) var(--gutter)', background: 'var(--bg-secondary)' }}>
+      <div style={{ maxWidth: 'var(--container)', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -39,15 +39,15 @@ export default function Education() {
           style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}
         >
           <SectionLabel>{t('education.label')}</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700 }}>
+          <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700 }}>
             {t('education.heading')}
           </h2>
         </motion.div>
 
-        <div style={{ maxWidth: '720px', margin: '0 auto', position: 'relative' }}>
-          {/* Timeline line */}
-          <div style={{
-            position: 'absolute', left: 23, top: 0, bottom: 0,
+        <div style={{ maxWidth: '45rem', margin: '0 auto', position: 'relative' }}>
+          {/* Timeline line — sits behind the dots, centred on them */}
+          <div className="edu-line" style={{
+            position: 'absolute', top: 0, bottom: 0,
             width: 2, background: 'linear-gradient(to bottom, var(--accent), var(--accent-2))',
             opacity: 0.3,
           }} />
@@ -59,10 +59,11 @@ export default function Education() {
                 initial={{ opacity: 0, x: -30 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ delay: i * 0.2, duration: 0.6 }}
+                className="edu-row"
                 style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}
               >
                 {/* Timeline dot */}
-                <div style={{
+                <div className="edu-dot" style={{
                   width: 48, height: 48, borderRadius: '50%',
                   border: `2px solid ${color}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -73,8 +74,9 @@ export default function Education() {
                 </div>
 
                 <div style={{
-                  flex: 1, background: 'var(--bg-card)', border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-lg)', padding: '1.5rem',
+                  flex: 1, minWidth: 0,
+                  background: 'var(--bg-card)', border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-lg)', padding: 'clamp(1rem, 3vw, 1.5rem)',
                   borderLeft: `3px solid ${color}`,
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
@@ -94,6 +96,21 @@ export default function Education() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        /* Keep the vertical line centred on the timeline dots at every size */
+        .edu-line { left: 23px; }
+
+        @media (max-width: 480px) {
+          .edu-row { gap: 0.85rem; }
+          .edu-dot {
+            width: 38px !important;
+            height: 38px !important;
+            font-size: 1rem !important;
+          }
+          .edu-line { left: 18px; }
+        }
+      `}</style>
     </section>
   );
 }

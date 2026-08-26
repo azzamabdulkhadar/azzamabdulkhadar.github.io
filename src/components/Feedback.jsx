@@ -222,8 +222,8 @@ export default function Feedback() {
   const { t } = useTranslation();
 
   return (
-    <section id="feedback" ref={ref} style={{ padding: 'var(--space-2xl) 2rem', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+    <section id="feedback" ref={ref} style={{ padding: 'var(--space-2xl) var(--gutter)', background: 'var(--bg)' }}>
+      <div style={{ maxWidth: '38rem', margin: '0 auto' }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : undefined}
@@ -231,7 +231,7 @@ export default function Feedback() {
           style={{ textAlign: 'center', marginBottom: 'var(--space-lg)' }}
         >
           <SectionLabel>{t('feedback.label')}</SectionLabel>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 700, marginBottom: '0.5rem' }}>
+          <h2 style={{ fontSize: 'var(--h2)', fontWeight: 700, marginBottom: '0.5rem' }}>
             {t('feedback.heading')}
           </h2>
           <p style={{ color: 'var(--text)', fontSize: 'var(--text-base)', lineHeight: 1.6 }}>
