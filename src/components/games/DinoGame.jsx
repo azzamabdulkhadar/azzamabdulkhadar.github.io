@@ -460,16 +460,17 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
             key={c.id}
             onClick={() => selectChar(i)}
             title={c.label}
+            className="dino-char-btn"
             style={{
               background: charIdx === i ? 'var(--accent-glow)' : 'var(--bg-card)',
               border: `2px solid ${charIdx === i ? c.color : 'var(--border)'}`,
-              borderRadius: 10, padding: '4px 10px', cursor: state.current.running ? 'not-allowed' : 'pointer',
-              fontSize: '1.2rem', transition: 'all 0.2s',
+              borderRadius: 10, cursor: state.current.running ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s',
               opacity: state.current.running ? 0.5 : 1,
             }}
           >
-            {c.emoji}
-            <span style={{ fontSize: '0.7rem', display: 'block', color: charIdx === i ? c.color : 'var(--text)', fontFamily: 'var(--font)', marginTop: 1 }}>
+            <span className="dino-char-emoji">{c.emoji}</span>
+            <span className="dino-char-label" style={{ display: 'block', color: charIdx === i ? c.color : 'var(--text)', fontFamily: 'var(--font)', marginTop: 1 }}>
               {c.label}
             </span>
           </button>
@@ -517,7 +518,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
         </div>
       </div>
 
-      <div style={{ position: 'relative', width: '100%' }}>
+      <div className="dino-canvas-wrap" style={{ position: 'relative', width: '100%' }}>
         <canvas
           className="game-canvas"
           ref={canvasRef}
@@ -531,6 +532,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
           style={{
             borderRadius: '12px', border: '1.5px solid var(--border)',
             cursor: 'pointer', width: '100%', height: 'auto', display: 'block',
+            aspectRatio: `${W} / ${H}`,
             background: 'var(--bg)',
           }}
         />
@@ -655,22 +657,24 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ type: 'spring', stiffness: 300, damping: 22, delay: 0.15 }}
               style={{
-                position: 'absolute', inset: 0, display: 'flex',
-                flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '12px', pointerEvents: 'none',
-                paddingTop: '48px',
+                /* Anchored just below the canvas-drawn GAME OVER / score text
+                   (which ends around 50% of canvas height) so the button never
+                   covers it. Percentage top keeps this correct at any size. */
+                position: 'absolute', top: '55%', left: 0, right: 0,
+                display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+                pointerEvents: 'none',
               }}
             >
               <button
                 onClick={start}
+                className="dino-replay-btn"
                 style={{
                   pointerEvents: 'all',
                   background: 'var(--gradient)',
-                  border: 'none', borderRadius: 12,
-                  padding: '0.6rem 1.8rem',
+                  border: 'none',
                   color: '#fff', fontFamily: 'var(--font)',
-                  fontSize: '1rem', fontWeight: 700,
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem',
+                  fontWeight: 700,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center',
                   boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
                 }}
               >
@@ -701,6 +705,46 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
           </span>
         ))}
       </div>
+
+      <style>{`
+        /* Character selector tiles: default (desktop) sizing */
+        .dino-char-btn { padding: 4px 10px; }
+        .dino-char-emoji { font-size: 1.2rem; }
+        .dino-char-label { font-size: 0.7rem; }
+
+        /* Shrink the character tiles on small devices so they don't dominate */
+        @media (max-width: 600px) {
+          .dino-char-btn { padding: 2px 6px; border-radius: 8px; }
+          .dino-char-emoji { font-size: 0.9rem; }
+          .dino-char-label { font-size: 0.6rem; }
+        }
+        @media (max-width: 420px) {
+          .dino-char-btn { padding: 2px 5px; }
+          .dino-char-emoji { font-size: 0.8rem; }
+          .dino-char-label { font-size: 0.55rem; }
+        }
+
+        /* Size the Play Again button relative to the CANVAS width, not the
+           viewport. The game runs in a modal whose panel can be narrow even on
+           a wide desktop window, so viewport media queries didn't shrink it.
+           Container query units (cqw) track the actual canvas width, so the
+           button stays proportional at every panel size. */
+        .dino-canvas-wrap {
+          container-type: inline-size;
+        }
+        /* clamp() keeps the button proportional to the canvas width while
+           bounding it at both ends: never bigger than the desktop look, never
+           too small to tap. cqw tracks the canvas, so a narrow game panel in a
+           wide window still gets a small button. */
+        .dino-replay-btn {
+          padding: clamp(0.15rem, 0.8cqw, 0.5rem) clamp(0.4rem, 2cqw, 1.4rem);
+          font-size: clamp(0.5rem, 1.7cqw, 0.9rem);
+          gap: clamp(0.15rem, 0.6cqw, 0.4rem);
+          border-radius: clamp(5px, 1.1cqw, 10px);
+          white-space: nowrap;
+          line-height: 1.15;
+        }
+      `}</style>
 
       <p style={{ color: 'var(--text)', fontSize: '0.8rem' }}>
         Press{' '}

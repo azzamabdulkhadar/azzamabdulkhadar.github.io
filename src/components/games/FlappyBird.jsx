@@ -421,16 +421,16 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start' }}>
         <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontFamily: 'var(--mono)' }}>Bird:</span>
         {BIRDS.map((b, i) => (
-          <button key={b.id} onClick={() => selectBird(i)} title={b.label} style={{
+          <button key={b.id} onClick={() => selectBird(i)} title={b.label} className="flappy-char-btn" style={{
             background: birdIdx === i ? 'var(--accent-glow)' : 'var(--bg-card)',
             border: `2px solid ${birdIdx === i ? b.color : 'var(--border)'}`,
-            borderRadius: 10, padding: '4px 10px',
+            borderRadius: 10,
             cursor: state.current.running ? 'not-allowed' : 'pointer',
-            fontSize: '1.2rem', transition: 'all 0.2s',
+            transition: 'all 0.2s',
             opacity: state.current.running ? 0.5 : 1,
           }}>
-            {b.emoji}
-            <span style={{ fontSize: '0.7rem', display: 'block', color: birdIdx === i ? b.color : 'var(--text)', fontFamily: 'var(--font)', marginTop: 1 }}>
+            <span className="flappy-char-emoji">{b.emoji}</span>
+            <span className="flappy-char-label" style={{ display: 'block', color: birdIdx === i ? b.color : 'var(--text)', fontFamily: 'var(--font)', marginTop: 1 }}>
               {b.label}
             </span>
           </button>
@@ -472,7 +472,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
           </button>
         </div>
       </div>
-      <div style={{ position: 'relative', width: '100%' }}>
+      <div className="flappy-canvas-wrap" style={{ position: 'relative', width: '100%' }}>
         <canvas
           ref={canvasRef}
           width={W} height={H}
@@ -486,6 +486,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
           style={{
             borderRadius: '12px', border: '1.5px solid var(--border)',
             cursor: 'pointer', width: '100%', height: 'auto', display: 'block',
+            aspectRatio: `${W} / ${H}`,
             background: 'var(--bg)',
           }}
         />
@@ -604,22 +605,24 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ type: 'spring', stiffness: 300, damping: 22, delay: 0.15 }}
               style={{
-                position: 'absolute', inset: 0, display: 'flex',
-                flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '12px', pointerEvents: 'none',
-                paddingTop: '60px',
+                /* Anchored just below the canvas-drawn GAME OVER / score text
+                   (which ends around 49% of canvas height) so the button never
+                   covers it. Percentage top keeps this correct at any size. */
+                position: 'absolute', top: '55%', left: 0, right: 0,
+                display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+                pointerEvents: 'none',
               }}
             >
               <button
                 onClick={start}
+                className="flappy-replay-btn"
                 style={{
                   pointerEvents: 'all',
                   background: 'var(--gradient)',
-                  border: 'none', borderRadius: 12,
-                  padding: '0.6rem 1.8rem',
+                  border: 'none',
                   color: '#fff', fontFamily: 'var(--font)',
-                  fontSize: '1rem', fontWeight: 700,
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem',
+                  fontWeight: 700,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center',
                   boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
                 }}
               >
@@ -646,8 +649,41 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
       <p style={{ color: 'var(--text)', fontSize: '0.8rem' }}>
         Press{' '}
         <kbd style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '4px', padding: '1px 6px', fontFamily: 'var(--mono)', color: 'var(--text-h)' }}>SPACE</kbd>
-        {' '}or tap to flap � Can't change bird while flying
+        {' '}or tap to flap · Can't change bird while flying
       </p>
+
+      <style>{`
+        /* Bird selector tiles: default (desktop) sizing */
+        .flappy-char-btn { padding: 4px 10px; }
+        .flappy-char-emoji { font-size: 1.2rem; }
+        .flappy-char-label { font-size: 0.7rem; }
+
+        /* Shrink the bird tiles on small viewports */
+        @media (max-width: 768px) {
+          .flappy-char-btn { padding: 2px 6px; border-radius: 8px; }
+          .flappy-char-emoji { font-size: 0.9rem; }
+          .flappy-char-label { font-size: 0.6rem; }
+        }
+        @media (max-width: 480px) {
+          .flappy-char-btn { padding: 2px 5px; }
+          .flappy-char-emoji { font-size: 0.8rem; }
+          .flappy-char-label { font-size: 0.55rem; }
+        }
+
+        /* Size the Play Again button relative to the CANVAS width (container
+           query units) so it stays proportional even when the game panel is
+           narrow inside a wide desktop window. clamp() bounds it at both ends:
+           never larger than the desktop look, never too small to tap. */
+        .flappy-canvas-wrap { container-type: inline-size; }
+        .flappy-replay-btn {
+          padding: clamp(0.15rem, 0.8cqw, 0.5rem) clamp(0.4rem, 2cqw, 1.4rem);
+          font-size: clamp(0.5rem, 1.7cqw, 0.9rem);
+          gap: clamp(0.15rem, 0.6cqw, 0.4rem);
+          border-radius: clamp(5px, 1.1cqw, 10px);
+          white-space: nowrap;
+          line-height: 1.15;
+        }
+      `}</style>
     </div>
   );
 })

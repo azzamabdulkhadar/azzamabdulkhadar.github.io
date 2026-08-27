@@ -296,24 +296,11 @@ const gamesModalStyles = `
   }
 
   /* ─── Game canvas ───
-     The canvases have a wide internal resolution (e.g. 1200x400). Scaling
-     purely by width would make them only ~110px tall on a phone, which is
-     unplayable. Below 760px we give them a usable height instead; the game
-     logic uses fixed internal coordinates so gameplay is unaffected. */
-  @media (max-width: 760px) {
-    .game-canvas {
-      height: 42dvh !important;
-      min-height: 200px;
-      max-height: 340px;
-    }
-  }
-
-  @media (max-width: 760px) and (orientation: landscape) {
-    .game-canvas {
-      height: 60dvh !important;
-      min-height: 160px;
-    }
-  }
+     The canvases have wide internal resolutions (Dino 1200x400, Flappy
+     1100x500). Forcing a fixed CSS height while width is 100% stretched the
+     pixels non-uniformly, which made characters look tall and squashed on
+     mobile. Each canvas now sets its own aspect-ratio inline (matching its
+     resolution) with width:100%/height:auto, so scaling is always uniform. */
 
   /* ─── Loading ─── */
   .games-loading {

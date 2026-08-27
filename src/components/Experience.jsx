@@ -161,43 +161,66 @@ function JobCard({ job, index, inView, isCompact, onOpen, t }) {
             </span>
           </div>
 
-          <ul className="exp-card-list">
-            {visible.map((item, i) => (
-              <motion.li
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.3 + index * 0.1 + i * 0.08 }}
-              >
-                <span style={{ color, marginTop: '0.2rem', flexShrink: 0 }}>▸</span>
-                <span>{item}</span>
-              </motion.li>
-            ))}
-          </ul>
-
           {isCompact ? (
-            <span className="exp-card-more" style={{ color }}>
-              {/* 'n' rather than 'count': passing `count` makes i18next look for
-                  plural-suffixed keys (_one/_other), which these aren't. */}
-              {hidden > 0
-                ? t('experience.viewMoreCount', { n: hidden })
-                : t('experience.viewDetails')}
-              <ChevronRight size={14} />
-            </span>
+            <>
+              <ul className="exp-card-list">
+                {visible.map((item, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.3 + index * 0.1 + i * 0.08 }}
+                  >
+                    <span style={{ color, marginTop: '0.2rem', flexShrink: 0 }}>▸</span>
+                    <span>{item}</span>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <span className="exp-card-more" style={{ color }}>
+                {/* 'n' rather than 'count': passing `count` makes i18next look for
+                    plural-suffixed keys (_one/_other), which these aren't. */}
+                {hidden > 0
+                  ? t('experience.viewMoreCount', { n: hidden })
+                  : t('experience.viewDetails')}
+                <ChevronRight size={14} />
+              </span>
+            </>
           ) : (
-            <div className="exp-card-techs">
-              {techs.map((tech) => (
-                <span
-                  key={tech}
-                  style={{
-                    color,
-                    background: `color-mix(in srgb, ${color} 10%, transparent)`,
-                    border: `1px solid color-mix(in srgb, ${color} 25%, transparent)`,
-                  }}
-                >
-                  {tech}
+            <div className="exp-card-body">
+              <ul className="exp-card-list">
+                {visible.map((item, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.3 + index * 0.1 + i * 0.08 }}
+                  >
+                    <span style={{ color, marginTop: '0.2rem', flexShrink: 0 }}>▸</span>
+                    <span>{item}</span>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <div className="exp-card-tech-panel">
+                <span className="exp-card-tech-title" style={{ color }}>
+                  {t('experience.techLabel')}
                 </span>
-              ))}
+                <div className="exp-card-techs">
+                  {techs.map((tech) => (
+                    <span
+                      key={tech}
+                      style={{
+                        color,
+                        background: `color-mix(in srgb, ${color} 10%, transparent)`,
+                        border: `1px solid color-mix(in srgb, ${color} 25%, transparent)`,
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -283,19 +306,31 @@ const experienceStyles = `
     white-space: nowrap;
   }
 
+  /* Two-column layout on wide screens: responsibilities take the primary
+     column while the tech stack fills what used to be empty space on the
+     right. The bullets keep a comfortable reading measure via the column
+     sizing rather than an explicit max-width. */
+  .exp-card-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: var(--space-xl);
+    margin-top: var(--space-md);
+    align-items: start;
+  }
+
   .exp-card-list {
     list-style: none;
-    margin-top: var(--space-md);
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
+    margin: 0;
   }
 
-  /* Cap the reading measure. This is the only section whose running text spans
-     the full container, so without a limit lines reach ~145 characters at
-     1920px and ~170 at 4K, well past the comfortable 45-75 range.
-     ch units tie the cap to the current font size, so it holds at every
-     breakpoint without extra media queries. The card stays full width. */
+  /* Compact layout keeps the previous top spacing since it isn't in the grid */
+  .exp-card-tappable .exp-card-list {
+    margin-top: var(--space-md);
+  }
+
   .exp-card-list li {
     display: flex;
     gap: var(--space-sm);
@@ -303,17 +338,34 @@ const experienceStyles = `
     color: var(--text);
     font-size: var(--text-base);
     line-height: 1.7;
-    max-width: 70ch;
   }
 
-  /* Same measure as the bullets so the chips wrap in line with the text above
-     rather than stretching across the full card on wide screens. */
+  /* The tech panel sits in the right column, using the reclaimed space */
+  .exp-card-tech-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-left: var(--space-lg);
+    border-left: 1px solid var(--border);
+  }
+
+  .exp-card-tech-title {
+    font-family: var(--mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
   .exp-card-techs {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
+  }
+
+  /* Compact screens still stack chips below the bullets */
+  .exp-card-tappable .exp-card-techs {
     margin-top: 1.5rem;
-    max-width: 70ch;
   }
 
   .exp-card-techs span {
@@ -330,6 +382,19 @@ const experienceStyles = `
     margin-top: var(--space-md);
     font-size: var(--text-sm);
     font-weight: 600;
+  }
+
+  /* At/below this the two-column split gets cramped, so stack the tech panel
+     under the bullets (matching the projects section) and drop the divider. */
+  @media (max-width: 1200px) {
+    .exp-card-body {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+    .exp-card-tech-panel {
+      padding-left: 0;
+      border-left: none;
+    }
   }
 
   @media (max-width: 768px) {
