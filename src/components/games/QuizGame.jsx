@@ -502,16 +502,25 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
         </div>
         <button
           onClick={() => setUseAI(!useAI)}
+          role="switch"
+          aria-checked={useAI}
+          aria-label="Toggle AI-generated questions"
+          className="quiz-ai-toggle"
           style={{
-            width: 50, height: 28, borderRadius: 14, border: 'none',
+            width: 50, height: 28, minHeight: 28, borderRadius: 14, border: 'none',
+            padding: 0, boxSizing: 'border-box', flexShrink: 0,
             background: useAI ? 'var(--accent)' : 'var(--border)',
             cursor: 'pointer', transition: 'all 0.2s',
             position: 'relative',
+            WebkitTapHighlightColor: 'transparent', outline: 'none',
+            appearance: 'none', WebkitAppearance: 'none',
           }}
         >
           <div style={{
             width: 24, height: 24, borderRadius: '50%', background: '#fff',
-            position: 'absolute', top: 2, left: useAI ? 24 : 2,
+            boxSizing: 'border-box', position: 'absolute',
+            top: '50%', left: useAI ? 24 : 2,
+            transform: 'translateY(-50%)',
             transition: 'left 0.2s',
           }} />
         </button>
@@ -574,6 +583,14 @@ function Intro({ topic, setTopic, onStart, points, level, nextLevel, onReset, sh
           <RotateCcw size={16} />
         </button>
       </div>
+
+      <style>{`
+        .quiz-ai-toggle:focus { outline: none; }
+        .quiz-ai-toggle:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 2px;
+        }
+      `}</style>
     </div>
   );
 }
