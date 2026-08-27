@@ -450,7 +450,7 @@ export default forwardRef(function DinoGame({ onRunningChange }, ref) {
   const diff = getDifficulty(display.score);
 
   return (
-    <div ref={wrapRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
+    <div ref={wrapRef} className="game-root" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
 
       {/* Character selector */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start' }}>

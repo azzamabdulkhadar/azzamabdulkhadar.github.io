@@ -302,6 +302,26 @@ const gamesModalStyles = `
      mobile. Each canvas now sets its own aspect-ratio inline (matching its
      resolution) with width:100%/height:auto, so scaling is always uniform. */
 
+  /* ─── Game panel sizing ───
+     .games-content centres its children, which makes them shrink-to-fit. The
+     game roots therefore need an explicit width to fill the available space.
+     The panel then scales with the screen: full width of the content area on
+     phones, growing up to a comfortable cap on large displays. The vh term
+     keeps the (wide, short) canvas from overflowing on short landscape
+     windows, since canvas height is derived from its width. */
+  .game-root {
+    width: 100%;
+    max-width: min(100%, 1100px, 165vh);
+  }
+
+  @media (max-width: 1024px) {
+    .game-root { max-width: min(100%, 900px, 165vh); }
+  }
+
+  @media (max-width: 768px) {
+    .game-root { max-width: 100%; }
+  }
+
   /* ─── Loading ─── */
   .games-loading {
     display: flex;

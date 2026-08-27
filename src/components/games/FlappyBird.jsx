@@ -416,7 +416,7 @@ export default forwardRef(function FlappyBird({ onRunningChange }, ref) {
   const lv = getLevel(display.score);
 
   return (
-    <div ref={wrapRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
+    <div ref={wrapRef} className="game-root" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
       {/* Bird selector */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start' }}>
         <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontFamily: 'var(--mono)' }}>Bird:</span>
